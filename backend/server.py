@@ -1,11 +1,17 @@
 import os
 import sys
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # ← ADD THIS
+
+# Fix path FIRST before any other imports
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from dotenv import load_dotenv
 
 # Fix Windows encoding issue
-if sys.stdout.encoding != 'utf-8':
-    sys.stdout.reconfigure(encoding='utf-8')
+try:
+    if sys.stdout.encoding != 'utf-8':
+        sys.stdout.reconfigure(encoding='utf-8')
+except Exception:
+    pass
 
 # Load .env from both possible locations
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -33,7 +39,7 @@ app.config["SESSION_TYPE"]               = "filesystem"
 # ── Session Cookie Fix ────────────────────────────────────────────────────────
 app.config["SESSION_COOKIE_SAMESITE"]    = "Lax"
 app.config["SESSION_COOKIE_HTTPONLY"]    = True
-app.config["SESSION_COOKIE_SECURE"]      = os.getenv("FLASK_ENV") == "production"  # True in production
+app.config["SESSION_COOKIE_SECURE"]      = os.getenv("FLASK_ENV") == "production"
 
 app.config["MAIL_SERVER"]                = os.getenv("MAIL_SERVER", "smtp.gmail.com")
 app.config["MAIL_PORT"]                  = int(os.getenv("MAIL_PORT", 587))
@@ -42,7 +48,7 @@ app.config["MAIL_USERNAME"]              = os.getenv("MAIL_USERNAME")
 app.config["MAIL_PASSWORD"]              = os.getenv("MAIL_PASSWORD")
 app.config["MAIL_DEFAULT_SENDER"]        = os.getenv("MAIL_DEFAULT_SENDER")
 
-# ── CORS Fix (supports both local dev and production) ─────────────────────────
+# ── CORS ──────────────────────────────────────────────────────────────────────
 allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5000").split(",")
 CORS(app, supports_credentials=True, origins=allowed_origins)
 
@@ -50,12 +56,20 @@ CORS(app, supports_credentials=True, origins=allowed_origins)
 Session(app)
 Mail(app)
 
-# ── DB Init ───────────────────────────────────────────────────────────────────
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from config.db import init_db
-with app.app_context():
-    init_db()
+# ── DB Init (with error logging) ──────────────────────────────────────────────
+print(f"[DEBUG] MYSQL_HOST = {os.getenv('MYSQL_HOST')}", flush=True)
+print(f"[DEBUG] MYSQL_PORT = {os.getenv('MYSQL_PORT')}", flush=True)
+print(f"[DEBUG] MYSQL_USER = {os.getenv('MYSQL_USER')}", flush=True)
+print(f"[DEBUG] MYSQL_DB   = {os.getenv('MYSQL_DB')}", flush=True)
+
+try:
+    from config.db import init_db
+    with app.app_context():
+        init_db()
+    print("[DB] Connected successfully!", flush=True)
+except Exception as e:
+    print(f"[DB ERROR] {e}", flush=True)
+    raise
 
 # ── Blueprints ────────────────────────────────────────────────────────────────
 from controllers.auth_controller import auth_bp
