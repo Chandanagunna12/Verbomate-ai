@@ -50,6 +50,8 @@ Session(app)
 Mail(app)
 
 # ── DB Init ───────────────────────────────────────────────────────────────────
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from config.db import init_db
 with app.app_context():
     init_db()
