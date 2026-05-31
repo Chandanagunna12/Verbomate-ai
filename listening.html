@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listening Lab — VerboMate</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+:root{
+  --bg:#070709;--s1:#0d0d12;--s2:#13131a;--s3:#1a1a24;
+  --b1:rgba(255,255,255,0.06);--b2:rgba(255,255,255,0.10);--b3:rgba(255,255,255,0.16);
+  --c1:#8b5cf6;--c2:#06b6d4;--c3:#10b981;--c4:#f59e0b;--c5:#f43f5e;
+  --t1:#f4f4f5;--t2:#a1a1aa;--t3:#52525b;
+  --sw:240px;--th:56px;--r:10px;--rl:16px;
+  --f:'DM Sans',sans-serif;--fh:'Syne',sans-serif;--fm:'JetBrains Mono',monospace;
+}
+body{font-family:var(--f);background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#2a2a35;border-radius:3px}
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sw);background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;z-index:100}
+.slogo{display:flex;align-items:center;gap:10px;padding:20px 18px 18px;border-bottom:1px solid var(--b1)}
+.slm{width:34px;height:34px;background:var(--c1);border-radius:9px;display:grid;place-items:center;font-size:16px;flex-shrink:0}
+.sln{font-family:var(--fh);font-weight:800;font-size:0.95rem;letter-spacing:-0.3px}
+.sln span{color:var(--c1)}
+.sxp{padding:14px 18px;border-bottom:1px solid var(--b1)}
+.sxpt{display:flex;justify-content:space-between;font-size:0.69rem;color:var(--t2);margin-bottom:6px}
+.sxpt strong{color:var(--c1)}
+.sxpb{height:3px;background:rgba(255,255,255,0.05);border-radius:99px;overflow:hidden}
+.sxpf{height:100%;background:linear-gradient(90deg,var(--c1),var(--c2));border-radius:99px;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
+.snav{padding:10px 10px 0;flex:1;overflow-y:auto}
+.snl{font-size:0.6rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--t3);padding:8px 8px 4px}
+.sni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:0.82rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all 0.15s;margin-bottom:1px;text-decoration:none}
+.sni:hover{background:rgba(255,255,255,0.04);color:var(--t1)}
+.sni.active{background:rgba(139,92,246,0.12);color:var(--c1);font-weight:600}
+.sni-ico{width:18px;text-align:center;font-size:14px;flex-shrink:0}
+.sni-pill{margin-left:auto;font-size:0.58rem;font-weight:700;background:rgba(139,92,246,0.15);color:var(--c1);padding:2px 6px;border-radius:99px}
+.suser{padding:12px 14px;border-top:1px solid var(--b1)}
+.surow{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background 0.15s}
+.surow:hover{background:rgba(255,255,255,0.04)}
+.suava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c5));display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0;color:#fff}
+.suname{font-size:0.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sumeta{font-size:0.67rem;color:var(--c3)}
+.main{margin-left:var(--sw);min-height:100vh;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:90;height:var(--th);background:rgba(7,7,9,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--b1);padding:0 24px;display:flex;align-items:center;gap:12px}
+.tb-title{font-family:var(--fh);font-size:0.9rem;font-weight:700;letter-spacing:-0.2px}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tb-streak{display:flex;align-items:center;gap:4px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:var(--c4);font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:99px}
+.tb-btn{display:flex;align-items:center;gap:5px;padding:6px 12px;background:var(--s2);border:1px solid var(--b1);border-radius:8px;font-size:0.74rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all 0.15s;text-decoration:none;font-family:var(--f)}
+.tb-btn:hover{border-color:var(--b2);color:var(--t1)}
+.tb-ava{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c5));display:grid;place-items:center;font-size:12px;font-weight:700;cursor:pointer;color:#fff}
+.content{padding:24px;flex:1}
+.ph{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.ph-left{display:flex;align-items:center;gap:14px}
+.ph-ico{width:46px;height:46px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:12px;display:grid;place-items:center;font-size:20px}
+.ph-t{font-family:var(--fh);font-size:1.6rem;font-weight:700;letter-spacing:-0.5px;line-height:1}
+.ph-t span{color:var(--c4)}
+.ph-s{font-size:0.78rem;color:var(--t2);margin-top:3px}
+.ph-right{display:flex;gap:8px;align-items:center}
+.filter-tabs{display:flex;background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:3px;gap:2px}
+.filter-tab{padding:6px 14px;border-radius:7px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s;color:var(--t2);font-family:var(--f)}
+.filter-tab.active{background:rgba(245,158,11,0.15);color:var(--c4)}
+.filter-tab:hover:not(.active){color:var(--t1)}
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-box{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:14px 16px}
+.stat-box-v{font-family:var(--fm);font-size:1.4rem;font-weight:500;line-height:1;margin-bottom:3px}
+.stat-box-l{font-size:0.68rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.5px}
+.main-grid{display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start}
+.sec-hd{display:flex;align-items:center;margin-bottom:14px}
+.sec-title{font-size:0.88rem;font-weight:700;display:flex;align-items:center;gap:7px}
+.sec-title::before{content:'';width:3px;height:13px;background:var(--c4);border-radius:2px}
+.sec-more{margin-left:auto;font-size:0.72rem;color:var(--c2);cursor:pointer;font-weight:500}
+.sec-more:hover{opacity:0.7}
+.now-playing{background:var(--s1);border:1px solid rgba(245,158,11,0.2);border-radius:var(--rl);padding:24px;margin-bottom:16px;position:relative;overflow:hidden}
+.now-playing::before{content:'';position:absolute;top:-80px;right:-80px;width:240px;height:240px;background:radial-gradient(circle,rgba(245,158,11,0.08),transparent 70%);pointer-events:none}
+.np-badge{display:inline-flex;align-items:center;gap:5px;font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--c4);background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);padding:3px 10px;border-radius:99px;margin-bottom:14px}
+.np-live-dot{width:6px;height:6px;border-radius:50%;background:var(--c4);animation:blink 1.2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.np-title{font-family:var(--fh);font-size:1.3rem;font-weight:700;letter-spacing:-0.3px;margin-bottom:6px;line-height:1.3}
+.np-meta{font-size:0.76rem;color:var(--t2);margin-bottom:18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.np-tag{padding:2px 8px;border-radius:99px;font-size:0.65rem;font-weight:700}
+.np-body{font-size:0.85rem;line-height:1.8;color:var(--t1);background:rgba(255,255,255,0.02);border:1px solid var(--b1);border-radius:10px;padding:16px;margin-bottom:16px;max-height:260px;overflow-y:auto;font-family:var(--fm)}
+.np-word{cursor:pointer;border-bottom:1.5px dashed rgba(245,158,11,0.5);transition:all 0.15s;background:rgba(245,158,11,0.06);border-radius:2px;padding:0 1px}
+.np-word:hover{background:rgba(245,158,11,0.15);border-bottom-color:var(--c4)}
+.np-word.highlight{background:rgba(245,158,11,0.2);border-bottom-color:var(--c4)}
+
+/* ── ACCENT / GENRE SELECTOR ── */
+.sel-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.sel-lbl{font-size:0.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t3);flex-shrink:0;min-width:50px}
+.chip-group{display:flex;gap:5px;flex-wrap:wrap}
+/* FIX: accent/genre chips — clear, tappable, distinct sel state */
+.ac{padding:5px 11px;border-radius:99px;font-size:0.72rem;font-weight:500;border:1px solid var(--b1);color:var(--t2);cursor:pointer;transition:all 0.18s;user-select:none;background:var(--s2)}
+.ac:hover{border-color:var(--b2);color:var(--t1);background:var(--s3)}
+.ac.sel{background:rgba(6,182,212,0.12);border-color:rgba(6,182,212,0.35);color:var(--c2);font-weight:600}
+.gc{padding:5px 11px;border-radius:99px;font-size:0.72rem;font-weight:500;border:1px solid var(--b1);color:var(--t2);cursor:pointer;transition:all 0.18s;user-select:none;background:var(--s2)}
+.gc:hover{border-color:var(--b2);color:var(--t1);background:var(--s3)}
+.gc.sel{background:rgba(139,92,246,0.14);border-color:rgba(139,92,246,0.35);color:var(--c1);font-weight:600}
+
+.player{background:rgba(255,255,255,0.02);border:1px solid var(--b1);border-radius:10px;padding:16px}
+.player-progress{margin-bottom:12px}
+.prog-bar-wrap{height:6px;background:rgba(255,255,255,0.06);border-radius:99px;cursor:pointer;margin-bottom:6px;position:relative}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--c4),var(--c2));border-radius:99px;transition:width 0.5s linear;position:relative}
+.prog-bar-fill::after{content:'';position:absolute;right:-6px;top:-4px;width:14px;height:14px;background:var(--c4);border-radius:50%;box-shadow:0 0 10px rgba(245,158,11,0.6)}
+.prog-times{display:flex;justify-content:space-between;font-family:var(--fm);font-size:0.65rem;color:var(--t3)}
+.player-controls{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.ctrl-btn{width:36px;height:36px;border-radius:50%;background:var(--s2);border:1px solid var(--b1);display:grid;place-items:center;font-size:14px;cursor:pointer;transition:all 0.15s}
+.ctrl-btn:hover{border-color:var(--b2);background:var(--s3)}
+.ctrl-play{width:54px;height:54px;font-size:20px;background:linear-gradient(135deg,var(--c4),#d97706);border:none;color:#000;box-shadow:0 0 20px rgba(245,158,11,0.35)}
+.ctrl-play:hover{box-shadow:0 0 36px rgba(245,158,11,0.55);transform:scale(1.06)}
+.ctrl-play.playing{background:linear-gradient(135deg,var(--c5),#be185d);box-shadow:0 0 20px rgba(244,63,94,0.35);color:#fff}
+.speed-btn{padding:5px 11px;background:var(--s2);border:1px solid var(--b1);border-radius:6px;font-family:var(--fm);font-size:0.72rem;cursor:pointer;transition:all 0.15s;color:var(--t2)}
+.speed-btn:hover{border-color:var(--c4);color:var(--c4)}
+.speed-btn.active{background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.35);color:var(--c4)}
+.quiz-section{margin-top:16px;display:none}
+.quiz-section.visible{display:block}
+.quiz-q{font-size:0.84rem;font-weight:600;margin-bottom:10px;color:var(--t1)}
+.quiz-opts{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.quiz-opt{padding:10px 14px;background:rgba(255,255,255,0.02);border:1px solid var(--b1);border-radius:8px;font-size:0.8rem;cursor:pointer;transition:all 0.15s;text-align:left;color:var(--t1);font-family:var(--f);width:100%}
+.quiz-opt:hover:not(:disabled){border-color:var(--c4);background:rgba(245,158,11,0.06)}
+.quiz-opt.correct{background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.35);color:var(--c3)}
+.quiz-opt.wrong{background:rgba(244,63,94,0.08);border-color:rgba(244,63,94,0.25);color:var(--c5)}
+.quiz-result{font-size:0.79rem;color:var(--t2);line-height:1.6;padding:10px;background:rgba(255,255,255,0.02);border-radius:8px;display:none}
+.quiz-result.visible{display:block}
+.word-tooltip{position:fixed;z-index:400;background:var(--s1);border:1px solid var(--b2);border-radius:10px;padding:12px 14px;max-width:240px;box-shadow:0 16px 48px rgba(0,0,0,0.6);pointer-events:none;opacity:0;transition:opacity 0.15s}
+.word-tooltip.show{opacity:1}
+.wt-word{font-family:var(--fh);font-size:1rem;font-weight:700;color:var(--c4);margin-bottom:2px}
+.wt-pos{font-size:0.65rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px}
+.wt-def{font-size:0.77rem;color:var(--t2);line-height:1.5}
+.wt-example{font-size:0.72rem;color:var(--t3);font-style:italic;margin-top:4px}
+.content-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.content-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:12px}
+.content-card:hover{border-color:var(--b2);background:var(--s2)}
+.cc-ico{width:40px;height:40px;border-radius:9px;display:grid;place-items:center;font-size:17px;flex-shrink:0}
+.cc-body{flex:1;min-width:0}
+.cc-title{font-size:0.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.cc-meta{font-size:0.68rem;color:var(--t3);display:flex;align-items:center;gap:6px}
+.cc-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
+.cc-done{font-size:0.62rem;color:var(--c3);font-weight:700}
+.diff-badge{padding:2px 7px;border-radius:99px;font-size:0.6rem;font-weight:700}
+.diff-easy{background:rgba(16,185,129,0.1);color:var(--c3)}
+.diff-medium{background:rgba(245,158,11,0.1);color:var(--c4)}
+.diff-hard{background:rgba(244,63,94,0.1);color:var(--c5)}
+
+/* SHADOWING */
+.shadow-panel{background:rgba(139,92,246,0.04);border:1px solid rgba(139,92,246,0.15);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.shadow-text{font-family:var(--fm);font-size:0.82rem;color:var(--t1);line-height:1.9;margin-bottom:14px;min-height:60px}
+.shadow-word.said{color:var(--c3)}
+.shadow-word.current{color:var(--c4);text-decoration:underline;font-weight:600}
+.shadow-word.unsaid{color:var(--t3)}
+.shadow-btns{display:flex;gap:8px;flex-wrap:wrap}
+
+/* SHADOWING SENTENCE MODE */
+.shadow-sentence{background:rgba(255,255,255,0.03);border:1px solid var(--b1);border-radius:8px;padding:12px 14px;margin-bottom:10px;font-size:0.85rem;line-height:1.7;color:var(--t1)}
+.shadow-sentence.active{border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.05);color:var(--t1)}
+.shadow-sentence.done{opacity:0.45}
+
+.rp{display:flex;flex-direction:column;gap:14px}
+.rp-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:16px}
+.vocab-list{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto}
+.vi{display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(255,255,255,0.02);border:1px solid var(--b1);border-radius:7px;font-size:0.75rem;cursor:pointer;transition:border-color 0.15s}
+.vi:hover{border-color:var(--c4)}
+.vi-word{flex:1;font-weight:600;color:var(--t1)}
+.vi-pos{font-size:0.62rem;color:var(--t3);font-style:italic}
+.vi-saved{font-size:0.65rem;color:var(--c3);font-weight:700}
+.prog-ring{display:flex;justify-content:center;margin:10px 0;position:relative}
+.prog-ring svg{transform:rotate(-90deg)}
+.pr-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.pr-v{font-family:var(--fm);font-size:1.4rem;font-weight:500;color:var(--c4)}
+.pr-l{font-size:0.6rem;color:var(--t3);text-transform:uppercase}
+.streak-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}
+.sd{width:100%;aspect-ratio:1;border-radius:4px;display:grid;place-items:center;font-size:0.55rem;font-weight:700}
+.sd.done{background:rgba(245,158,11,0.2);color:var(--c4)}
+.sd.today{background:var(--c4);color:#000}
+.sd.empty{background:rgba(255,255,255,0.03);color:var(--t3)}
+.gen-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px;background:linear-gradient(135deg,var(--c4),#d97706);border:none;border-radius:8px;color:#000;font-family:var(--fh);font-size:0.85rem;font-weight:700;cursor:pointer;transition:all 0.2s;margin-bottom:10px}
+.gen-btn:hover{opacity:0.9;transform:translateY(-1px)}
+.gen-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.gen-btn-secondary{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:var(--c4);font-family:var(--f);font-size:0.8rem;font-weight:600;padding:9px;border-radius:8px;cursor:pointer;transition:all 0.15s;width:100%;display:flex;align-items:center;justify-content:center;gap:6px}
+.gen-btn-secondary:hover{background:rgba(245,158,11,0.18)}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:12px 16px;font-size:0.8rem;z-index:999;display:flex;align-items:center;gap:8px;box-shadow:0 12px 40px rgba(0,0,0,0.5);transform:translateY(70px);opacity:0;transition:all 0.35s cubic-bezier(.22,1,.36,1)}
+.toast.show{transform:translateY(0);opacity:1}
+.modal{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);backdrop-filter:blur(12px)}
+.modal.open{display:flex}
+.mbox{background:var(--s1);border:1px solid var(--b2);border-radius:var(--rl);padding:28px;max-width:480px;width:90%}
+.mbox-title{font-family:var(--fh);font-size:1rem;font-weight:700;margin-bottom:14px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fa{animation:fadeUp 0.35s ease both}
+@media(max-width:1100px){.main-grid{grid-template-columns:1fr}}
+@media(max-width:900px){:root{--sw:0px}.sidebar{display:none}.main{margin-left:0}.content{padding:14px}.stats-bar{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="slogo"><div class="slm">💬</div><div class="sln">Verbo<span>Mate</span></div></div>
+  <div class="sxp">
+    <div class="sxpt"><span id="sb-level">Level — Explorer</span><strong id="sb-xp">— XP</strong></div>
+    <div class="sxpb"><div class="sxpf" id="sb-xp-fill" style="width:0%"></div></div>
+  </div>
+  <div class="snav">
+    <div class="snl">Main</div>
+    <a href="/dashboard" class="sni"><span class="sni-ico">🏠</span> Dashboard</a>
+    <!-- <div class="sni"><span class="sni-ico">📊</span> Progress</div>
+    <div class="sni"><span class="sni-ico">🏆</span> Leaderboard <span class="sni-pill">Live</span></div> -->
+    <div class="snl" style="margin-top:8px">Practice</div>
+    <!-- <a href="/vocabulary" class="sni"><span class="sni-ico">📖</span> Vocabulary</a>
+    <a href="/speaking" class="sni"><span class="sni-ico">🎙️</span> Speaking</a>
+    <a href="/grammar" class="sni"><span class="sni-ico">📝</span> Grammar</a> -->
+    <div class="sni active"><span class="sni-ico">🎧</span> Listening</div>
+    <!-- <div class="sni"><span class="sni-ico">✍️</span> Writing</div>
+    <div class="sni"><span class="sni-ico">💼</span> Interview Prep</div> -->
+    <div class="snl" style="margin-top:8px">Account</div>
+    <!-- <div class="sni"><span class="sni-ico">⚙️</span> Settings</div> -->
+    <div class="sni" onclick="handleLogout()"><span class="sni-ico">🚪</span> Sign Out</div>
+  </div>
+  <div class="suser">
+    <div class="surow">
+      <div class="suava" id="sb-ava">?</div>
+      <div><div class="suname" id="sb-name">Loading…</div><div class="sumeta" id="sb-rank">⚡ Explorer</div></div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <a href="/dashboard" class="tb-btn">← Back</a>
+    <div class="tb-title">🎧 Listening Lab</div>
+    <div class="tb-right">
+      <div class="tb-streak" id="streak-badge">🔥 Start today!</div>
+      <div class="tb-ava" id="top-ava">?</div>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="ph fa">
+      <div class="ph-left">
+        <div class="ph-ico">🎧</div>
+        <div>
+          <div class="ph-t">Listening <span>Lab</span></div>
+          <div class="ph-s">AI stories · Shadowing · News briefings · Comprehension quizzes · Vocab builder</div>
+        </div>
+      </div>
+      <div class="ph-right">
+        <div class="filter-tabs">
+          <div class="filter-tab active" onclick="setTab('stories')">🎭 Stories</div>
+          <div class="filter-tab" onclick="setTab('shadowing')">🔁 Shadowing</div>
+          <div class="filter-tab" onclick="setTab('news')">📰 News</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-bar fa">
+      <div class="stat-box"><div class="stat-box-v" style="color:var(--c4)" id="stat-listened">0</div><div class="stat-box-l">Clips Listened</div></div>
+      <div class="stat-box"><div class="stat-box-v" style="color:var(--c2)" id="stat-mins">0m</div><div class="stat-box-l">Total Time</div></div>
+      <div class="stat-box"><div class="stat-box-v" style="color:var(--c3)" id="stat-vocab">0</div><div class="stat-box-l">Words Saved</div></div>
+      <div class="stat-box"><div class="stat-box-v" style="color:var(--c1)" id="stat-score">—</div><div class="stat-box-l">Avg Quiz Score</div></div>
+    </div>
+
+    <div class="main-grid">
+      <div>
+
+        <!-- STORIES PANEL -->
+        <div id="stories-panel" class="fa">
+          <div class="now-playing">
+            <div class="np-badge"><span class="np-live-dot"></span> Now Playing</div>
+
+            <!-- ACCENT ROW -->
+            <div class="sel-row">
+              <span class="sel-lbl">Accent:</span>
+              <div class="chip-group" id="accent-chips">
+                <div class="ac sel" data-a="indian">🇮🇳 Indian</div>
+                <div class="ac" data-a="american">🇺🇸 American</div>
+                <div class="ac" data-a="british">🇬🇧 British</div>
+                <div class="ac" data-a="australian">🇦🇺 Australian</div>
+              </div>
+            </div>
+            <!-- GENRE ROW -->
+            <div class="sel-row" style="margin-bottom:14px">
+              <span class="sel-lbl">Genre:</span>
+              <div class="chip-group" id="genre-chips">
+                <div class="gc sel" data-g="inspirational">✨ Inspirational</div>
+                <div class="gc" data-g="mystery">🔍 Mystery</div>
+                <div class="gc" data-g="adventure">⛰️ Adventure</div>
+                <div class="gc" data-g="science">🔬 Science</div>
+                <div class="gc" data-g="culture">🌍 Culture</div>
+                <div class="gc" data-g="business">💼 Business</div>
+              </div>
+            </div>
+
+            <div class="np-title" id="np-title">Generate your first story →</div>
+            <div class="np-meta" id="np-meta" style="display:none">
+              <span id="np-diff-badge" class="diff-badge diff-medium"></span>
+              <span id="np-accent-label"></span>
+              <span id="np-genre-label"></span>
+              <span id="np-word-count"></span>
+            </div>
+
+            <div class="np-body" id="np-body" style="display:none">
+              <span id="np-text-content"></span>
+            </div>
+
+            <!-- PLAYER — hidden until story loads -->
+            <div class="player" id="player-box" style="display:none">
+              <div class="player-progress">
+                <div class="prog-bar-wrap" id="prog-bar-wrap" onclick="seekAudio(event)">
+                  <div class="prog-bar-fill" id="prog-bar" style="width:0%"></div>
+                </div>
+                <div class="prog-times">
+                  <span id="cur-time">0:00</span>
+                  <span id="tot-time">0:00</span>
+                </div>
+              </div>
+              <div class="player-controls">
+                <div class="ctrl-btn" onclick="seekRel(-10)" title="−10s">⟨⟨</div>
+                <div style="display:flex;gap:6px">
+                  <div class="speed-btn" data-s="0.75" onclick="setSpeed(0.75)">0.75×</div>
+                  <div class="speed-btn active" data-s="1" onclick="setSpeed(1)">1×</div>
+                  <div class="speed-btn" data-s="1.25" onclick="setSpeed(1.25)">1.25×</div>
+                  <div class="speed-btn" data-s="1.5" onclick="setSpeed(1.5)">1.5×</div>
+                </div>
+                <button class="ctrl-btn ctrl-play" id="play-btn" onclick="togglePlay()">▶</button>
+                <div class="ctrl-btn" onclick="seekRel(10)" title="+10s">⟩⟩</div>
+              </div>
+              <!-- TTS STATUS -->
+              <div id="tts-status" style="text-align:center;font-size:0.7rem;color:var(--t3);margin-top:8px">
+                🔊 Uses browser text-to-speech
+              </div>
+            </div>
+
+            <!-- QUIZ -->
+            <div class="quiz-section" id="quiz-section">
+              <div style="height:1px;background:var(--b1);margin:16px 0"></div>
+              <div class="sec-hd" style="margin-bottom:12px"><div class="sec-title">Comprehension Quiz</div></div>
+              <div id="quiz-container"></div>
+              <div style="display:flex;gap:8px;margin-top:10px">
+                <button class="gen-btn-secondary" style="flex:1" onclick="generateNewStory()">🔄 New Story</button>
+                <button class="gen-btn-secondary" style="flex:1" onclick="showVocabModal()">📚 Vocab List</button>
+              </div>
+            </div>
+
+            <!-- GENERATE AREA -->
+            <div id="gen-area">
+              <button class="gen-btn" id="gen-btn" onclick="generateNewStory()">✨ Generate AI Story</button>
+              <div style="text-align:center;font-size:0.72rem;color:var(--t3)">Each story is unique — never repeated. AI creates custom content for your level.</div>
+            </div>
+          </div>
+
+          <!-- PAST SESSIONS -->
+          <div>
+            <div class="sec-hd"><div class="sec-title">Past Sessions</div><span class="sec-more" onclick="clearHistory()">Clear All</span></div>
+            <div class="content-list" id="past-list">
+              <div style="text-align:center;padding:20px;color:var(--t3);font-size:0.77rem">No sessions yet — generate your first story above!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SHADOWING PANEL -->
+        <div id="shadowing-panel" style="display:none" class="fa">
+          <div class="shadow-panel">
+            <div class="sec-hd" style="margin-bottom:8px"><div class="sec-title">🔁 Shadowing Mode</div></div>
+            <div style="font-size:0.77rem;color:var(--t2);margin-bottom:12px;line-height:1.6">
+              AI reads each sentence. Listen carefully, then record yourself repeating it.
+              <br>Highlighted = current sentence. Green = completed.
+            </div>
+            <div id="shadow-sentences" style="max-height:320px;overflow-y:auto;margin-bottom:12px">
+              <div style="color:var(--t3);font-size:0.78rem;padding:12px;text-align:center">Generate a story in the Stories tab first, then come back to shadow it.</div>
+            </div>
+            <div class="shadow-btns">
+              <button class="gen-btn-secondary" style="flex:1" onclick="startShadowing()">▶ Play &amp; Shadow</button>
+              <button class="gen-btn-secondary" style="width:auto;padding:9px 16px" onclick="stopShadowing()">⏹ Stop</button>
+              <button class="gen-btn-secondary" style="width:auto;padding:9px 16px" onclick="restartShadowing()">↩ Restart</button>
+            </div>
+          </div>
+          <div style="font-size:0.78rem;color:var(--t2);line-height:1.7;padding:14px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--r)">
+            💡 <strong>Technique:</strong> Click ▶ Play &amp; Shadow. The AI reads one sentence at a time — pause after each and repeat it aloud. Do 3 rounds for best results.
+          </div>
+        </div>
+
+        <!-- NEWS PANEL -->
+        <div id="news-panel" style="display:none" class="fa">
+          <div class="now-playing">
+            <div class="np-badge"><span class="np-live-dot"></span> AI News Briefing</div>
+            <div class="np-title" id="news-title">Generate Today's English News</div>
+            <div class="np-body" id="news-body" style="display:none"><span id="news-text"></span></div>
+            <!-- news player -->
+            <div class="player" id="news-player" style="display:none">
+              <div class="player-progress">
+                <div class="prog-bar-wrap" onclick="seekNewsAudio(event)"><div class="prog-bar-fill" id="news-prog-bar" style="width:0%"></div></div>
+                <div class="prog-times"><span id="news-cur-time">0:00</span><span id="news-tot-time">0:00</span></div>
+              </div>
+              <div class="player-controls">
+                <div class="ctrl-btn" onclick="seekNewsRel(-10)">⟨⟨</div>
+                <button class="ctrl-btn ctrl-play" id="news-play-btn" onclick="toggleNewsPlay()">▶</button>
+                <div class="ctrl-btn" onclick="seekNewsRel(10)">⟩⟩</div>
+              </div>
+            </div>
+            <button class="gen-btn" id="news-gen-btn" onclick="generateNews()">📰 Generate News Briefing</button>
+            <div id="news-quiz-area" style="display:none">
+              <div style="height:1px;background:var(--b1);margin:14px 0"></div>
+              <div id="news-quiz-container"></div>
+              <button class="gen-btn-secondary" style="margin-top:8px" onclick="generateNews()">🔄 New Briefing</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="rp">
+        <div class="rp-card">
+          <div class="sec-hd" style="margin-bottom:10px"><div class="sec-title">Today's Goal</div></div>
+          <div class="prog-ring">
+            <svg width="100" height="100" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="9"/>
+              <circle id="goal-ring" cx="60" cy="60" r="50" fill="none" stroke="url(#lg1)" stroke-width="9"
+                stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16"
+                style="transition:stroke-dashoffset 1.2s cubic-bezier(.22,1,.36,1)"/>
+              <defs><linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#06b6d4"/>
+              </linearGradient></defs>
+            </svg>
+            <div class="pr-center"><div class="pr-v" id="goal-pct">0%</div><div class="pr-l">Goal</div></div>
+          </div>
+          <div style="display:flex;justify-content:center;gap:16px;font-size:0.72rem;color:var(--t2)">
+            <div style="text-align:center"><div style="font-family:var(--fm);color:var(--c4)" id="goal-done">0</div><div>Done</div></div>
+            <div style="text-align:center"><div style="font-family:var(--fm);color:var(--t3)">3</div><div>Daily Goal</div></div>
+          </div>
+        </div>
+        <div class="rp-card">
+          <div class="sec-hd" style="margin-bottom:10px"><div class="sec-title">Weekly Streak</div></div>
+          <div class="streak-grid" id="streak-grid"></div>
+        </div>
+        <div class="rp-card">
+          <div class="sec-hd" style="margin-bottom:10px">
+            <div class="sec-title">Saved Vocabulary</div>
+            <span class="sec-more" onclick="clearVocab()">Clear</span>
+          </div>
+          <div class="vocab-list" id="vocab-list">
+            <div style="text-align:center;padding:12px;color:var(--t3);font-size:0.74rem">Click any underlined word in the story to save it here.</div>
+          </div>
+        </div>
+        <div class="rp-card">
+          <div class="sec-hd" style="margin-bottom:10px"><div class="sec-title">Listening Tips</div></div>
+          <div style="font-size:0.79rem;color:var(--t2);line-height:1.7;transition:opacity 0.3s" id="tip-text"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Word tooltip -->
+<div class="word-tooltip" id="word-tooltip">
+  <div class="wt-word" id="wt-word"></div>
+  <div class="wt-pos" id="wt-pos"></div>
+  <div class="wt-def" id="wt-def"></div>
+  <div class="wt-example" id="wt-example"></div>
+</div>
+
+<!-- Vocab modal -->
+<div class="modal" id="vocab-modal">
+  <div class="mbox">
+    <div class="mbox-title">📚 Your Vocabulary List</div>
+    <div id="vocab-modal-list" style="max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:16px"></div>
+    <button style="width:100%;padding:10px;border:none;border-radius:8px;background:var(--c1);color:#fff;font-family:var(--fh);font-weight:700;cursor:pointer;font-size:0.85rem" onclick="document.getElementById('vocab-modal').classList.remove('open')">Close</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="t-ico">✅</span><span id="t-msg">Done</span></div>
+
+<script>
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let currentUser = null;
+let currentStory = null;
+let currentTab = 'stories';
+let selectedAccent = 'indian';
+let selectedGenre = 'inspirational';
+let isPlaying = false;
+let playSpeed = 1.0;
+let storyDuration = 90;
+let storyElapsed = 0;
+let playerTimer = null;
+let utterance = null;
+let sessionHistory = [];
+let savedVocab = {};
+let listenStats = { listened:0, mins:0, vocabCount:0, quizScores:[] };
+let usedStoryIds = new Set();
+let shadowSentences = [];
+let shadowIdx = 0;
+let shadowInterval = null;
+let shadowUtterance = null;
+// News player state
+let newsText = '';
+let newsIsPlaying = false;
+let newsDuration = 60;
+let newsElapsed = 0;
+let newsTimer = null;
+let newsUtterance = null;
+
+const TIPS = [
+  '💡 Listen first without reading. Then use the transcript to fill gaps.',
+  '🔁 Replay sentences you missed at 0.75× speed for clarity.',
+  '📝 Click any underlined word to see its meaning instantly.',
+  '🎯 Try to predict what comes next — it builds active listening.',
+  '🗣 Shadow: listen → pause → repeat. Do it 3 times per sentence.',
+  '⏱ 15 minutes of focused listening daily beats 2 hours of passive audio.',
+  '🌍 Expose yourself to different accents each week.',
+  '✅ After listening, summarise what you heard in your own words.',
+];
+
+/* ══════════════════════════════════════════
+   FIX: VOICES — load voices before any TTS
+   SpeechSynthesis.getVoices() is async in Chrome
+══════════════════════════════════════════ */
+let cachedVoices = [];
+function loadVoices() {
+  cachedVoices = window.speechSynthesis.getVoices();
+  if (!cachedVoices.length) {
+    // Chrome fires onvoiceschanged async
+    window.speechSynthesis.onvoiceschanged = () => {
+      cachedVoices = window.speechSynthesis.getVoices();
+    };
+  }
+}
+loadVoices();
+
+function getBestVoice() {
+  // Try to get a natural English voice
+  const voices = cachedVoices.length ? cachedVoices : window.speechSynthesis.getVoices();
+  // Prefer Google voices (most natural)
+  let v = voices.find(v => v.lang.startsWith('en') && v.name.includes('Google') && !v.name.includes('India'));
+  if (!v) v = voices.find(v => v.lang === 'en-US');
+  if (!v) v = voices.find(v => v.lang.startsWith('en'));
+  return v || null;
+}
+
+function speakText(text, rate, onEnd, onStart) {
+  // Always cancel first to avoid overlap
+  window.speechSynthesis.cancel();
+  utterance = null;
+
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = rate * 0.88; // slightly slower than raw rate for clarity
+  u.pitch = 1.02;
+  u.volume = 1;
+  const voice = getBestVoice();
+  if (voice) u.voice = voice;
+  if (onStart) u.onstart = onStart;
+  u.onend = onEnd || function(){};
+  u.onerror = function(e) {
+    console.warn('TTS error:', e.error);
+    if (onEnd) onEnd();
+  };
+  utterance = u;
+  // Small delay prevents Chrome TTS race condition
+  setTimeout(() => window.speechSynthesis.speak(u), 80);
+  return u;
+}
+
+/* ═══════════════════════════════════════════
+   SAVE LISTENING PROGRESS TO SERVER (Real DB)
+═══════════════════════════════════════════ */
+async function saveListeningProgressToServer(story) {
+  try {
+    const totalSessions = sessionHistory.length;
+    const modulePct = Math.min(Math.round((totalSessions / 20) * 100), 100);
+
+    await fetch('/api/progress/update', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        module_key:          'listening',
+        practice_minutes:    Math.round((story.wordCount || 180) / 130),
+        accuracy:            listenStats.quizScores?.length
+                               ? Math.round(listenStats.quizScores.reduce((a,b)=>a+b,0) / listenStats.quizScores.length)
+                               : 80,
+        xp_earned:           50,
+        activity_title:      `🎧 Listening — ${story.title}`,
+        activity_meta:       `${story.genre} · ${story.difficulty} · 🌐 ${selectedAccent}`,
+        module_progress_pct: modulePct,
+      })
+    });
+  } catch(e) {
+    console.warn('Listening progress save failed:', e);
+  }
+}
+
+async function saveListeningQuizScore(isCorrect) {
+  try {
+    const sc = listenStats.quizScores || [];
+    const avg = sc.length
+      ? Math.round(sc.reduce((a,b)=>a+b,0) / sc.length)
+      : (isCorrect ? 100 : 0);
+
+    await fetch('/api/progress/update', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        module_key:          'listening',
+        practice_minutes:    0,
+        accuracy:            avg,
+        xp_earned:           isCorrect ? 30 : 5,
+        activity_title:      `🎧 Listening Quiz — ${currentStory?.title || 'Story'}`,
+        activity_meta:       `Quiz answer: ${isCorrect ? '✅ Correct' : '❌ Incorrect'} · Avg: ${avg}%`,
+        module_progress_pct: Math.min(Math.round((sessionHistory.length / 20) * 100), 100),
+      })
+    });
+  } catch(e) {
+    console.warn('Quiz score save failed:', e);
+  }
+}
+
+/* ══════════════════════════════════════════
+   AUTH
+══════════════════════════════════════════ */
+async function loadUser() {
+  try {
+    const r = await fetch('/api/auth/me', {credentials:'include'});
+    if (!r.ok) { window.location.href='/login'; return; }
+    const d = await r.json();
+    if (!d.success) { window.location.href='/login'; return; }
+    currentUser = d.user;
+    renderUser();
+    loadProgress();
+    initModule();
+  } catch(e) { window.location.href='/login'; }
+}
+function getInitials(n){ return n ? n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : '?'; }
+function renderUser(){
+  const i = getInitials(currentUser.name);
+  document.getElementById('sb-name').textContent = currentUser.name||'User';
+  document.getElementById('sb-ava').textContent = i;
+  document.getElementById('top-ava').textContent = i;
+}
+
+/* ══════════════════════════════════════════
+   PROGRESS
+══════════════════════════════════════════ */
+function getTodayStr(){
+  const d=new Date();
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+function loadProgress(){
+  const key='vm_listening_v2_'+currentUser.email;
+  const raw=localStorage.getItem(key);
+  if(raw){
+    try{
+      const p=JSON.parse(raw);
+      sessionHistory=p.sessions||[];
+      savedVocab=p.vocab||{};
+      listenStats=p.stats||{listened:0,mins:0,vocabCount:0,quizScores:[]};
+      usedStoryIds=new Set(p.usedIds||[]);
+      if(p.prefs){selectedAccent=p.prefs.accent||'indian';selectedGenre=p.prefs.genre||'inspirational';}
+    }catch(e){}
+  }
+  const xp=listenStats.listened*50;
+  const lvl=Math.floor(xp/500)+1;
+  document.getElementById('sb-level').textContent=`Level ${lvl} — Explorer`;
+  document.getElementById('sb-xp').textContent=`${xp} / ${lvl*500} XP`;
+  setTimeout(()=>{ document.getElementById('sb-xp-fill').style.width=Math.round((xp%500)/500*100)+'%'; },300);
+
+  const streakData=getStreakData();
+  document.getElementById('streak-badge').textContent=streakData.streak>0?`🔥 ${streakData.streak}-day streak`:'🔥 Start today!';
+  document.getElementById('sb-rank').textContent=`⚡ Explorer · Lvl ${lvl}`;
+  updateStatsDisplay();
+  renderPastSessions();
+  renderVocabList();
+  renderWeeklyStreak();
+  updateGoalRing();
+}
+function saveProgress(){
+  const key='vm_listening_v2_'+currentUser.email;
+  localStorage.setItem(key,JSON.stringify({sessions:sessionHistory.slice(0,50),vocab:savedVocab,stats:listenStats,usedIds:[...usedStoryIds].slice(-100),prefs:{accent:selectedAccent,genre:selectedGenre}}));
+}
+function getStreakData(){
+  const key='vm_streak_l_'+currentUser.email;
+  const raw=localStorage.getItem(key);
+  return raw?JSON.parse(raw):{streak:0,lastDay:null};
+}
+function markTodayActive(){
+  const key='vm_streak_l_'+currentUser.email;
+  const today=getTodayStr();
+  const data=getStreakData();
+  if(data.lastDay===today) return data.streak;
+  const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+  const yStr=`${yesterday.getFullYear()}-${yesterday.getMonth()}-${yesterday.getDate()}`;
+  const newStreak=data.lastDay===yStr?data.streak+1:1;
+  localStorage.setItem(key,JSON.stringify({streak:newStreak,lastDay:today}));
+  document.getElementById('streak-badge').textContent=`🔥 ${newStreak}-day streak`;
+  return newStreak;
+}
+function updateStatsDisplay(){
+  document.getElementById('stat-listened').textContent=listenStats.listened;
+  document.getElementById('stat-mins').textContent=listenStats.mins+'m';
+  document.getElementById('stat-vocab').textContent=Object.keys(savedVocab).length;
+  const sc=listenStats.quizScores||[];
+  document.getElementById('stat-score').textContent=sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length)+'%':'—';
+}
+function updateGoalRing(){
+  const todaySess=sessionHistory.filter(s=>s.date===getTodayStr()).length;
+  const pct=Math.min(100,Math.round(todaySess/3*100));
+  document.getElementById('goal-ring').style.strokeDashoffset=314.16-(pct/100)*314.16;
+  document.getElementById('goal-pct').textContent=pct+'%';
+  document.getElementById('goal-done').textContent=todaySess;
+}
+function renderWeeklyStreak(){
+  const grid=document.getElementById('streak-grid');
+  const today=new Date().getDay();
+  const days=['S','M','T','W','T','F','S'];
+  const thisWeek=[];
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);thisWeek.push(`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`);}
+  const active=new Set(sessionHistory.map(s=>s.date));
+  grid.innerHTML=thisWeek.map((ds,i)=>{
+    const lbl=days[(today-(6-i)+7)%7];
+    const isToday=i===6,isDone=active.has(ds);
+    const cls=isToday&&isDone?'sd today':isDone?'sd done':'sd empty';
+    return `<div class="${cls}">${lbl}</div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+function initModule(){
+  rotateTips();
+  // FIX: Use event delegation for accent/genre chips instead of per-element listeners
+  document.getElementById('accent-chips').addEventListener('click', e => {
+    const chip = e.target.closest('.ac');
+    if (!chip) return;
+    document.querySelectorAll('#accent-chips .ac').forEach(c => c.classList.remove('sel'));
+    chip.classList.add('sel');
+    selectedAccent = chip.dataset.a;
+    saveProgress();
+    showToast('🌐', 'Accent: ' + chip.textContent.trim());
+  });
+  document.getElementById('genre-chips').addEventListener('click', e => {
+    const chip = e.target.closest('.gc');
+    if (!chip) return;
+    document.querySelectorAll('#genre-chips .gc').forEach(c => c.classList.remove('sel'));
+    chip.classList.add('sel');
+    selectedGenre = chip.dataset.g;
+    saveProgress();
+    showToast('🎭', 'Genre: ' + chip.textContent.trim());
+  });
+
+  // Restore saved selections
+  document.querySelectorAll('#accent-chips .ac').forEach(c => {
+    c.classList.toggle('sel', c.dataset.a === selectedAccent);
+  });
+  document.querySelectorAll('#genre-chips .gc').forEach(c => {
+    c.classList.toggle('sel', c.dataset.g === selectedGenre);
+  });
+}
+
+/* ══════════════════════════════════════════
+   TAB
+══════════════════════════════════════════ */
+function setTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.filter-tab').forEach((t,i)=>t.classList.remove('active'));
+  const idx={stories:0,shadowing:1,news:2}[tab];
+  document.querySelectorAll('.filter-tab')[idx].classList.add('active');
+  document.getElementById('stories-panel').style.display=tab==='stories'?'block':'none';
+  document.getElementById('shadowing-panel').style.display=tab==='shadowing'?'block':'none';
+  document.getElementById('news-panel').style.display=tab==='news'?'block':'none';
+  if(tab==='shadowing') renderShadowingPanel();
+  if(tab!=='stories') stopPlay();
+}
+
+/* ══════════════════════════════════════════
+   STORY GENERATION
+══════════════════════════════════════════ */
+async function generateNewStory(){
+  const btn=document.getElementById('gen-btn');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Generating…';}
+  stopPlay();
+  document.getElementById('quiz-section').classList.remove('visible');
+  document.getElementById('gen-area').style.display='none';
+  document.getElementById('player-box').style.display='none';
+  document.getElementById('np-body').style.display='none';
+  document.getElementById('np-meta').style.display='none';
+  document.getElementById('np-title').textContent='Creating your story…';
+
+  const usedArr=[...usedStoryIds].slice(-20);
+  const sysP=`You are a creative English story writer for language learners. RESPOND ONLY with a raw JSON object — no markdown, no code fences, no explanation before or after. Start with { and end with }.
+Schema:
+{"id":"genre_keyword_N","title":"max 8 word title","genre":"genre name","difficulty":"easy|medium|hard","wordCount":180,"story":"Full story text 160-200 words in natural spoken English. Clear sentences, complete narrative arc.","vocabulary":[{"word":"word","pos":"noun/verb/adj/adv","definition":"simple definition","example":"example sentence"}],"quiz":[{"question":"question about the story","options":["A option","B option","C option","D option"],"answer":0,"explanation":"why correct"}],"summary":"one sentence summary"}
+Rules:
+- story: 160-200 words, natural conversational English
+- vocabulary: 5-7 interesting words FROM the story
+- quiz: exactly 3 questions, 4 options each, answer is 0-based index
+- Do NOT repeat these story IDs: ${usedArr.join(',')||'none'}
+- Make it engaging and culturally relevant for Indian English learners`;
+
+  const userP=`Genre: ${selectedGenre}. Accent target: ${selectedAccent} English. Level: B1-B2.
+Create a completely original ${selectedGenre} story. Make it interesting, relatable, educational. Include real-world vocabulary that learners will find useful.`;
+
+  try{
+    const r=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({system:sysP,messages:[{role:'user',content:userP}],max_tokens:1200})});
+    if(!r.ok) throw new Error('API '+r.status);
+    const d=await r.json();
+    let txt=(d.content?.[0]?.text||'').trim();
+    txt=txt.replace(/```json|```/g,'').trim();
+    const fi=txt.indexOf('{'),li=txt.lastIndexOf('}');
+    if(fi!==-1&&li!==-1) txt=txt.slice(fi,li+1);
+    const story=JSON.parse(txt);
+    if(story.id) usedStoryIds.add(story.id);
+    currentStory=story;
+    renderStory(story);
+    sessionHistory.unshift({id:story.id,title:story.title,genre:story.genre,difficulty:story.difficulty,date:getTodayStr(),score:null,accent:selectedAccent});
+    listenStats.listened++;
+    listenStats.mins+=Math.round((story.wordCount||180)/130);
+    markTodayActive();
+    saveProgress();
+    saveListeningProgressToServer(story); 
+    updateStatsDisplay();
+    renderPastSessions();
+    updateGoalRing();
+    renderWeeklyStreak();
+    if(btn){btn.disabled=false;btn.textContent='✨ Generate AI Story';}
+    showToast('✅','Story ready! Click ▶ to listen.');
+  }catch(e){
+    console.error('Story error:',e);
+    document.getElementById('np-title').textContent='Generation failed. Try again.';
+    document.getElementById('gen-area').style.display='block';
+    if(btn){btn.disabled=false;btn.textContent='✨ Generate AI Story';}
+    showToast('⚠️','Could not generate story. Check connection.');
+  }
+}
+
+function renderStory(story){
+  document.getElementById('np-title').textContent=story.title||'Untitled';
+  const diffMap={easy:'diff-easy',medium:'diff-medium',hard:'diff-hard'};
+  const diffEl=document.getElementById('np-diff-badge');
+  diffEl.className='diff-badge '+(diffMap[story.difficulty]||'diff-medium');
+  diffEl.textContent=story.difficulty||'medium';
+  document.getElementById('np-accent-label').textContent='🌐 '+selectedAccent;
+  document.getElementById('np-genre-label').textContent='🎭 '+(story.genre||selectedGenre);
+  document.getElementById('np-word-count').textContent=(story.wordCount||180)+' words';
+  document.getElementById('np-meta').style.display='flex';
+
+  // Render story text — vocab words are underlined and clickable
+  const textEl=document.getElementById('np-text-content');
+  const vocabSet=new Set((story.vocabulary||[]).map(v=>v.word.toLowerCase()));
+  const tokens=(story.story||'').split(/(\s+)/);
+  textEl.innerHTML=tokens.map(token=>{
+    const clean=token.replace(/[^a-zA-Z]/g,'').toLowerCase();
+    if(vocabSet.has(clean)){
+      return `<span class="np-word" onclick="showWordDef('${clean.replace(/'/g,"\\'")}',event)">${token}</span>`;
+    }
+    return token;
+  }).join('');
+
+  document.getElementById('np-body').style.display='block';
+  document.getElementById('player-box').style.display='block';
+  document.getElementById('gen-area').style.display='none';
+  setupPlayer(story.wordCount||180);
+  renderQuiz(story.quiz||[]);
+  document.getElementById('quiz-section').classList.add('visible');
+  // Update shadowing too if tab is open
+  if(currentTab==='shadowing') renderShadowingPanel();
+}
+
+/* ══════════════════════════════════════════
+   PLAYER — FIX: robust TTS with voice loading
+══════════════════════════════════════════ */
+function setupPlayer(wordCount){
+  storyDuration=Math.round(wordCount/(130*playSpeed));
+  storyElapsed=0;
+  document.getElementById('prog-bar').style.width='0%';
+  document.getElementById('tot-time').textContent=fmtTime(storyDuration);
+  document.getElementById('cur-time').textContent='0:00';
+  const pb=document.getElementById('play-btn');
+  pb.textContent='▶';pb.classList.remove('playing');
+  isPlaying=false;
+  if(playerTimer) clearInterval(playerTimer);
+}
+
+function togglePlay(){
+  if(!currentStory){showToast('⚠️','Generate a story first!');return;}
+  isPlaying?pausePlay():startPlay();
+}
+
+function startPlay(){
+  if(!currentStory) return;
+  isPlaying=true;
+  const pb=document.getElementById('play-btn');
+  pb.textContent='⏸';pb.classList.add('playing');
+  document.getElementById('tts-status').textContent='🔊 Speaking…';
+
+  // FIX: use our speakText helper which handles voice loading and delays
+  speakText(
+    currentStory.story||'',
+    playSpeed,
+    ()=>{ // onEnd
+      isPlaying=false;
+      pb.textContent='▶';pb.classList.remove('playing');
+      storyElapsed=storyDuration;
+      updatePlayerUI();
+      if(playerTimer) clearInterval(playerTimer);
+      document.getElementById('tts-status').textContent='✅ Finished — take the quiz below!';
+    },
+    ()=>{ // onStart
+      document.getElementById('tts-status').textContent='🔊 Now speaking…';
+    }
+  );
+
+  // Simulate progress bar
+  if(playerTimer) clearInterval(playerTimer);
+  playerTimer=setInterval(()=>{
+    if(storyElapsed>=storyDuration){clearInterval(playerTimer);return;}
+    storyElapsed++;
+    updatePlayerUI();
+  },1000);
+}
+
+function pausePlay(){
+  isPlaying=false;
+  window.speechSynthesis.cancel();
+  utterance=null;
+  if(playerTimer) clearInterval(playerTimer);
+  const pb=document.getElementById('play-btn');
+  if(pb){pb.textContent='▶';pb.classList.remove('playing');}
+  document.getElementById('tts-status').textContent='⏸ Paused — click ▶ to resume';
+}
+
+function stopPlay(){
+  isPlaying=false;
+  window.speechSynthesis.cancel();
+  utterance=null;
+  if(playerTimer) clearInterval(playerTimer);
+  storyElapsed=0;
+  const pb=document.getElementById('play-btn');
+  if(pb){pb.textContent='▶';pb.classList.remove('playing');}
+  const pbar=document.getElementById('prog-bar');
+  if(pbar) pbar.style.width='0%';
+}
+
+function updatePlayerUI(){
+  const pct=Math.min(100,(storyElapsed/Math.max(1,storyDuration))*100);
+  document.getElementById('prog-bar').style.width=pct+'%';
+  document.getElementById('cur-time').textContent=fmtTime(storyElapsed);
+  document.getElementById('tot-time').textContent=fmtTime(storyDuration);
+}
+
+function seekRel(s){
+  storyElapsed=Math.max(0,Math.min(storyDuration,storyElapsed+s));
+  updatePlayerUI();
+  if(isPlaying){pausePlay();startPlay();}
+}
+
+function seekAudio(e){
+  const w=document.getElementById('prog-bar-wrap');
+  const r=w.getBoundingClientRect();
+  const pct=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
+  storyElapsed=Math.round(pct*storyDuration);
+  updatePlayerUI();
+  if(isPlaying){pausePlay();startPlay();}
+}
+
+function setSpeed(s){
+  playSpeed=s;
+  document.querySelectorAll('.speed-btn').forEach(b=>b.classList.toggle('active',parseFloat(b.dataset.s)===s));
+  if(currentStory) storyDuration=Math.round((currentStory.wordCount||180)/(130*playSpeed));
+  updatePlayerUI();
+  if(isPlaying){pausePlay();startPlay();}
+}
+
+function fmtTime(s){const m=Math.floor(s/60),sec=s%60;return `${m}:${sec.toString().padStart(2,'0')}`;}
+
+/* ══════════════════════════════════════════
+   WORD DEFINITION
+══════════════════════════════════════════ */
+function showWordDef(word,e){
+  if(!currentStory) return;
+  const vocab=(currentStory.vocabulary||[]).find(v=>v.word.toLowerCase()===word.toLowerCase());
+  if(!vocab) return;
+  const tt=document.getElementById('word-tooltip');
+  document.getElementById('wt-word').textContent=vocab.word;
+  document.getElementById('wt-pos').textContent=vocab.pos||'word';
+  document.getElementById('wt-def').textContent=vocab.definition||'';
+  document.getElementById('wt-example').textContent=vocab.example?'"'+vocab.example+'"':'';
+  const x=Math.min(e.clientX+12,window.innerWidth-260);
+  const y=Math.min(e.clientY-10,window.innerHeight-140);
+  tt.style.left=x+'px';tt.style.top=y+'px';
+  tt.classList.add('show');
+  if(!savedVocab[word.toLowerCase()]){
+    savedVocab[word.toLowerCase()]={word:vocab.word,pos:vocab.pos,definition:vocab.definition,example:vocab.example,savedAt:new Date().toLocaleDateString('en-IN')};
+    listenStats.vocabCount=Object.keys(savedVocab).length;
+    saveProgress();renderVocabList();updateStatsDisplay();
+    showToast('📚',`"${vocab.word}" saved!`);
+  }
+  document.querySelectorAll('.np-word').forEach(w=>w.classList.remove('highlight'));
+  if(e.target) e.target.classList.add('highlight');
+  setTimeout(()=>document.addEventListener('click',()=>tt.classList.remove('show'),{once:true}),100);
+}
+
+/* ══════════════════════════════════════════
+   QUIZ
+══════════════════════════════════════════ */
+function renderQuiz(quiz){
+  const c=document.getElementById('quiz-container');
+  if(!quiz||!quiz.length){c.innerHTML='<div style="color:var(--t3);font-size:0.78rem">No quiz available.</div>';return;}
+  c.innerHTML=quiz.map((q,qi)=>`
+    <div style="margin-bottom:16px">
+      <div class="quiz-q">${qi+1}. ${q.question}</div>
+      <div class="quiz-opts">
+        ${(q.options||[]).map((opt,oi)=>`<button class="quiz-opt" onclick="answerQuiz(${qi},${oi},${q.answer},'${escStr(q.explanation||'')}',this)">${opt}</button>`).join('')}
+      </div>
+      <div class="quiz-result" id="quiz-res-${qi}">${q.explanation||''}</div>
+    </div>`).join('');
+}
+
+function escStr(s){return s.replace(/'/g,"&#39;").replace(/"/g,'&quot;').replace(/\n/g,' ');}
+
+function answerQuiz(qi,chosen,correct,explanation,btn){
+  const opts=btn.closest('.quiz-opts')?.querySelectorAll('.quiz-opt')||[];
+  opts.forEach((b,i)=>{
+    b.disabled=true;
+    if(i===correct) b.classList.add('correct');
+    else if(i===chosen) b.classList.add('wrong');
+    
+  });
+  const res=document.getElementById('quiz-res-'+qi);
+  if(res) res.classList.add('visible');
+  const isCorrect=chosen===correct;
+  showToast(isCorrect?'✅':'💡',isCorrect?'Correct! Great listening!':'Not quite — read the explanation below.');
+  listenStats.quizScores=listenStats.quizScores||[];
+  listenStats.quizScores.push(isCorrect?100:0);
+  if(sessionHistory[0]) sessionHistory[0].score=isCorrect?100:0;
+  saveProgress();updateStatsDisplay();renderPastSessions();
+  saveListeningQuizScore(isCorrect); 
+}
+
+/* ══════════════════════════════════════════
+   SHADOWING — FIX: sentence-by-sentence TTS
+══════════════════════════════════════════ */
+function renderShadowingPanel(){
+  const el=document.getElementById('shadow-sentences');
+  if(!currentStory){
+    el.innerHTML='<div style="color:var(--t3);font-size:0.78rem;padding:12px;text-align:center">Generate a story in the Stories tab first.</div>';
+    return;
+  }
+  // Split story into sentences
+  shadowSentences=currentStory.story.match(/[^.!?]+[.!?]+/g)||[currentStory.story];
+  shadowSentences=shadowSentences.map(s=>s.trim()).filter(s=>s.length>4);
+  shadowIdx=0;
+  el.innerHTML=shadowSentences.map((s,i)=>`
+    <div class="shadow-sentence ${i===0?'active':''}" id="shadow-sent-${i}">${s}</div>
+  `).join('');
+}
+
+function startShadowing(){
+  if(!currentStory){showToast('⚠️','Generate a story first in the Stories tab!');return;}
+  if(!shadowSentences.length) renderShadowingPanel();
+  stopShadowing();
+  speakShadowSentence(shadowIdx);
+}
+
+function speakShadowSentence(idx){
+  if(idx>=shadowSentences.length){
+    showToast('✅','Shadowing complete! Great work!');
+    return;
+  }
+  // Highlight current sentence
+  document.querySelectorAll('.shadow-sentence').forEach((el,i)=>{
+    el.classList.remove('active');
+    if(i<idx) el.classList.add('done');
+    if(i===idx){el.classList.add('active');el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  });
+
+  const sentence=shadowSentences[idx];
+  speakText(
+    sentence,
+    playSpeed,
+    ()=>{ // after AI reads, pause for user to repeat
+      shadowIdx=idx+1;
+      // Wait 2.5 seconds for user to repeat, then move to next
+      shadowInterval=setTimeout(()=>{
+        speakShadowSentence(shadowIdx);
+      }, 2500);
+    }
+  );
+}
+
+function stopShadowing(){
+  window.speechSynthesis.cancel();
+  if(shadowInterval) clearTimeout(shadowInterval);
+  shadowInterval=null;
+}
+
+function restartShadowing(){
+  stopShadowing();
+  shadowIdx=0;
+  renderShadowingPanel();
+  showToast('↩','Restarted from beginning');
+}
+
+/* ══════════════════════════════════════════
+   NEWS — with TTS player
+══════════════════════════════════════════ */
+async function generateNews(){
+  const btn=document.getElementById('news-gen-btn');
+  btn.disabled=true;btn.textContent='⏳ Generating…';
+  document.getElementById('news-body').style.display='none';
+  document.getElementById('news-quiz-area').style.display='none';
+  document.getElementById('news-player').style.display='none';
+  document.getElementById('news-title').textContent='Creating briefing…';
+
+  const sysP=`You are a news presenter. ONLY output raw JSON (no markdown, no fences):
+{"headline":"max 10 word headline","body":"120-150 word news briefing in clear journalistic English. Past tense. Make it FICTIONAL to avoid copyright. Topic: global events, science, environment, business, or culture.","quiz":[{"question":"question","options":["A","B","C","D"],"answer":0,"explanation":"why"}]}
+Write exactly 2 quiz questions.`;
+
+  try{
+    const r=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({system:sysP,messages:[{role:'user',content:'Create a fresh unique news briefing — different topic each time.'}],max_tokens:700})});
+    const d=await r.json();
+    let txt=(d.content?.[0]?.text||'').trim().replace(/```json|```/g,'').trim();
+    const fi=txt.indexOf('{'),li=txt.lastIndexOf('}');
+    if(fi!==-1&&li!==-1) txt=txt.slice(fi,li+1);
+    const news=JSON.parse(txt);
+    newsText=news.body||'';
+    document.getElementById('news-title').textContent=news.headline||'Today\'s Briefing';
+    document.getElementById('news-text').textContent=newsText;
+    document.getElementById('news-body').style.display='block';
+
+    // Setup news player
+    newsDuration=Math.round((newsText.split(' ').length)/130*60);
+    newsElapsed=0;
+    document.getElementById('news-player').style.display='block';
+    document.getElementById('news-prog-bar').style.width='0%';
+    document.getElementById('news-cur-time').textContent='0:00';
+    document.getElementById('news-tot-time').textContent=fmtTime(newsDuration);
+    const npb=document.getElementById('news-play-btn');
+    if(npb){npb.textContent='▶';npb.classList.remove('playing');}
+    newsIsPlaying=false;
+
+    if(news.quiz?.length){
+      const c=document.getElementById('news-quiz-container');
+      c.innerHTML=news.quiz.map((q,qi)=>`
+        <div style="margin-bottom:14px">
+          <div class="quiz-q">${qi+1}. ${q.question}</div>
+          <div class="quiz-opts">${(q.options||[]).map((opt,oi)=>`<button class="quiz-opt" onclick="answerQuiz(${qi},${oi},${q.answer},'${escStr(q.explanation||'')}',this)">${opt}</button>`).join('')}</div>
+          <div class="quiz-result" id="quiz-res-${qi}">${q.explanation||''}</div>
+        </div>`).join('');
+      document.getElementById('news-quiz-area').style.display='block';
+    }
+    listenStats.listened++;
+    markTodayActive();saveProgress();updateStatsDisplay();
+    btn.disabled=false;btn.textContent='🔄 New Briefing';
+    showToast('📰','News briefing ready! Click ▶ to listen.');
+  }catch(e){
+    console.error('News error:',e);
+    document.getElementById('news-title').textContent='Could not generate. Try again.';
+    btn.disabled=false;btn.textContent='📰 Generate News Briefing';
+    showToast('⚠️','Generation failed. Check connection.');
+  }
+}
+
+function toggleNewsPlay(){
+  newsIsPlaying?pauseNewsPlay():startNewsPlay();
+}
+function startNewsPlay(){
+  if(!newsText){showToast('⚠️','Generate a briefing first!');return;}
+  newsIsPlaying=true;
+  const pb=document.getElementById('news-play-btn');
+  pb.textContent='⏸';pb.classList.add('playing');
+  speakText(newsText,1.0,()=>{
+    newsIsPlaying=false;pb.textContent='▶';pb.classList.remove('playing');
+    newsElapsed=newsDuration;updateNewsUI();
+    if(newsTimer) clearInterval(newsTimer);
+  });
+  if(newsTimer) clearInterval(newsTimer);
+  newsTimer=setInterval(()=>{
+    if(newsElapsed>=newsDuration){clearInterval(newsTimer);return;}
+    newsElapsed++;updateNewsUI();
+  },1000);
+}
+function pauseNewsPlay(){
+  newsIsPlaying=false;
+  window.speechSynthesis.cancel();
+  if(newsTimer) clearInterval(newsTimer);
+  const pb=document.getElementById('news-play-btn');
+  pb.textContent='▶';pb.classList.remove('playing');
+}
+function updateNewsUI(){
+  const pct=Math.min(100,(newsElapsed/Math.max(1,newsDuration))*100);
+  document.getElementById('news-prog-bar').style.width=pct+'%';
+  document.getElementById('news-cur-time').textContent=fmtTime(newsElapsed);
+  document.getElementById('news-tot-time').textContent=fmtTime(newsDuration);
+}
+function seekNewsRel(s){newsElapsed=Math.max(0,Math.min(newsDuration,newsElapsed+s));updateNewsUI();if(newsIsPlaying){pauseNewsPlay();startNewsPlay();}}
+function seekNewsAudio(e){const w=document.getElementById('news-prog-bar').parentElement;const r=w.getBoundingClientRect();const pct=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));newsElapsed=Math.round(pct*newsDuration);updateNewsUI();if(newsIsPlaying){pauseNewsPlay();startNewsPlay();}}
+
+/* ══════════════════════════════════════════
+   PAST SESSIONS
+══════════════════════════════════════════ */
+function renderPastSessions(){
+  const el=document.getElementById('past-list');
+  if(!sessionHistory.length){
+    el.innerHTML='<div style="text-align:center;padding:20px;color:var(--t3);font-size:0.77rem">No sessions yet — generate your first story above!</div>';
+    return;
+  }
+  const gIco={inspirational:'✨',mystery:'🔍',adventure:'⛰️',science:'🔬',culture:'🌍',business:'💼',news:'📰'};
+  el.innerHTML=sessionHistory.slice(0,10).map(s=>`
+    <div class="content-card" onclick="showToast('✅','Already completed: ${escStr(s.title)}')">
+      <div class="cc-ico" style="background:rgba(245,158,11,0.08)">${gIco[s.genre]||'📖'}</div>
+      <div class="cc-body">
+        <div class="cc-title">${s.title}</div>
+        <div class="cc-meta"><span>${s.date}</span><span>•</span><span>${s.difficulty||'medium'}</span><span>•</span><span>🌐 ${s.accent||'indian'}</span></div>
+      </div>
+      <div class="cc-right">
+        ${s.score!==null&&s.score!==undefined?`<div style="font-family:var(--fm);font-size:0.72rem;color:var(--c3)">${s.score}%</div>`:''}
+        <div class="cc-done">✓ Done</div>
+      </div>
+    </div>`).join('');
+}
+function clearHistory(){sessionHistory=[];usedStoryIds.clear();saveProgress();renderPastSessions();showToast('🗑️','History cleared');}
+
+/* ══════════════════════════════════════════
+   VOCABULARY
+══════════════════════════════════════════ */
+function renderVocabList(){
+  const el=document.getElementById('vocab-list');
+  const entries=Object.values(savedVocab);
+  if(!entries.length){el.innerHTML='<div style="text-align:center;padding:12px;color:var(--t3);font-size:0.74rem">Click any underlined word in the story to save it here.</div>';return;}
+  el.innerHTML=entries.slice(-12).reverse().map(v=>`
+    <div class="vi" onclick="showToast('📚','${escStr(v.word)}: ${escStr((v.definition||'').slice(0,60))}')">
+      <span class="vi-word">${v.word}</span>
+      <span class="vi-pos">${v.pos||''}</span>
+      <span class="vi-saved">★</span>
+    </div>`).join('');
+}
+function clearVocab(){savedVocab={};saveProgress();renderVocabList();updateStatsDisplay();showToast('🗑️','Vocabulary cleared');}
+function showVocabModal(){
+  const entries=Object.values(savedVocab);
+  const c=document.getElementById('vocab-modal-list');
+  c.innerHTML=!entries.length?'<div style="color:var(--t3);text-align:center;padding:16px">No words saved yet.</div>':
+    entries.map(v=>`<div style="padding:10px 12px;background:rgba(255,255,255,0.02);border:1px solid var(--b1);border-radius:8px">
+      <div style="font-weight:600;color:var(--c4);font-size:0.85rem">${v.word} <span style="font-size:0.65rem;color:var(--t3);font-style:italic">${v.pos||''}</span></div>
+      <div style="font-size:0.77rem;color:var(--t2);margin-top:2px">${v.definition||''}</div>
+      ${v.example?`<div style="font-size:0.72rem;color:var(--t3);font-style:italic;margin-top:2px">"${v.example}"</div>`:''}
+    </div>`).join('');
+  document.getElementById('vocab-modal').classList.add('open');
+}
+
+/* ══════════════════════════════════════════
+   TIPS
+══════════════════════════════════════════ */
+let tipIdx=0;
+function rotateTips(){
+  const el=document.getElementById('tip-text');
+  if(!el) return;
+  el.style.opacity='0';
+  setTimeout(()=>{el.textContent=TIPS[tipIdx%TIPS.length];el.style.opacity='1';tipIdx++;},300);
+  setTimeout(rotateTips,7000);
+}
+
+/* ══════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════ */
+function showToast(ico,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('t-ico').textContent=ico;
+  document.getElementById('t-msg').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+async function handleLogout(){
+  showToast('👋','Signing out…');
+  await fetch('/api/auth/logout',{method:'POST',credentials:'include'});
+  window.location.href='/login';
+}
+
+/* BOOT */
+loadUser();
+document.addEventListener('scroll',()=>document.getElementById('word-tooltip').classList.remove('show'));
+document.getElementById('vocab-modal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+</script>
+</body>
+</html>

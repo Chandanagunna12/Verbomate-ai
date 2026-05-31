@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Prep — VerboMate</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+:root{
+  --bg:#06060a;
+  --s1:#0e0e14;
+  --s2:#14141c;
+  --s3:#1c1c28;
+  --b1:rgba(255,255,255,0.06);
+  --b2:rgba(255,255,255,0.11);
+  --b3:rgba(255,255,255,0.18);
+  --gold:#f59e0b;
+  --gold-d:rgba(245,158,11,0.12);
+  --rose:#f43f5e;
+  --rose-d:rgba(244,63,94,0.1);
+  --cyan:#22d3ee;
+  --cyan-d:rgba(34,211,238,0.1);
+  --violet:#8b5cf6;
+  --violet-d:rgba(139,92,246,0.1);
+  --green:#10b981;
+  --green-d:rgba(16,185,129,0.1);
+  --t1:#f1f1f3;
+  --t2:#9494a0;
+  --t3:#4a4a58;
+  --sw:240px;
+  --th:56px;
+  --r:10px;
+  --rl:16px;
+  --f:'DM Sans',sans-serif;
+  --fh:'Syne',sans-serif;
+  --fm:'JetBrains Mono',monospace;
+}
+body{font-family:var(--f);background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#222230;border-radius:3px}
+
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sw);background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;z-index:100}
+.slogo{display:flex;align-items:center;gap:10px;padding:20px 18px 18px;border-bottom:1px solid var(--b1)}
+.slm{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--rose));border-radius:9px;display:grid;place-items:center;font-size:16px;flex-shrink:0}
+.sln{font-family:var(--fh);font-weight:800;font-size:0.95rem;letter-spacing:-0.3px}
+.sln span{color:var(--gold)}
+.snav{padding:10px 10px 0;flex:1;overflow-y:auto}
+.snl{font-size:0.6rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--t3);padding:8px 8px 4px}
+.sni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:0.82rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all 0.15s;margin-bottom:1px;text-decoration:none}
+.sni:hover{background:rgba(255,255,255,0.04);color:var(--t1)}
+.sni.active{background:rgba(245,158,11,0.1);color:var(--gold);font-weight:600}
+.sni-ico{width:18px;text-align:center;font-size:14px;flex-shrink:0}
+.sni-pill{margin-left:auto;font-size:0.58rem;font-weight:700;background:rgba(244,63,94,0.15);color:var(--rose);padding:2px 6px;border-radius:99px}
+.suser{padding:12px 14px;border-top:1px solid var(--b1)}
+.surow{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background 0.15s}
+.surow:hover{background:rgba(255,255,255,0.04)}
+.suava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--rose));display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0;color:#fff}
+.suname{font-size:0.82rem;font-weight:600}
+.sumeta{font-size:0.67rem;color:var(--green)}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sw);min-height:100vh;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:90;height:var(--th);background:rgba(6,6,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--b1);padding:0 24px;display:flex;align-items:center;gap:12px}
+.tb-title{font-family:var(--fh);font-size:0.9rem;font-weight:700}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tb-btn{display:flex;align-items:center;gap:5px;padding:6px 12px;background:var(--s2);border:1px solid var(--b1);border-radius:8px;font-size:0.74rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all 0.15s;text-decoration:none;font-family:var(--f)}
+.tb-btn:hover{border-color:var(--b2);color:var(--t1)}
+.tb-ava{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--rose));display:grid;place-items:center;font-size:12px;font-weight:700;cursor:pointer;color:#fff}
+.content{padding:24px;flex:1}
+
+/* ── PAGE HEADER ── */
+.ph{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px;animation:fadeUp 0.4s ease both}
+.ph-left{display:flex;align-items:center;gap:14px}
+.ph-ico{width:48px;height:48px;background:var(--gold-d);border:1px solid rgba(245,158,11,0.2);border-radius:14px;display:grid;place-items:center;font-size:22px;flex-shrink:0}
+.ph-t{font-family:var(--fh);font-size:1.6rem;font-weight:800;letter-spacing:-0.5px;line-height:1}
+.ph-t span{color:var(--gold)}
+.ph-s{font-size:0.78rem;color:var(--t2);margin-top:3px}
+
+/* ── TABS ── */
+.main-tabs{display:flex;gap:4px;background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:4px;margin-bottom:24px;animation:fadeUp 0.4s 0.05s ease both;overflow-x:auto}
+.mtab{padding:8px 16px;border-radius:8px;font-size:0.78rem;font-weight:600;cursor:pointer;color:var(--t2);white-space:nowrap;transition:all 0.15s;font-family:var(--f)}
+.mtab.active{background:rgba(245,158,11,0.15);color:var(--gold)}
+.mtab:hover:not(.active){color:var(--t1)}
+
+/* ── PANELS ── */
+.panel{display:none}
+.panel.active{display:block;animation:fadeUp 0.35s ease both}
+
+/* ── CARDS ── */
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:20px}
+.card-hd{display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:0.86rem;font-weight:700}
+.card-hd::before{content:'';width:3px;height:14px;background:var(--gold);border-radius:2px;flex-shrink:0}
+.sec-label{font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
+
+/* ── QUESTION TYPE GRID ── */
+.q-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.q-card{background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:16px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
+.q-card:hover{transform:translateY(-2px);border-color:var(--b2)}
+/* ✅ FIX: Use !important on sel state to override hover conflicts */
+.q-card.sel{border-color:var(--gold) !important;background:var(--gold-d) !important;transform:translateY(-2px)}
+.q-card-ico{font-size:1.5rem;margin-bottom:8px}
+.q-card-t{font-weight:700;font-size:0.88rem;margin-bottom:4px}
+.q-card-s{font-size:0.72rem;color:var(--t2)}
+
+/* ── DIFFICULTY CHIPS ── */
+.diff-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.dchip{padding:6px 14px;border-radius:99px;font-size:0.74rem;font-weight:600;cursor:pointer;border:1px solid var(--b1);color:var(--t2);transition:all 0.15s;font-family:var(--f)}
+.dchip:hover{border-color:var(--b2);color:var(--t1)}
+.dchip.easy.sel{background:var(--green-d);border-color:var(--green);color:var(--green)}
+.dchip.med.sel{background:var(--gold-d);border-color:var(--gold);color:var(--gold)}
+.dchip.hard.sel{background:var(--rose-d);border-color:var(--rose);color:var(--rose)}
+
+/* ── START BTN ── */
+.start-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,var(--gold),#d97706);border:none;border-radius:10px;font-family:var(--fh);font-size:0.92rem;font-weight:700;color:#000;cursor:pointer;transition:all 0.2s;width:100%}
+.start-btn:hover{opacity:0.9;transform:translateY(-1px)}
+.start-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+
+/* ── INTERVIEW SESSION ── */
+.session-box{display:none}
+.session-box.active{display:block}
+.q-display{background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:20px;margin-bottom:16px}
+.q-meta{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.q-badge{padding:3px 10px;border-radius:99px;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+.q-badge.hr{background:var(--cyan-d);color:var(--cyan);border:1px solid rgba(34,211,238,0.2)}
+.q-badge.tech{background:var(--violet-d);color:var(--violet);border:1px solid rgba(139,92,246,0.2)}
+.q-badge.gd{background:var(--green-d);color:var(--green);border:1px solid rgba(16,185,129,0.2)}
+.q-badge.coding{background:var(--gold-d);color:var(--gold);border:1px solid rgba(245,158,11,0.2)}
+.q-num{font-size:0.72rem;color:var(--t3);font-family:var(--fm)}
+.q-text{font-size:1rem;font-weight:600;line-height:1.6;font-family:var(--fh)}
+.q-hint{font-size:0.78rem;color:var(--t2);margin-top:8px;padding:8px 12px;background:rgba(255,255,255,0.02);border-left:2px solid var(--gold);border-radius:0 6px 6px 0}
+
+/* Answer area */
+.ans-wrap{margin-bottom:16px;position:relative}
+.ans-box{width:100%;min-height:140px;background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:14px;font-family:var(--f);font-size:0.86rem;color:var(--t1);resize:vertical;outline:none;transition:border-color 0.15s;line-height:1.7}
+.ans-box:focus{border-color:var(--gold)}
+.ans-box::placeholder{color:var(--t3)}
+
+/* ── SPEECH CONTROLS ── */
+.speech-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:10px;margin-bottom:12px}
+.mic-btn{width:36px;height:36px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all 0.2s;flex-shrink:0}
+.mic-btn.idle{background:var(--violet-d);color:var(--violet)}
+.mic-btn.listening{background:var(--rose);color:#fff;animation:pulse-mic 1s infinite}
+.mic-btn:disabled{opacity:0.4;cursor:not-allowed}
+@keyframes pulse-mic{0%,100%{box-shadow:0 0 0 0 rgba(244,63,94,0.4)}50%{box-shadow:0 0 0 8px rgba(244,63,94,0)}}
+.speech-status{font-size:0.75rem;color:var(--t2);flex:1}
+.speech-status.active{color:var(--rose)}
+.tts-btn{padding:6px 12px;background:var(--cyan-d);border:1px solid rgba(34,211,238,0.2);border-radius:7px;font-size:0.72rem;font-weight:600;color:var(--cyan);cursor:pointer;transition:all 0.15s;font-family:var(--f)}
+.tts-btn:hover{background:rgba(34,211,238,0.15)}
+.tts-btn.speaking{background:rgba(34,211,238,0.2);border-color:var(--cyan);animation:pulse-tts 1.5s infinite}
+@keyframes pulse-tts{0%,100%{opacity:1}50%{opacity:0.6}}
+.voice-wave{display:flex;align-items:center;gap:2px;height:20px}
+.wave-bar{width:3px;background:var(--rose);border-radius:2px;animation:wave 0.8s infinite ease-in-out}
+.wave-bar:nth-child(1){animation-delay:0s;height:6px}
+.wave-bar:nth-child(2){animation-delay:0.1s;height:14px}
+.wave-bar:nth-child(3){animation-delay:0.2s;height:10px}
+.wave-bar:nth-child(4){animation-delay:0.3s;height:18px}
+.wave-bar:nth-child(5){animation-delay:0.4s;height:8px}
+@keyframes wave{0%,100%{transform:scaleY(0.5)}50%{transform:scaleY(1.2)}}
+.voice-wave.hidden{display:none}
+
+.action-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.act-btn{flex:1;min-width:120px;padding:10px 16px;border-radius:9px;font-family:var(--f);font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:6px;border:none}
+.act-btn.primary{background:linear-gradient(135deg,var(--gold),#d97706);color:#000}
+.act-btn.secondary{background:var(--s2);border:1px solid var(--b1);color:var(--t2)}
+.act-btn.secondary:hover{border-color:var(--b2);color:var(--t1)}
+.act-btn.danger{background:var(--rose-d);border:1px solid rgba(244,63,94,0.2);color:var(--rose)}
+.act-btn:disabled{opacity:0.4;cursor:not-allowed}
+
+/* AI Feedback */
+.aifb{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:18px;display:none}
+.aifb.show{display:block;animation:fadeUp 0.3s ease both}
+.aifb-hd{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:0.84rem;font-weight:700;color:var(--gold)}
+.aifb-score{display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap}
+.score-pill{text-align:center;padding:8px 14px;background:var(--s2);border:1px solid var(--b1);border-radius:9px;min-width:80px}
+.score-v{font-family:var(--fm);font-size:1.2rem;font-weight:600;line-height:1}
+.score-l{font-size:0.6rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.aifb-text{font-size:0.83rem;line-height:1.75;color:var(--t1)}
+.aifb-text.wait{color:var(--t3);font-style:italic}
+.typing-cur{display:inline-block;width:2px;height:13px;background:var(--gold);margin-left:2px;animation:blink 0.7s infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* AI Speaking indicator */
+.ai-speaking-badge{display:none;align-items:center;gap:6px;padding:5px 10px;background:var(--cyan-d);border:1px solid rgba(34,211,238,0.2);border-radius:99px;font-size:0.68rem;color:var(--cyan);font-weight:600;width:fit-content;margin-bottom:8px}
+.ai-speaking-badge.show{display:flex}
+
+/* Progress bar */
+.prog-bar-wrap{height:4px;background:rgba(255,255,255,0.05);border-radius:99px;overflow:hidden;margin-bottom:20px}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--rose));border-radius:99px;transition:width 0.5s}
+
+/* Session complete */
+.session-complete{display:none;text-align:center;padding:40px 20px}
+.session-complete.show{display:block;animation:fadeUp 0.4s ease both}
+.sc-ico{font-size:3.5rem;margin-bottom:16px}
+.sc-title{font-family:var(--fh);font-size:1.6rem;font-weight:800;margin-bottom:8px}
+.sc-sub{font-size:0.85rem;color:var(--t2);margin-bottom:24px}
+.sc-scores{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+.scs-item{text-align:center;padding:14px 20px;background:var(--s2);border:1px solid var(--b1);border-radius:12px;min-width:90px}
+.scs-v{font-family:var(--fm);font-size:1.5rem;font-weight:600}
+.scs-l{font-size:0.65rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.5px;margin-top:3px}
+
+/* ── CODING ARENA ── */
+.coding-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;min-height:600px}
+@media(max-width:1100px){.coding-layout{grid-template-columns:1fr}}
+.prob-panel{display:flex;flex-direction:column;gap:14px}
+.prob-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:20px}
+.prob-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.prob-title{font-family:var(--fh);font-size:1.1rem;font-weight:700;letter-spacing:-0.2px}
+.prob-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.ptag{padding:2px 8px;border-radius:99px;font-size:0.62rem;font-weight:700;border:1px solid}
+.ptag.easy{background:var(--green-d);border-color:var(--green);color:var(--green)}
+.ptag.medium{background:var(--gold-d);border-color:var(--gold);color:var(--gold)}
+.ptag.hard{background:var(--rose-d);border-color:var(--rose);color:var(--rose)}
+.ptag.dsa{background:var(--cyan-d);border-color:var(--cyan);color:var(--cyan)}
+.prob-desc{font-size:0.83rem;line-height:1.8;color:var(--t2);margin-bottom:14px}
+.prob-example{background:rgba(255,255,255,0.02);border:1px solid var(--b1);border-radius:8px;padding:12px;margin-bottom:10px;font-family:var(--fm);font-size:0.76rem;color:var(--t2)}
+.prob-example strong{color:var(--t1);display:block;margin-bottom:4px;font-family:var(--f);font-size:0.74rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase}
+.hint-steps{display:flex;flex-direction:column;gap:8px}
+.hint-step{padding:10px 14px;background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.12);border-radius:8px;font-size:0.79rem;color:var(--t1);line-height:1.65;display:none}
+.hint-step.show{display:block;animation:fadeUp 0.3s ease both}
+.hint-step-n{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:4px}
+.code-panel{display:flex;flex-direction:column;gap:12px}
+.code-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.lang-sel{padding:6px 12px;background:var(--s2);border:1px solid var(--b1);border-radius:8px;font-family:var(--fm);font-size:0.76rem;color:var(--t1);outline:none;cursor:pointer}
+.lang-sel option{background:var(--s2)}
+.code-editor{width:100%;min-height:320px;background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:16px;font-family:var(--fm);font-size:0.82rem;color:var(--t1);resize:vertical;outline:none;line-height:1.7;transition:border-color 0.15s;tab-size:4}
+.code-editor:focus{border-color:var(--gold)}
+.run-row{display:flex;gap:8px;flex-wrap:wrap}
+.run-btn{flex:1;padding:10px 18px;background:linear-gradient(135deg,var(--green),#059669);border:none;border-radius:9px;font-family:var(--fh);font-size:0.82rem;font-weight:700;color:#fff;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.run-btn:hover{opacity:0.9}
+.run-btn:disabled{opacity:0.4;cursor:not-allowed}
+.hint-btn{padding:10px 14px;background:var(--gold-d);border:1px solid rgba(245,158,11,0.2);border-radius:9px;font-family:var(--f);font-size:0.79rem;font-weight:600;color:var(--gold);cursor:pointer;transition:all 0.15s}
+.hint-btn:hover{background:rgba(245,158,11,0.15)}
+.sol-btn{padding:10px 14px;background:var(--violet-d);border:1px solid rgba(139,92,246,0.2);border-radius:9px;font-family:var(--f);font-size:0.79rem;font-weight:600;color:var(--violet);cursor:pointer;transition:all 0.15s}
+.sol-btn:hover{background:rgba(139,92,246,0.15)}
+.output-box{background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:14px;font-family:var(--fm);font-size:0.8rem;min-height:80px;max-height:200px;overflow-y:auto;white-space:pre-wrap;line-height:1.65;color:var(--t1)}
+.output-box.pass{border-color:rgba(16,185,129,0.3);color:var(--green)}
+.output-box.fail{border-color:rgba(244,63,94,0.3);color:var(--rose)}
+
+/* ── STATS PANEL ── */
+.stats-grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.stat2{background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:16px;text-align:center}
+.stat2-v{font-family:var(--fm);font-size:1.6rem;font-weight:600;line-height:1;margin-bottom:4px}
+.stat2-l{font-size:0.68rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.5px}
+
+/* ── HISTORY ── */
+.hist-list{display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto}
+.hist-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.02);border:1px solid var(--b1);border-radius:9px;font-size:0.77rem}
+.hist-ico{font-size:1rem;flex-shrink:0}
+.hist-t{flex:1;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-sc{font-family:var(--fm);color:var(--green);font-size:0.72rem}
+.hist-d{color:var(--t3);font-size:0.65rem}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:12px 18px;font-size:0.8rem;z-index:999;display:flex;align-items:center;gap:8px;box-shadow:0 12px 40px rgba(0,0,0,0.5);transform:translateY(70px);opacity:0;transition:all 0.35s cubic-bezier(.22,1,.36,1)}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ── GD PANEL ── */
+.gd-topic-box{background:var(--s2);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:16px;margin-bottom:16px}
+.gd-topic-label{font-size:0.62rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--green);margin-bottom:6px}
+.gd-topic-text{font-family:var(--fh);font-size:1.05rem;font-weight:700;color:var(--t1)}
+.gd-participants{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.gd-part{padding:4px 12px;background:var(--s2);border:1px solid var(--b1);border-radius:99px;font-size:0.72rem;color:var(--t2)}
+.gd-part.you{background:var(--green-d);border-color:var(--green);color:var(--green)}
+
+/* GD message bubbles */
+.gd-msg{padding:10px 13px;border-radius:9px;background:var(--s2);border:1px solid var(--b1);font-size:0.81rem;line-height:1.65;animation:fadeUp 0.3s ease both}
+.gd-msg-speaker{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;color:var(--t3)}
+.gd-msg.user{background:var(--gold-d);border-color:rgba(245,158,11,0.2)}
+.gd-msg.ai1{background:var(--rose-d);border-color:rgba(244,63,94,0.2)}
+.gd-msg.ai2{background:var(--cyan-d);border-color:rgba(34,211,238,0.2)}
+.gd-msg.ai3{background:var(--green-d);border-color:rgba(16,185,129,0.2)}
+.gd-msg.system{background:rgba(255,255,255,0.02)}
+
+/* AI voice indicator in GD */
+.ai-voice-indicator{display:none;align-items:center;gap:8px;padding:8px 14px;background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.15);border-radius:8px;font-size:0.74rem;color:var(--cyan);margin-bottom:10px}
+.ai-voice-indicator.show{display:flex}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:900px){:root{--sw:0px}.sidebar{display:none}.main{margin-left:0}.content{padding:14px}}
+
+/* Speech support notice */
+.speech-notice{font-size:0.7rem;color:var(--t3);padding:4px 8px;background:rgba(139,92,246,0.06);border-radius:6px;border:1px solid rgba(139,92,246,0.1)}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="slogo">
+    <div class="slm">💼</div>
+    <div class="sln">Verbo<span>Mate</span></div>
+  </div>
+  <div class="snav">
+    <div class="snl">Main</div>
+    <a href="/dashboard" class="sni"><span class="sni-ico">🏠</span> Dashboard</a>
+    <!-- <div class="sni"><span class="sni-ico">📊</span> Progress</div>
+    <div class="sni"><span class="sni-ico">🏆</span> Leaderboard <span class="sni-pill">Live</span></div> -->
+    <div class="snl" style="margin-top:8px">Practice</div>
+    <!-- <a href="/vocabulary" class="sni"><span class="sni-ico">📖</span> Vocabulary</a>
+    <a href="/speaking" class="sni"><span class="sni-ico">🎙️</span> Speaking</a>
+    <a href="/grammar" class="sni"><span class="sni-ico">📝</span> Grammar</a>
+    <a href="/listening" class="sni"><span class="sni-ico">🎧</span> Listening</a>
+    <a href="/writing" class="sni"><span class="sni-ico">✍️</span> Writing</a> -->
+    <div class="sni active"><span class="sni-ico">💼</span> Interview Prep</div>
+    <div class="snl" style="margin-top:8px">Account</div>
+    <!-- <div class="sni"><span class="sni-ico">⚙️</span> Settings</div> -->
+    <div class="sni" onclick="handleLogout()"><span class="sni-ico">🚪</span> Sign Out</div>
+  </div>
+  <div class="suser">
+    <div class="surow">
+      <div class="suava" id="sb-ava">?</div>
+      <div>
+        <div class="suname" id="sb-name">Loading…</div>
+        <div class="sumeta">⚡ Interview Mode</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <a href="/dashboard" class="tb-btn">← Back</a>
+    <div class="tb-title">💼 Interview Prep Portal</div>
+    <div class="tb-right">
+      <div class="tb-btn" onclick="clearAllProgress()">🗑 Reset Progress</div>
+      <div class="tb-ava" id="top-ava">?</div>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="ph">
+      <div class="ph-left">
+        <div class="ph-ico">💼</div>
+        <div>
+          <div class="ph-t">Interview <span>Prep</span></div>
+          <div class="ph-s">Mock HR · Technical · DSA Coding · Group Discussion · Performance Analytics</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-tabs">
+      <div class="mtab active" onclick="switchTab('hr')">🎤 HR Interview</div>
+      <div class="mtab" onclick="switchTab('tech')">⚙️ Technical</div>
+      <div class="mtab" onclick="switchTab('coding')">💻 Coding Arena</div>
+      <div class="mtab" onclick="switchTab('gd')">🗣️ Group Discussion</div>
+      <div class="mtab" onclick="switchTab('stats')">📊 My Performance</div>
+    </div>
+
+    <!-- ═══════════ HR INTERVIEW PANEL ═══════════ -->
+    <div id="panel-hr" class="panel active">
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:16px;align-items:start">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card" id="hr-setup">
+            <div class="card-hd">Configure Your Mock HR Interview</div>
+            <div class="sec-label">Interview Type</div>
+            <!-- ✅ FIX: Added id to q-grid for proper scoping -->
+            <div class="q-grid" id="hr-type-grid" style="grid-template-columns:repeat(3,1fr)">
+              <div class="q-card sel" data-type="hr-behavioral" onclick="selType(this,'hr-type-grid')">
+                <div class="q-card-ico">🧠</div>
+                <div class="q-card-t">Behavioural</div>
+                <div class="q-card-s">STAR method, past situations</div>
+              </div>
+              <div class="q-card" data-type="hr-situational" onclick="selType(this,'hr-type-grid')">
+                <div class="q-card-ico">💡</div>
+                <div class="q-card-t">Situational</div>
+                <div class="q-card-s">Hypothetical scenarios</div>
+              </div>
+              <div class="q-card" data-type="hr-competency" onclick="selType(this,'hr-type-grid')">
+                <div class="q-card-ico">🎯</div>
+                <div class="q-card-t">Competency</div>
+                <div class="q-card-s">Skills &amp; strengths</div>
+              </div>
+            </div>
+            <div class="sec-label">Difficulty</div>
+            <div class="diff-row" id="hr-diff-row">
+              <div class="dchip easy sel" onclick="selDiff(this,'hr-diff-row','hr')">🟢 Fresher</div>
+              <div class="dchip med" onclick="selDiff(this,'hr-diff-row','hr')">🟡 Mid-level</div>
+              <div class="dchip hard" onclick="selDiff(this,'hr-diff-row','hr')">🔴 Senior</div>
+            </div>
+            <div class="sec-label">Number of Questions</div>
+            <div class="diff-row" id="hr-n-row" style="margin-bottom:20px">
+              <div class="dchip easy sel" data-n="5" onclick="selN(this,'hr-n-row','hr')">5 Questions</div>
+              <div class="dchip med" data-n="10" onclick="selN(this,'hr-n-row','hr')">10 Questions</div>
+              <div class="dchip hard" data-n="15" onclick="selN(this,'hr-n-row','hr')">15 Questions</div>
+            </div>
+            <button class="start-btn" onclick="startInterview('hr')">🎤 Start HR Mock Interview</button>
+          </div>
+
+          <div class="session-box" id="hr-session">
+            <div class="card">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                <div class="card-hd" style="margin-bottom:0">Question <span id="hr-qnum">1</span> of <span id="hr-qtotal">5</span></div>
+                <button class="act-btn danger" style="width:auto;min-width:auto;padding:6px 12px;flex:none" onclick="endSession('hr')">✕ End</button>
+              </div>
+              <div class="prog-bar-wrap"><div class="prog-bar-fill" id="hr-prog" style="width:0%"></div></div>
+              <div class="q-display">
+                <div class="q-meta">
+                  <span class="q-badge hr">HR Interview</span>
+                  <span class="q-num" id="hr-qcat">Behavioural</span>
+                </div>
+                <!-- AI reading question aloud indicator -->
+                <div class="ai-speaking-badge" id="hr-ai-reading">
+                  <div class="voice-wave"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+                  AI is reading the question…
+                  <button onclick="stopSpeaking()" style="background:none;border:none;color:var(--cyan);cursor:pointer;font-size:11px;margin-left:4px">stop</button>
+                </div>
+                <div class="q-text" id="hr-qtext">Loading question…</div>
+                <div class="q-hint" id="hr-qhint" style="display:none"></div>
+              </div>
+
+              <!-- ✅ NEW: Speech controls -->
+              <div class="speech-bar">
+                <button class="mic-btn idle" id="hr-mic" onclick="toggleMic('hr')" title="Click to speak your answer">🎙️</button>
+                <div>
+                  <div class="speech-status" id="hr-speech-status">Click 🎙️ to speak your answer, or type below</div>
+                  <div class="speech-notice" id="hr-speech-notice"></div>
+                </div>
+                <div class="voice-wave hidden" id="hr-wave">
+                  <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+                </div>
+                <button class="tts-btn" id="hr-read-btn" onclick="readQuestion('hr')">🔊 Read Q</button>
+              </div>
+
+              <div class="ans-wrap">
+                <textarea class="ans-box" id="hr-ans" placeholder="Type your answer here… or use the mic above to speak. Use the STAR method: Situation → Task → Action → Result"></textarea>
+              </div>
+              <div class="action-row">
+                <button class="act-btn secondary" onclick="showHint('hr')">💡 Hint</button>
+                <button class="act-btn secondary" onclick="skipQ('hr')">⏭ Skip</button>
+                <button class="act-btn primary" onclick="submitAnswer('hr')" id="hr-submit-btn">✓ Submit Answer</button>
+              </div>
+              <div class="aifb" id="hr-aifb">
+                <div class="aifb-hd">🤖 AI Coach Feedback</div>
+                <div class="aifb-score" id="hr-aifb-scores"></div>
+                <div class="ai-speaking-badge" id="hr-fb-reading">
+                  <div class="voice-wave"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+                  AI is reading feedback…
+                  <button onclick="stopSpeaking()" style="background:none;border:none;color:var(--cyan);cursor:pointer;font-size:11px;margin-left:4px">stop</button>
+                </div>
+                <div class="aifb-text" id="hr-aifb-text"></div>
+                <div style="margin-top:12px;display:flex;gap:8px">
+                  <button class="act-btn secondary" style="flex:none" onclick="nextQ('hr')">Next Question →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="session-complete" id="hr-complete">
+            <div class="sc-ico">🎉</div>
+            <div class="sc-title">Session Complete!</div>
+            <div class="sc-sub" id="hr-complete-sub">You answered all HR questions.</div>
+            <div class="sc-scores" id="hr-complete-scores"></div>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+              <button class="act-btn primary" style="flex:none" onclick="restartSession('hr')">🔄 Try Again</button>
+              <button class="act-btn secondary" style="flex:none" onclick="switchTab('stats')">📊 View Stats</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="card-hd">🎙️ Voice Features</div>
+            <div style="font-size:0.77rem;color:var(--t2);line-height:1.7;display:flex;flex-direction:column;gap:6px">
+              <div>🔊 <strong style="color:var(--t1)">AI reads questions</strong> aloud automatically</div>
+              <div>🎙️ <strong style="color:var(--t1)">Speak your answer</strong> — text fills automatically</div>
+              <div>🤖 <strong style="color:var(--t1)">AI reads feedback</strong> after evaluation</div>
+              <div style="color:var(--t3);font-size:0.7rem;margin-top:4px">Requires microphone permission. Works in Chrome/Edge.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd">STAR Method Guide</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="padding:10px;background:var(--s2);border-radius:8px;border-left:3px solid var(--cyan)">
+                <div style="font-size:0.7rem;font-weight:700;color:var(--cyan);margin-bottom:3px">S — SITUATION</div>
+                <div style="font-size:0.76rem;color:var(--t2)">Describe the context and background</div>
+              </div>
+              <div style="padding:10px;background:var(--s2);border-radius:8px;border-left:3px solid var(--gold)">
+                <div style="font-size:0.7rem;font-weight:700;color:var(--gold);margin-bottom:3px">T — TASK</div>
+                <div style="font-size:0.76rem;color:var(--t2)">Explain your responsibility</div>
+              </div>
+              <div style="padding:10px;background:var(--s2);border-radius:8px;border-left:3px solid var(--violet)">
+                <div style="font-size:0.7rem;font-weight:700;color:var(--violet);margin-bottom:3px">A — ACTION</div>
+                <div style="font-size:0.76rem;color:var(--t2)">Detail the steps you took</div>
+              </div>
+              <div style="padding:10px;background:var(--s2);border-radius:8px;border-left:3px solid var(--green)">
+                <div style="font-size:0.7rem;font-weight:700;color:var(--green);margin-bottom:3px">R — RESULT</div>
+                <div style="font-size:0.76rem;color:var(--t2)">Share the outcome with numbers if possible</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd">Session Stats</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;justify-content:space-between;font-size:0.78rem"><span style="color:var(--t2)">Questions Done</span><span id="hr-stat-done" style="font-family:var(--fm);color:var(--gold)">0</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:0.78rem"><span style="color:var(--t2)">Avg. Score</span><span id="hr-stat-avg" style="font-family:var(--fm);color:var(--green)">—</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:0.78rem"><span style="color:var(--t2)">Best Score</span><span id="hr-stat-best" style="font-family:var(--fm);color:var(--cyan)">—</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TECHNICAL PANEL ═══════════ -->
+    <div id="panel-tech" class="panel">
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card" id="tech-setup">
+            <div class="card-hd">Configure Technical Interview</div>
+            <div class="sec-label">Technology Domain</div>
+            <!-- ✅ FIX: Added id to q-grid -->
+            <div class="q-grid" id="tech-type-grid">
+              <div class="q-card sel" data-type="tech-general" onclick="selType(this,'tech-type-grid')">
+                <div class="q-card-ico">🖥️</div>
+                <div class="q-card-t">General CS</div>
+                <div class="q-card-s">OS, Networks, DBMS</div>
+              </div>
+              <div class="q-card" data-type="tech-python" onclick="selType(this,'tech-type-grid')">
+                <div class="q-card-ico">🐍</div>
+                <div class="q-card-t">Python</div>
+                <div class="q-card-s">Core concepts &amp; libraries</div>
+              </div>
+              <div class="q-card" data-type="tech-java" onclick="selType(this,'tech-type-grid')">
+                <div class="q-card-ico">☕</div>
+                <div class="q-card-t">Java</div>
+                <div class="q-card-s">OOP, Spring, JVM</div>
+              </div>
+              <div class="q-card" data-type="tech-js" onclick="selType(this,'tech-type-grid')">
+                <div class="q-card-ico">⚡</div>
+                <div class="q-card-t">JavaScript</div>
+                <div class="q-card-s">ES6+, Node, React</div>
+              </div>
+              <div class="q-card" data-type="tech-sql" onclick="selType(this,'tech-type-grid')">
+                <div class="q-card-ico">🗄️</div>
+                <div class="q-card-t">SQL / Databases</div>
+                <div class="q-card-s">Queries, indexes, joins</div>
+              </div>
+              <div class="q-card" data-type="tech-system" onclick="selType(this,'tech-type-grid')">
+                <div class="q-card-ico">🏗️</div>
+                <div class="q-card-t">System Design</div>
+                <div class="q-card-s">Scalability, architecture</div>
+              </div>
+            </div>
+            <div class="sec-label">Difficulty</div>
+            <div class="diff-row" id="tech-diff-row">
+              <div class="dchip easy sel" onclick="selDiff(this,'tech-diff-row','tech')">🟢 Beginner</div>
+              <div class="dchip med" onclick="selDiff(this,'tech-diff-row','tech')">🟡 Intermediate</div>
+              <div class="dchip hard" onclick="selDiff(this,'tech-diff-row','tech')">🔴 Advanced</div>
+            </div>
+            <div class="sec-label">Questions</div>
+            <div class="diff-row" id="tech-n-row" style="margin-bottom:20px">
+              <div class="dchip easy sel" data-n="5" onclick="selN(this,'tech-n-row','tech')">5 Questions</div>
+              <div class="dchip med" data-n="10" onclick="selN(this,'tech-n-row','tech')">10 Questions</div>
+              <div class="dchip hard" data-n="15" onclick="selN(this,'tech-n-row','tech')">15 Questions</div>
+            </div>
+            <button class="start-btn" onclick="startInterview('tech')">⚙️ Start Technical Interview</button>
+          </div>
+
+          <div class="session-box" id="tech-session">
+            <div class="card">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                <div class="card-hd" style="margin-bottom:0">Question <span id="tech-qnum">1</span> of <span id="tech-qtotal">5</span></div>
+                <button class="act-btn danger" style="width:auto;min-width:auto;padding:6px 12px;flex:none" onclick="endSession('tech')">✕ End</button>
+              </div>
+              <div class="prog-bar-wrap"><div class="prog-bar-fill" id="tech-prog" style="width:0%"></div></div>
+              <div class="q-display">
+                <div class="q-meta">
+                  <span class="q-badge tech">Technical</span>
+                  <span class="q-num" id="tech-qcat">General CS</span>
+                </div>
+                <div class="ai-speaking-badge" id="tech-ai-reading">
+                  <div class="voice-wave"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+                  AI is reading the question…
+                  <button onclick="stopSpeaking()" style="background:none;border:none;color:var(--cyan);cursor:pointer;font-size:11px;margin-left:4px">stop</button>
+                </div>
+                <div class="q-text" id="tech-qtext">Loading question…</div>
+                <div class="q-hint" id="tech-qhint" style="display:none"></div>
+              </div>
+
+              <!-- ✅ NEW: Speech controls for tech -->
+              <div class="speech-bar">
+                <button class="mic-btn idle" id="tech-mic" onclick="toggleMic('tech')" title="Click to speak your answer">🎙️</button>
+                <div>
+                  <div class="speech-status" id="tech-speech-status">Click 🎙️ to speak your answer, or type below</div>
+                  <div class="speech-notice" id="tech-speech-notice"></div>
+                </div>
+                <div class="voice-wave hidden" id="tech-wave">
+                  <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+                </div>
+                <button class="tts-btn" id="tech-read-btn" onclick="readQuestion('tech')">🔊 Read Q</button>
+              </div>
+
+              <div class="ans-wrap">
+                <textarea class="ans-box" id="tech-ans" placeholder="Explain your answer clearly. For technical concepts, give definitions, examples and use-cases…"></textarea>
+              </div>
+              <div class="action-row">
+                <button class="act-btn secondary" onclick="showHint('tech')">💡 Hint</button>
+                <button class="act-btn secondary" onclick="skipQ('tech')">⏭ Skip</button>
+                <button class="act-btn primary" onclick="submitAnswer('tech')" id="tech-submit-btn">✓ Submit Answer</button>
+              </div>
+              <div class="aifb" id="tech-aifb">
+                <div class="aifb-hd">🤖 AI Evaluation</div>
+                <div class="aifb-score" id="tech-aifb-scores"></div>
+                <div class="ai-speaking-badge" id="tech-fb-reading">
+                  <div class="voice-wave"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+                  AI is reading feedback…
+                  <button onclick="stopSpeaking()" style="background:none;border:none;color:var(--cyan);cursor:pointer;font-size:11px;margin-left:4px">stop</button>
+                </div>
+                <div class="aifb-text" id="tech-aifb-text"></div>
+                <div style="margin-top:12px"><button class="act-btn secondary" style="flex:none" onclick="nextQ('tech')">Next Question →</button></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="session-complete" id="tech-complete">
+            <div class="sc-ico">🏆</div>
+            <div class="sc-title">Technical Round Complete!</div>
+            <div class="sc-sub" id="tech-complete-sub"></div>
+            <div class="sc-scores" id="tech-complete-scores"></div>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+              <button class="act-btn primary" style="flex:none" onclick="restartSession('tech')">🔄 Try Again</button>
+              <button class="act-btn secondary" style="flex:none" onclick="switchTab('stats')">📊 View Stats</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="card-hd">Answer Framework</div>
+            <div style="font-size:0.78rem;color:var(--t2);line-height:1.7">
+              <div style="margin-bottom:8px">🔷 <strong style="color:var(--t1)">Define</strong> — Give a clear, concise definition</div>
+              <div style="margin-bottom:8px">🔷 <strong style="color:var(--t1)">Explain</strong> — How it works internally</div>
+              <div style="margin-bottom:8px">🔷 <strong style="color:var(--t1)">Example</strong> — Real-world use case</div>
+              <div style="margin-bottom:8px">🔷 <strong style="color:var(--t1)">Pros/Cons</strong> — Trade-offs if applicable</div>
+              <div>🔷 <strong style="color:var(--t1)">Relate</strong> — Link to your experience</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd">Session Stats</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;justify-content:space-between;font-size:0.78rem"><span style="color:var(--t2)">Questions Done</span><span id="tech-stat-done" style="font-family:var(--fm);color:var(--gold)">0</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:0.78rem"><span style="color:var(--t2)">Avg. Score</span><span id="tech-stat-avg" style="font-family:var(--fm);color:var(--green)">—</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ CODING ARENA ═══════════ -->
+    <div id="panel-coding" class="panel">
+      <div class="card" id="coding-setup" style="margin-bottom:16px">
+        <div class="card-hd">Coding Arena — DSA Practice</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px">
+          <div style="flex:1;min-width:180px">
+            <div class="sec-label">Topic</div>
+            <select id="coding-topic" style="width:100%;padding:8px 12px;background:var(--s2);border:1px solid var(--b1);border-radius:8px;font-family:var(--f);font-size:0.82rem;color:var(--t1);outline:none">
+              <option value="all">All Topics</option>
+              <option value="arrays">Arrays &amp; Strings</option>
+              <option value="linkedlist">Linked Lists</option>
+              <option value="trees">Trees &amp; Graphs</option>
+              <option value="dp">Dynamic Programming</option>
+              <option value="sorting">Sorting &amp; Searching</option>
+              <option value="hashing">Hashing</option>
+              <option value="stack">Stack &amp; Queue</option>
+              <option value="greedy">Greedy Algorithms</option>
+              <option value="recursion">Recursion &amp; Backtracking</option>
+            </select>
+          </div>
+          <div style="flex:1;min-width:160px">
+            <div class="sec-label">Difficulty</div>
+            <select id="coding-diff" style="width:100%;padding:8px 12px;background:var(--s2);border:1px solid var(--b1);border-radius:8px;font-family:var(--f);font-size:0.82rem;color:var(--t1);outline:none">
+              <option value="easy">Easy</option>
+              <option value="medium" selected>Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+          <div style="flex:1;min-width:160px">
+            <div class="sec-label">Language</div>
+            <select id="coding-lang-sel" style="width:100%;padding:8px 12px;background:var(--s2);border:1px solid var(--b1);border-radius:8px;font-family:var(--fm);font-size:0.82rem;color:var(--t1);outline:none">
+              <option value="python">Python</option>
+              <option value="java">Java</option>
+              <option value="c">C</option>
+              <option value="cpp">C++</option>
+              <option value="javascript">JavaScript</option>
+            </select>
+          </div>
+          <div style="align-self:flex-end">
+            <button class="run-btn" style="min-width:140px" onclick="loadCodingProblem()">⚡ Get Problem</button>
+          </div>
+        </div>
+        <div style="font-size:0.74rem;color:var(--t3)" id="coding-seen-info">Problems are non-repeating — already solved problems won't appear again.</div>
+      </div>
+
+      <div class="coding-layout" id="coding-main" style="display:none">
+        <div class="prob-panel">
+          <div class="prob-card">
+            <div class="prob-header">
+              <div>
+                <div class="prob-title" id="prob-title">Loading…</div>
+                <div class="prob-tags" id="prob-tags"></div>
+              </div>
+            </div>
+            <div class="prob-desc" id="prob-desc">Generating problem…</div>
+            <div id="prob-examples"></div>
+            <div style="margin-top:14px">
+              <div style="font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:8px">Constraints</div>
+              <div class="prob-example" id="prob-constraints">Loading…</div>
+            </div>
+          </div>
+          <div class="card" id="hints-card" style="display:none">
+            <div class="card-hd">Step-by-Step Hints</div>
+            <div class="hint-steps" id="hint-steps"></div>
+            <button class="act-btn secondary" style="margin-top:10px" onclick="revealNextHint()" id="next-hint-btn">💡 Reveal Next Hint</button>
+          </div>
+          <div class="card" id="solution-card" style="display:none">
+            <div class="card-hd" style="color:var(--violet)">✨ Optimal Solution</div>
+            <div class="aifb-text" id="solution-text" style="margin-bottom:12px"></div>
+            <div class="prob-example" id="solution-code" style="border-color:rgba(139,92,246,0.2);color:var(--t1);white-space:pre-wrap;max-height:300px;overflow-y:auto"></div>
+            <div style="margin-top:10px;font-size:0.76rem;color:var(--t2)" id="solution-complexity"></div>
+          </div>
+        </div>
+
+        <div class="code-panel">
+          <div class="card" style="flex:1;display:flex;flex-direction:column;gap:12px">
+            <div class="code-toolbar">
+              <select class="lang-sel" id="editor-lang" onchange="changeLang()">
+                <option value="python">🐍 Python</option>
+                <option value="java">☕ Java</option>
+                <option value="c">🔵 C</option>
+                <option value="cpp">⚡ C++</option>
+                <option value="javascript">💛 JavaScript</option>
+              </select>
+              <span style="font-size:0.72rem;color:var(--t3);font-family:var(--fm)" id="prob-id-label">#001</span>
+              <span style="margin-left:auto;font-size:0.72rem;color:var(--t3)">Press Tab to indent</span>
+            </div>
+            <textarea class="code-editor" id="code-editor" placeholder="// Write your solution here…" spellcheck="false" onkeydown="handleTab(event)"></textarea>
+            <div class="run-row">
+              <button class="run-btn" onclick="runCode()" id="run-btn">▶ Run &amp; Evaluate</button>
+              <button class="hint-btn" onclick="getHints()">💡 Hints</button>
+              <button class="sol-btn" onclick="getSolution()">✨ Solution</button>
+              <button class="act-btn secondary" style="flex:none" onclick="loadCodingProblem()">⟳ Next</button>
+            </div>
+            <div class="sec-label">Output</div>
+            <div class="output-box" id="code-output">Run your code to see output…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ GROUP DISCUSSION ═══════════ -->
+    <div id="panel-gd" class="panel">
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card" id="gd-setup">
+            <div class="card-hd">Group Discussion Practice</div>
+            <div class="sec-label">GD Category</div>
+            <!-- ✅ FIX: Added id to q-grid -->
+            <div class="q-grid" id="gd-type-grid" style="grid-template-columns:repeat(3,1fr)">
+              <div class="q-card sel" data-type="gd-social" onclick="selType(this,'gd-type-grid')">
+                <div class="q-card-ico">🌍</div>
+                <div class="q-card-t">Social Issues</div>
+                <div class="q-card-s">Society &amp; policy</div>
+              </div>
+              <div class="q-card" data-type="gd-tech" onclick="selType(this,'gd-type-grid')">
+                <div class="q-card-ico">🤖</div>
+                <div class="q-card-t">Technology</div>
+                <div class="q-card-s">AI, innovation, future</div>
+              </div>
+              <div class="q-card" data-type="gd-business" onclick="selType(this,'gd-type-grid')">
+                <div class="q-card-ico">📈</div>
+                <div class="q-card-t">Business</div>
+                <div class="q-card-s">Economy &amp; management</div>
+              </div>
+              <div class="q-card" data-type="gd-abstract" onclick="selType(this,'gd-type-grid')">
+                <div class="q-card-ico">🎭</div>
+                <div class="q-card-t">Abstract</div>
+                <div class="q-card-s">Creative thinking</div>
+              </div>
+              <div class="q-card" data-type="gd-current" onclick="selType(this,'gd-type-grid')">
+                <div class="q-card-ico">📰</div>
+                <div class="q-card-t">Current Affairs</div>
+                <div class="q-card-s">News &amp; events</div>
+              </div>
+            </div>
+            <button class="start-btn" style="margin-top:16px" onclick="startGD()">🗣️ Start Group Discussion</button>
+          </div>
+
+          <div class="session-box" id="gd-session">
+            <div class="card">
+              <div class="gd-topic-box">
+                <div class="gd-topic-label">📢 GD Topic</div>
+                <div class="gd-topic-text" id="gd-topic">Loading topic…</div>
+              </div>
+              <div class="sec-label">Participants</div>
+              <div class="gd-participants" id="gd-parts">
+                <div class="gd-part you">👤 You</div>
+                <div class="gd-part">🤖 AI-1 (Devil's Advocate)</div>
+                <div class="gd-part">🤖 AI-2 (Neutral)</div>
+                <div class="gd-part">🤖 AI-3 (Supporter)</div>
+              </div>
+
+              <!-- ✅ NEW: Voice mode toggle for GD -->
+              <div class="speech-bar" style="margin-bottom:14px">
+                <button class="mic-btn idle" id="gd-mic" onclick="toggleMic('gd')" title="Speak your GD point">🎙️</button>
+                <div style="flex:1">
+                  <div class="speech-status" id="gd-speech-status">Click mic to speak, or type your point below</div>
+                </div>
+                <div class="voice-wave hidden" id="gd-wave">
+                  <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+                </div>
+                <!-- AI voice toggle for GD responses -->
+                <button class="tts-btn" id="gd-voice-toggle" onclick="toggleGDVoice()" title="Toggle AI voice responses">🔊 AI Voice: ON</button>
+              </div>
+
+              <!-- AI speaking indicator for GD -->
+              <div class="ai-voice-indicator" id="gd-ai-speaking">
+                <div class="voice-wave"><div class="wave-bar" style="background:var(--cyan)"></div><div class="wave-bar" style="background:var(--cyan)"></div><div class="wave-bar" style="background:var(--cyan)"></div><div class="wave-bar" style="background:var(--cyan)"></div><div class="wave-bar" style="background:var(--cyan)"></div></div>
+                <span id="gd-ai-speaker-name">AI is speaking…</span>
+                <button onclick="stopSpeaking()" style="background:none;border:none;color:var(--cyan);cursor:pointer;font-size:11px;margin-left:auto">stop</button>
+              </div>
+
+              <div id="gd-convo" style="display:flex;flex-direction:column;gap:10px;max-height:360px;overflow-y:auto;margin-bottom:14px;padding:4px"></div>
+              <textarea class="ans-box" id="gd-ans" style="min-height:80px" placeholder="Make your point… (press Enter to submit or click Send)"></textarea>
+              <div class="action-row" style="margin-top:8px">
+                <button class="act-btn secondary" onclick="gdAITurn()">Ask AI to respond</button>
+                <button class="act-btn primary" onclick="gdUserTurn()">📤 Send My Point</button>
+              </div>
+              <div class="aifb" id="gd-feedback" style="margin-top:12px">
+                <div class="aifb-hd">🏆 GD Performance Evaluation</div>
+                <div class="aifb-text" id="gd-feedback-text"></div>
+              </div>
+              <button class="act-btn danger" style="margin-top:10px;width:100%" onclick="evaluateGD()">📊 Evaluate My GD Performance</button>
+              <button class="act-btn secondary" style="margin-top:6px;width:100%" onclick="endGD()">✕ End GD Session</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="card-hd">🗣️ Voice in GD</div>
+            <div style="font-size:0.77rem;color:var(--t2);line-height:1.7;display:flex;flex-direction:column;gap:6px">
+              <div>🎙️ <strong style="color:var(--t1)">Speak your points</strong> naturally</div>
+              <div>🤖 <strong style="color:var(--t1)">AI participants speak</strong> their responses</div>
+              <div>🔊 <strong style="color:var(--t1)">Each AI has a different voice</strong> tone</div>
+              <div>⏸️ <strong style="color:var(--t1)">Stop AI</strong> anytime with the stop button</div>
+              <div style="color:var(--t3);font-size:0.7rem;margin-top:4px">Use Chrome/Edge for best voice support.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd">GD Scoring Criteria</div>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:0.77rem;line-height:1.6">
+              <div style="display:flex;align-items:center;gap:8px"><span style="color:var(--cyan)">●</span><div><strong>Initiation</strong><div style="color:var(--t2)">Starting the discussion confidently</div></div></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="color:var(--gold)">●</span><div><strong>Content Quality</strong><div style="color:var(--t2)">Depth and relevance of points</div></div></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="color:var(--green)">●</span><div><strong>Communication</strong><div style="color:var(--t2)">Clarity, fluency and vocabulary</div></div></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="color:var(--violet)">●</span><div><strong>Listening</strong><div style="color:var(--t2)">Responding to others' points</div></div></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="color:var(--rose)">●</span><div><strong>Conclusion</strong><div style="color:var(--t2)">Summarising with a clear stance</div></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd">GD Tips</div>
+            <div style="font-size:0.76rem;color:var(--t2);line-height:1.7">
+              <div>✅ Use facts and statistics</div>
+              <div>✅ Build on others' points</div>
+              <div>✅ Stay calm when challenged</div>
+              <div>✅ Use transitions: "Building on that…"</div>
+              <div>✅ Don't interrupt — wait for a pause</div>
+              <div>✅ Summarise at the end</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ STATS PANEL ═══════════ -->
+    <div id="panel-stats" class="panel">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div class="stats-grid2" id="overall-stats">
+          <div class="stat2"><div class="stat2-v" id="st-sessions" style="color:var(--gold)">0</div><div class="stat2-l">Total Sessions</div></div>
+          <div class="stat2"><div class="stat2-v" id="st-questions" style="color:var(--cyan)">0</div><div class="stat2-l">Questions Done</div></div>
+          <div class="stat2"><div class="stat2-v" id="st-avg" style="color:var(--green)">0%</div><div class="stat2-l">Avg. Score</div></div>
+          <div class="stat2"><div class="stat2-v" id="st-coding" style="color:var(--violet)">0</div><div class="stat2-l">Problems Solved</div></div>
+          <div class="stat2"><div class="stat2-v" id="st-streak" style="color:var(--rose)">0</div><div class="stat2-l">Day Streak</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="card">
+            <div class="card-hd">Score by Category</div>
+            <div id="cat-scores" style="display:flex;flex-direction:column;gap:10px"></div>
+          </div>
+          <div class="card">
+            <div class="card-hd">Session History</div>
+            <div class="hist-list" id="hist-list">
+              <div style="text-align:center;padding:20px;color:var(--t3);font-size:0.77rem">No sessions yet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="t-ico">✅</span><span id="t-msg">Done</span></div>
+
+<script>
+/* ═══════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════ */
+let currentUser = null;
+
+const state = {
+  hr:   { setup:{type:'hr-behavioral', diff:'easy', n:5}, questions:[], idx:0, scores:[], active:false },
+  tech: { setup:{type:'tech-general',  diff:'easy', n:5}, questions:[], idx:0, scores:[], active:false },
+  gd:   { type:'gd-social', messages:[], topic:'', active:false, aiVoiceEnabled:true },
+  coding: { currentProblem:null, hintsRevealed:0, allHints:[], lang:'python' }
+};
+
+let progress = {
+  sessions: [],
+  solvedProblems: [],
+  stats: { sessions:0, questions:0, totalScore:0, codingSolved:0 }
+};
+
+const STORAGE_KEY_PREFIX = 'vm_interview_v2_';
+
+/* ═══════════════════════════════════════════
+   SPEECH — Text-to-Speech (AI speaks)
+═══════════════════════════════════════════ */
+let currentUtterance = null;
+const synth = window.speechSynthesis;
+
+// Voice personalities for each AI participant
+const AI_VOICES = {
+  ai1: { pitch: 0.8, rate: 0.95, label: "AI-1 (Devil's Advocate)" },
+  ai2: { pitch: 1.1, rate: 1.0,  label: 'AI-2 (Neutral)' },
+  ai3: { pitch: 1.3, rate: 1.05, label: 'AI-3 (Supporter)' },
+  coach:{ pitch: 1.0, rate: 0.9,  label: 'AI Coach' }
+};
+
+function stopSpeaking() {
+  if (synth) synth.cancel();
+  // Hide all speaking indicators
+  document.querySelectorAll('.ai-speaking-badge, .ai-voice-indicator').forEach(el => el.classList.remove('show'));
+}
+
+function speakText(text, voiceKey = 'coach', onEnd = null) {
+  if (!synth) return;
+  stopSpeaking();
+
+  // Clean text (remove emojis for cleaner speech)
+  const cleanText = text.replace(/[\u{1F000}-\u{1FFFF}]/gu, '')
+    .replace(/[🎉🏆✅❌⚠️🤖💡📌🔷🟢🟡🔴]/g, '')
+    .replace(/\n\n/g, '. ')
+    .replace(/\n/g, '. ')
+    .trim();
+
+  const utter = new SpeechSynthesisUtterance(cleanText);
+  const vConfig = AI_VOICES[voiceKey] || AI_VOICES.coach;
+  utter.pitch = vConfig.pitch;
+  utter.rate = vConfig.rate;
+  utter.volume = 0.95;
+
+  // Try to pick a good English voice
+  const voices = synth.getVoices();
+  const enVoice = voices.find(v => v.lang.startsWith('en') && v.localService) || 
+                  voices.find(v => v.lang.startsWith('en')) ||
+                  voices[0];
+  if (enVoice) utter.voice = enVoice;
+
+  utter.onend = () => {
+    document.querySelectorAll('.ai-speaking-badge, .ai-voice-indicator').forEach(el => el.classList.remove('show'));
+    if (onEnd) onEnd();
+  };
+  utter.onerror = () => {
+    document.querySelectorAll('.ai-speaking-badge, .ai-voice-indicator').forEach(el => el.classList.remove('show'));
+  };
+
+  currentUtterance = utter;
+  synth.speak(utter);
+}
+
+function readQuestion(type) {
+  const qText = document.getElementById(`${type}-qtext`).textContent;
+  if (!qText || qText === 'Loading question…') return;
+
+  const indicator = document.getElementById(`${type}-ai-reading`);
+  if (indicator) indicator.classList.add('show');
+
+  const btn = document.getElementById(`${type}-read-btn`);
+  if (btn) { btn.classList.add('speaking'); btn.textContent = '⏸ Stop'; }
+
+  speakText('Question: ' + qText, 'coach', () => {
+    if (btn) { btn.classList.remove('speaking'); btn.textContent = '🔊 Read Q'; }
+  });
+}
+
+function speakFeedback(type, feedbackText) {
+  const indicator = document.getElementById(`${type}-fb-reading`);
+  if (indicator) indicator.classList.add('show');
+  speakText(feedbackText, 'coach', () => {
+    if (indicator) indicator.classList.remove('show');
+  });
+}
+
+/* ═══════════════════════════════════════════
+   SPEECH — Speech Recognition (User speaks)
+═══════════════════════════════════════════ */
+let recognitionInstances = {};
+
+function getSpeechRecognition() {
+  return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+}
+
+function toggleMic(type) {
+  const SR = getSpeechRecognition();
+  if (!SR) {
+    showToast('⚠️', 'Speech recognition not supported. Use Chrome or Edge.');
+    const notice = document.getElementById(`${type}-speech-notice`);
+    if (notice) notice.textContent = 'Not supported in this browser. Use Chrome/Edge.';
+    return;
+  }
+
+  if (recognitionInstances[type] && recognitionInstances[type]._active) {
+    // Stop
+    recognitionInstances[type].stop();
+    return;
+  }
+
+  // Stop AI speaking first
+  stopSpeaking();
+
+  const rec = new SR();
+  rec.lang = 'en-IN'; // Indian English — better for Indian users
+  rec.continuous = true;
+  rec.interimResults = true;
+  rec._active = true;
+  recognitionInstances[type] = rec;
+
+  const micBtn = document.getElementById(`${type}-mic`);
+  const statusEl = document.getElementById(`${type}-speech-status`);
+  const waveEl = document.getElementById(`${type}-wave`);
+  const ansEl = document.getElementById(`${type}-ans`);
+
+  micBtn.className = 'mic-btn listening';
+  micBtn.textContent = '⏹️';
+  if (statusEl) { statusEl.textContent = 'Listening… speak now'; statusEl.className = 'speech-status active'; }
+  if (waveEl) waveEl.classList.remove('hidden');
+
+  let finalTranscript = ansEl ? (ansEl.value + ' ') : '';
+
+  rec.onresult = (e) => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) {
+        finalTranscript += e.results[i][0].transcript + ' ';
+      } else {
+        interim += e.results[i][0].transcript;
+      }
+    }
+    if (ansEl) ansEl.value = finalTranscript.trim() + (interim ? ' ' + interim : '');
+  };
+
+  rec.onerror = (e) => {
+    if (e.error !== 'aborted') showToast('⚠️', 'Mic error: ' + e.error);
+    stopMic(type);
+  };
+
+  rec.onend = () => {
+    stopMic(type);
+  };
+
+  rec.start();
+}
+
+function stopMic(type) {
+  if (recognitionInstances[type]) {
+    recognitionInstances[type]._active = false;
+    try { recognitionInstances[type].stop(); } catch(e) {}
+  }
+  const micBtn = document.getElementById(`${type}-mic`);
+  const statusEl = document.getElementById(`${type}-speech-status`);
+  const waveEl = document.getElementById(`${type}-wave`);
+  if (micBtn) { micBtn.className = 'mic-btn idle'; micBtn.textContent = '🎙️'; }
+  if (statusEl) { statusEl.textContent = 'Click mic to speak again, or edit your text below'; statusEl.className = 'speech-status'; }
+  if (waveEl) waveEl.classList.add('hidden');
+}
+
+/* ═══════════════════════════════════════════
+   GD Voice toggle
+═══════════════════════════════════════════ */
+function toggleGDVoice() {
+  state.gd.aiVoiceEnabled = !state.gd.aiVoiceEnabled;
+  const btn = document.getElementById('gd-voice-toggle');
+  if (btn) btn.textContent = state.gd.aiVoiceEnabled ? '🔊 AI Voice: ON' : '🔇 AI Voice: OFF';
+  if (!state.gd.aiVoiceEnabled) stopSpeaking();
+}
+
+/* ═══════════════════════════════════════════
+   SAVE INTERVIEW PROGRESS TO SERVER (Real DB)
+═══════════════════════════════════════════ */
+async function saveInterviewProgressToServer(type, score, questionsCount) {
+  try {
+    const typeLabels = {
+      hr: 'HR Interview', tech: 'Technical Interview',
+      coding: 'Coding Arena', gd: 'Group Discussion'
+    };
+    const typeIcos = { hr:'🎤', tech:'⚙️', coding:'💻', gd:'🗣️' };
+
+    const totalSessions = (progress.sessions || []).length;
+    const modulePct = Math.min(Math.round((totalSessions / 20) * 100), 100);
+
+    await fetch('/api/progress/update', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        module_key:          'interview',
+        practice_minutes:    Math.ceil(questionsCount * 2),
+        accuracy:            score,
+        xp_earned:           Math.round(score * 1.5),
+        activity_title:      `${typeIcos[type]} Interview — ${typeLabels[type] || type}`,
+        activity_meta:       `Score: ${score}% · ${questionsCount} question${questionsCount !== 1 ? 's' : ''}`,
+        module_progress_pct: modulePct,
+      })
+    });
+  } catch(e) {
+    console.warn('Interview progress save failed:', e);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════ */
+async function loadUser() {
+  try {
+    const r = await fetch('/api/auth/me', {credentials:'include'});
+    if (!r.ok) { window.location.href = '/login'; return; }
+    const d = await r.json();
+    if (!d.success) { window.location.href = '/login'; return; }
+    currentUser = d.user;
+    const ini = getInitials(currentUser.name);
+    document.getElementById('sb-name').textContent = currentUser.name || 'User';
+    document.getElementById('sb-ava').textContent = ini;
+    document.getElementById('top-ava').textContent = ini;
+    loadProgress();
+    renderStats();
+  } catch(e) { window.location.href = '/login'; }
+}
+
+function getInitials(n) {
+  return n ? n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : '?';
+}
+
+/* ═══════════════════════════════════════════
+   PROGRESS
+═══════════════════════════════════════════ */
+function storageKey() { return STORAGE_KEY_PREFIX + (currentUser ? currentUser.email : 'guest'); }
+
+function loadProgress() {
+  const stored = localStorage.getItem(storageKey());
+  if (stored) { try { progress = {...progress, ...JSON.parse(stored)}; } catch(e) {} }
+  const si = document.getElementById('coding-seen-info');
+  if (si) si.textContent = `Problems solved so far: ${progress.solvedProblems.length} — solved problems won't repeat.`;
+}
+
+function saveProgress() {
+  localStorage.setItem(storageKey(), JSON.stringify(progress));
+  renderStats();
+}
+
+function clearAllProgress() {
+  if (!confirm('Reset all interview progress? This cannot be undone.')) return;
+  localStorage.removeItem(storageKey());
+  progress = { sessions:[], solvedProblems:[], stats:{sessions:0,questions:0,totalScore:0,codingSolved:0} };
+  saveProgress();
+  showToast('🗑️','Progress reset!');
+}
+
+/* ═══════════════════════════════════════════
+   TAB SWITCHING
+═══════════════════════════════════════════ */
+function switchTab(t) {
+  stopSpeaking();
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.mtab').forEach(tb => tb.classList.remove('active'));
+  document.getElementById('panel-'+t).classList.add('active');
+  const tabs = ['hr','tech','coding','gd','stats'];
+  document.querySelectorAll('.mtab')[tabs.indexOf(t)].classList.add('active');
+  if (t === 'stats') renderStats();
+}
+
+/* ═══════════════════════════════════════════
+   ✅ FIX: SETUP SELECTORS — now use grid ID
+═══════════════════════════════════════════ */
+function selType(el, gridId) {
+  // Deselect all cards in the same grid
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  grid.querySelectorAll('.q-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+
+  const type = el.dataset.type;
+  // Update state based on which grid
+  if (gridId === 'hr-type-grid') state.hr.setup.type = type;
+  else if (gridId === 'tech-type-grid') state.tech.setup.type = type;
+  else if (gridId === 'gd-type-grid') state.gd.type = type;
+}
+
+function selDiff(el, rowId, prefix) {
+  // ✅ FIX: Use rowId to scope deselection
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  row.querySelectorAll('.dchip').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+
+  const txt = el.textContent.toLowerCase();
+  const level = txt.includes('senior') || txt.includes('advanced') ? 'hard'
+    : txt.includes('mid') || txt.includes('inter') ? 'medium' : 'easy';
+  if (state[prefix]) state[prefix].setup.diff = level;
+}
+
+function selN(el, rowId, prefix) {
+  // ✅ FIX: Use rowId to scope deselection
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  row.querySelectorAll('.dchip').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  if (state[prefix]) state[prefix].setup.n = parseInt(el.dataset.n) || 5;
+}
+
+/* ═══════════════════════════════════════════
+   HR / TECHNICAL INTERVIEW FLOW
+═══════════════════════════════════════════ */
+async function startInterview(type) {
+  const s = state[type].setup;
+  const typeNames = {
+    'hr-behavioral':'Behavioural HR', 'hr-situational':'Situational HR', 'hr-competency':'Competency-based HR',
+    'tech-general':'General CS', 'tech-python':'Python', 'tech-java':'Java',
+    'tech-js':'JavaScript', 'tech-sql':'SQL/Databases', 'tech-system':'System Design'
+  };
+  const typeName = typeNames[s.type] || s.type;
+  const btn = document.querySelector(`#${type}-setup .start-btn`);
+  btn.disabled = true;
+  btn.textContent = '⏳ Generating questions…';
+
+  const seenQs = (progress.sessions || [])
+    .filter(ss => ss.type === type && ss.subtype === s.type)
+    .flatMap(ss => ss.questions || []).slice(-20);
+
+  const sys = `You are a professional interview question generator. Generate exactly ${s.n} unique interview questions as a JSON array.
+Respond ONLY with valid JSON array, no markdown, no explanation.
+Format: [{"q":"question text","hint":"brief hint for candidate","cat":"${typeName}"}]
+Requirements:
+- Difficulty: ${s.diff}
+- Type: ${typeName}
+- All questions must be unique and different from these already-used ones: ${JSON.stringify(seenQs.slice(0,10))}
+- For HR: focus on past experiences, leadership, conflict, teamwork
+- For Technical: test conceptual understanding
+- Hints should be subtle nudges, not answers`;
+
+  try {
+    const r = await fetch('/api/claude', {
+      method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
+      body: JSON.stringify({system:sys, messages:[{role:'user',content:`Generate ${s.n} ${s.diff} ${typeName} interview questions.`}], max_tokens:1500})
+    });
+    const d = await r.json();
+    let txt = (d.content?.[0]?.text || '').trim().replace(/```json|```/g,'').trim();
+    const fa = txt.indexOf('['), la = txt.lastIndexOf(']');
+    if (fa !== -1 && la !== -1) txt = txt.slice(fa, la+1);
+    const qs = JSON.parse(txt);
+
+    state[type].questions = qs;
+    state[type].idx = 0;
+    state[type].scores = [];
+    state[type].active = true;
+
+    document.getElementById(`${type}-setup`).style.display = 'none';
+    document.getElementById(`${type}-session`).classList.add('active');
+    document.getElementById(`${type}-complete`).classList.remove('show');
+    document.getElementById(`${type}-aifb`).classList.remove('show');
+    document.getElementById(`${type}-ans`).value = '';
+
+    renderQuestion(type);
+    btn.disabled = false;
+    btn.textContent = type === 'hr' ? '🎤 Start HR Mock Interview' : '⚙️ Start Technical Interview';
+
+  } catch(e) {
+    console.error('startInterview error:', e);
+    showToast('⚠️','Failed to generate questions. Check connection.');
+    btn.disabled = false;
+    btn.textContent = type === 'hr' ? '🎤 Start HR Mock Interview' : '⚙️ Start Technical Interview';
+  }
+}
+
+function renderQuestion(type) {
+  const s = state[type];
+  const q = s.questions[s.idx];
+  if (!q) return;
+  const total = s.questions.length;
+
+  document.getElementById(`${type}-qnum`).textContent = s.idx + 1;
+  document.getElementById(`${type}-qtotal`).textContent = total;
+  document.getElementById(`${type}-qtext`).textContent = q.q;
+  document.getElementById(`${type}-qcat`).textContent = q.cat || (type === 'hr' ? 'HR Round' : 'Technical');
+  document.getElementById(`${type}-prog`).style.width = ((s.idx / total) * 100) + '%';
+  document.getElementById(`${type}-qhint`).style.display = 'none';
+  document.getElementById(`${type}-aifb`).classList.remove('show');
+  document.getElementById(`${type}-ans`).value = '';
+  document.getElementById(`${type}-submit-btn`).disabled = false;
+
+  // Reset mic
+  stopMic(type);
+
+  // ✅ NEW: Auto-read question aloud
+  setTimeout(() => readQuestion(type), 600);
+
+  // Update live stats
+  document.getElementById(`${type}-stat-done`).textContent = s.idx;
+  if (s.scores.length) {
+    const avg = Math.round(s.scores.reduce((a,b)=>a+b,0)/s.scores.length);
+    document.getElementById(`${type}-stat-avg`).textContent = avg + '%';
+    if (type === 'hr' && document.getElementById('hr-stat-best')) {
+      document.getElementById('hr-stat-best').textContent = Math.max(...s.scores) + '%';
+    }
+  }
+}
+
+function showHint(type) {
+  const s = state[type];
+  const q = s.questions[s.idx];
+  if (!q) return;
+  const hintEl = document.getElementById(`${type}-qhint`);
+  hintEl.textContent = '💡 ' + (q.hint || 'Think about a specific situation from your experience.');
+  hintEl.style.display = 'block';
+  speakText(q.hint || 'Think about a specific situation from your experience.', 'coach');
+}
+
+function skipQ(type) {
+  state[type].scores.push(0);
+  nextQ(type, true);
+}
+
+async function submitAnswer(type) {
+  const ans = document.getElementById(`${type}-ans`).value.trim();
+  if (!ans || ans.length < 10) { showToast('⚠️','Please write a more complete answer.'); return; }
+
+  stopMic(type);
+  stopSpeaking();
+
+  const s = state[type];
+  const q = s.questions[s.idx];
+  const btn = document.getElementById(`${type}-submit-btn`);
+  btn.disabled = true;
+  btn.textContent = '⏳ Evaluating…';
+
+  const aifb = document.getElementById(`${type}-aifb`);
+  const aifbText = document.getElementById(`${type}-aifb-text`);
+  const aifbScores = document.getElementById(`${type}-aifb-scores`);
+
+  aifb.classList.add('show');
+  aifbText.className = 'aifb-text wait';
+  aifbText.innerHTML = 'Analysing your answer<span class="typing-cur"></span>';
+  aifbScores.innerHTML = '';
+
+  const isHR = type === 'hr';
+  const sys = `You are an expert interview evaluator. Evaluate the candidate's answer and respond ONLY with valid JSON, no markdown:
+{"overallScore":82,"contentScore":80,"deliveryScore":85,"feedback":"2-3 sentences of specific, constructive feedback","strengths":"One specific strength","improvement":"One specific area to improve","sampleAnswer":"A brief ideal answer in 2-3 sentences for reference"}
+Scores are 0-100. Be honest but encouraging.`;
+
+  const userMsg = `Interview Type: ${isHR ? 'HR' : 'Technical'} — ${q.cat}
+Question: "${q.q}"
+Candidate's Answer: "${ans}"
+Evaluate this answer for: content accuracy, completeness, structure${isHR ? ', use of STAR method' : ', technical correctness'}.`;
+
+  try {
+    const r = await fetch('/api/claude', {
+      method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
+      body: JSON.stringify({system:sys, messages:[{role:'user',content:userMsg}], max_tokens:600})
+    });
+    const d = await r.json();
+    let txt = (d.content?.[0]?.text || '').trim().replace(/```json|```/g,'').trim();
+    const fb = txt.indexOf('{'), lb = txt.lastIndexOf('}');
+    if (fb !== -1 && lb !== -1) txt = txt.slice(fb, lb+1);
+    const ev = JSON.parse(txt);
+
+    const overall = Math.max(0, Math.min(100, ev.overallScore || 70));
+    const content = Math.max(0, Math.min(100, ev.contentScore || 70));
+    const delivery = Math.max(0, Math.min(100, ev.deliveryScore || 70));
+
+    s.scores.push(overall);
+
+    const scoreColor = overall >= 80 ? 'var(--green)' : overall >= 60 ? 'var(--gold)' : 'var(--rose)';
+    aifbScores.innerHTML = `
+      <div class="score-pill"><div class="score-v" style="color:${scoreColor}">${overall}</div><div class="score-l">Overall</div></div>
+      <div class="score-pill"><div class="score-v" style="color:var(--cyan)">${content}</div><div class="score-l">Content</div></div>
+      <div class="score-pill"><div class="score-v" style="color:var(--violet)">${delivery}</div><div class="score-l">Delivery</div></div>
+    `;
+
+    const fullFeedback = `${ev.feedback || ''} Strength: ${ev.strengths || ''}. Improvement area: ${ev.improvement || ''}. Sample answer: ${ev.sampleAnswer || ''}`;
+    aifbText.className = 'aifb-text';
+    const displayText = `${ev.feedback || ''}\n\n✅ Strength: ${ev.strengths || ''}\n\n🔧 Improve: ${ev.improvement || ''}\n\n📝 Sample: ${ev.sampleAnswer || ''}`;
+    typeTextInto(aifbText, displayText, 12, () => {
+      // After typing completes, speak the feedback
+      speakFeedback(type, fullFeedback);
+    });
+
+    btn.textContent = isHR ? '🎤 Start HR Mock Interview' : '⚙️ Start Technical Interview';
+    document.getElementById(`${type}-stat-done`).textContent = s.idx + 1;
+    if (s.scores.length) {
+      const avg = Math.round(s.scores.reduce((a,b)=>a+b,0)/s.scores.length);
+      document.getElementById(`${type}-stat-avg`).textContent = avg + '%';
+      if (type === 'hr' && document.getElementById('hr-stat-best')) {
+        document.getElementById('hr-stat-best').textContent = Math.max(...s.scores) + '%';
+      }
+    }
+  } catch(e) {
+    console.error('submitAnswer error:', e);
+    s.scores.push(60);
+    aifbText.className = 'aifb-text';
+    aifbText.textContent = '⚠️ Could not get AI feedback. Your answer has been recorded with a baseline score.';
+    btn.textContent = isHR ? '🎤 Start HR Mock Interview' : '⚙️ Start Technical Interview';
+  }
+}
+
+function nextQ(type, skip=false) {
+  stopSpeaking();
+  state[type].idx++;
+  if (state[type].idx >= state[type].questions.length) {
+    endSession(type);
+  } else {
+    renderQuestion(type);
+  }
+}
+
+function endSession(type) {
+  stopSpeaking();
+  stopMic(type);
+  const s = state[type];
+  s.active = false;
+
+  document.getElementById(`${type}-session`).classList.remove('active');
+  document.getElementById(`${type}-setup`).style.display = 'block';
+
+  if (s.scores.length > 0) {
+    const avg = Math.round(s.scores.reduce((a,b)=>a+b,0)/s.scores.length);
+    const comp = document.getElementById(`${type}-complete`);
+    comp.classList.add('show');
+    document.getElementById(`${type}-complete-sub`).textContent = `You completed ${s.idx} questions with an average score of ${avg}%`;
+
+    const colors = ['var(--gold)','var(--cyan)','var(--green)','var(--violet)'];
+    const labels = ['Avg Score', 'Questions', 'Best Score', 'Skipped'];
+    const vals = [avg+'%', s.idx, Math.max(...s.scores)+'%', s.questions.length - s.scores.filter(x=>x>0).length];
+    document.getElementById(`${type}-complete-scores`).innerHTML = vals.map((v,i) => `
+      <div class="scs-item"><div class="scs-v" style="color:${colors[i]}">${v}</div><div class="scs-l">${labels[i]}</div></div>`).join('');
+
+    progress.stats.sessions++;
+    progress.stats.questions += s.idx;
+    progress.stats.totalScore += avg;
+    progress.sessions.unshift({
+      type, subtype: s.setup.type, score: avg,
+      questions: s.questions.map(q=>q.q),
+      date: new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short'}),
+      count: s.idx
+    });
+    if (progress.sessions.length > 50) progress.sessions.pop();
+    saveProgress();
+    saveInterviewProgressToServer(type, avg, s.idx);
+    speakText(`Session complete! Your average score was ${avg} out of 100. Great work!`, 'coach');
+  }
+}
+
+function restartSession(type) {
+  document.getElementById(`${type}-complete`).classList.remove('show');
+  document.getElementById(`${type}-setup`).style.display = 'block';
+}
+
+/* ═══════════════════════════════════════════
+   CODING ARENA
+═══════════════════════════════════════════ */
+const LANG_TEMPLATES = {
+  python: `def solution():\n    # Write your solution here\n    pass\n\n# Test\nprint(solution())`,
+  java: `import java.util.*;\n\nclass Solution {\n    public static void main(String[] args) {\n        // Write your solution here\n        System.out.println("Result: ");\n    }\n}`,
+  c: `#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    /* Write your solution here */\n    printf("Result: \\n");\n    return 0;\n}`,
+  cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Write your solution here\n    cout << "Result: " << endl;\n    return 0;\n}`,
+  javascript: `function solution() {\n    // Write your solution here\n    \n}\n\n// Test\nconsole.log(solution());`
+};
+
+function changeLang() {
+  const lang = document.getElementById('editor-lang').value;
+  state.coding.lang = lang;
+  const editor = document.getElementById('code-editor');
+  if (!editor.value.trim()) editor.value = LANG_TEMPLATES[lang] || '';
+}
+
+function handleTab(e) {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const ta = e.target, s = ta.selectionStart, end = ta.selectionEnd;
+    ta.value = ta.value.substring(0,s) + '    ' + ta.value.substring(end);
+    ta.selectionStart = ta.selectionEnd = s + 4;
+  }
+}
+
+async function loadCodingProblem() {
+  const topic = document.getElementById('coding-topic').value;
+  const diff  = document.getElementById('coding-diff').value;
+  const lang  = document.getElementById('coding-lang-sel').value;
+
+  state.coding.lang = lang;
+  state.coding.hintsRevealed = 0;
+  state.coding.allHints = [];
+
+  document.getElementById('editor-lang').value = lang;
+  document.getElementById('code-editor').value = LANG_TEMPLATES[lang] || '';
+  document.getElementById('code-output').textContent = 'Run your code to see output…';
+  document.getElementById('code-output').className = 'output-box';
+  document.getElementById('hints-card').style.display = 'none';
+  document.getElementById('solution-card').style.display = 'none';
+  document.getElementById('hint-steps').innerHTML = '';
+
+  const btn = document.querySelector('#coding-setup .run-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Generating…';
+  document.getElementById('coding-main').style.display = 'none';
+
+  const seenIds = (progress.solvedProblems || []).slice(-40);
+  const topicLabel = topic === 'all' ? 'any DSA topic' : topic;
+
+  const sys = `You are a competitive programming problem setter. Generate ONE unique coding problem.
+Respond ONLY with valid JSON, no markdown:
+{
+  "id":"unique_id_like_array_001",
+  "title":"Problem Title",
+  "topic":"${topicLabel}",
+  "difficulty":"${diff}",
+  "description":"Clear problem statement in 3-5 sentences.",
+  "examples":[{"input":"example input","output":"example output","explanation":"why this output"}],
+  "constraints":"Time: O(?), Space: O(?) — list 2-3 input constraints",
+  "hints":["Hint 1","Hint 2","Hint 3"],
+  "optimalApproach":"Explain the optimal algorithm in 2-3 sentences",
+  "solution_python":"complete working Python solution with comments",
+  "solution_java":"complete working Java solution",
+  "solution_c":"complete working C solution",
+  "solution_cpp":"complete working C++ solution",
+  "solution_javascript":"complete working JavaScript solution",
+  "timeComplexity":"O(...)",
+  "spaceComplexity":"O(...)"
+}
+Do NOT use any of these problem IDs: ${JSON.stringify(seenIds)}`;
+
+  try {
+    const r = await fetch('/api/claude', {
+      method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
+      body: JSON.stringify({system:sys, messages:[{role:'user',content:`Create a ${diff} ${topicLabel} coding problem for ${lang}.`}], max_tokens:2000})
+    });
+    const d = await r.json();
+    let txt = (d.content?.[0]?.text || '').trim().replace(/```json|```/g,'').trim();
+    const fb = txt.indexOf('{'), lb = txt.lastIndexOf('}');
+    if (fb !== -1 && lb !== -1) txt = txt.slice(fb, lb+1);
+    const prob = JSON.parse(txt);
+
+    state.coding.currentProblem = prob;
+    state.coding.allHints = prob.hints || [];
+
+    document.getElementById('prob-title').textContent = prob.title || 'Untitled';
+    document.getElementById('prob-id-label').textContent = '#' + (prob.id || '001');
+    document.getElementById('prob-tags').innerHTML = `
+      <span class="ptag ${prob.difficulty}">${prob.difficulty}</span>
+      <span class="ptag dsa">${prob.topic || topicLabel}</span>`;
+    document.getElementById('prob-desc').textContent = prob.description || '';
+    document.getElementById('prob-constraints').textContent = prob.constraints || 'No constraints specified.';
+    document.getElementById('prob-examples').innerHTML = (prob.examples || []).map((ex, i) => `
+      <div class="prob-example">
+        <strong>Example ${i+1}</strong>
+        Input: ${ex.input}<br>Output: ${ex.output}<br>${ex.explanation ? 'Explanation: '+ex.explanation : ''}
+      </div>`).join('');
+
+    document.getElementById('code-editor').value = LANG_TEMPLATES[lang] || '';
+    document.getElementById('coding-main').style.display = 'grid';
+    document.getElementById('coding-seen-info').textContent = `Problems solved so far: ${progress.solvedProblems.length} — solved problems won't repeat.`;
+
+    btn.disabled = false;
+    btn.textContent = '⚡ Get Problem';
+    showToast('💻','Problem loaded! Write your solution and click Run.');
+    speakText(`New problem loaded: ${prob.title}. Difficulty: ${prob.difficulty}.`, 'coach');
+
+  } catch(e) {
+    console.error('loadCodingProblem error:', e);
+    btn.disabled = false;
+    btn.textContent = '⚡ Get Problem';
+    showToast('⚠️','Failed to load problem. Please try again.');
+  }
+}
+
+function getHints() {
+  const prob = state.coding.currentProblem;
+  if (!prob) { showToast('⚠️','Load a problem first!'); return; }
+  const card = document.getElementById('hints-card');
+  card.style.display = 'block';
+  state.coding.hintsRevealed = 0;
+  document.getElementById('hint-steps').innerHTML = (prob.hints || []).map((h,i) => `
+    <div class="hint-step" id="hint-${i}"><div class="hint-step-n">Hint ${i+1}</div>${h}</div>`).join('');
+  revealNextHint();
+  card.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function revealNextHint() {
+  const hints = document.querySelectorAll('.hint-step');
+  const idx = state.coding.hintsRevealed;
+  if (idx < hints.length) {
+    hints[idx].classList.add('show');
+    state.coding.hintsRevealed++;
+    if (state.coding.hintsRevealed >= hints.length) {
+      document.getElementById('next-hint-btn').textContent = '✅ All hints revealed';
+      document.getElementById('next-hint-btn').disabled = true;
+    }
+  }
+}
+
+async function getSolution() {
+  const prob = state.coding.currentProblem;
+  if (!prob) { showToast('⚠️','Load a problem first!'); return; }
+  const lang = document.getElementById('editor-lang').value;
+  const card = document.getElementById('solution-card');
+  card.style.display = 'block';
+  document.getElementById('solution-text').textContent = prob.optimalApproach || '';
+  document.getElementById('solution-complexity').textContent = `Time: ${prob.timeComplexity || '?'} | Space: ${prob.spaceComplexity || '?'}`;
+  document.getElementById('solution-code').textContent = prob[`solution_${lang}`] || prob.solution_python || 'Solution not available.';
+  card.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+async function runCode() {
+  const prob = state.coding.currentProblem;
+  const code = document.getElementById('code-editor').value.trim();
+  const lang = document.getElementById('editor-lang').value;
+  if (!code || code.length < 10) { showToast('⚠️','Please write some code first.'); return; }
+  if (!prob) { showToast('⚠️','Load a problem first!'); return; }
+
+  const btn = document.getElementById('run-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Evaluating…';
+  const outputEl = document.getElementById('code-output');
+  outputEl.className = 'output-box';
+  outputEl.textContent = 'Evaluating your code…';
+
+  const sys = `You are a code evaluator. Evaluate the student's ${lang} solution.
+Respond ONLY with valid JSON, no markdown:
+{"passes":true,"score":85,"output":"What the code outputs","correctness":"Correct/Partially Correct/Incorrect","feedback":"2-3 sentences","timeComplexity":"O(...)","spaceComplexity":"O(...)","improvements":"One improvement"}`;
+
+  try {
+    const r = await fetch('/api/claude', {
+      method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
+      body: JSON.stringify({system:sys, messages:[{role:'user',content:`Problem: ${prob.title}\nDescription: ${prob.description}\nExamples: ${JSON.stringify(prob.examples||[])}\n\nStudent's ${lang} Code:\n\`\`\`${lang}\n${code}\n\`\`\``}], max_tokens:700})
+    });
+    const d = await r.json();
+    let txt = (d.content?.[0]?.text||'').trim().replace(/```json|```/g,'').trim();
+    const fb = txt.indexOf('{'), lb = txt.lastIndexOf('}');
+    if (fb !== -1 && lb !== -1) txt = txt.slice(fb, lb+1);
+    const ev = JSON.parse(txt);
+
+    outputEl.className = 'output-box ' + (ev.passes ? 'pass' : 'fail');
+    outputEl.textContent = [
+      ev.passes ? '✅ ACCEPTED' : '❌ NEEDS REVIEW',
+      `Score: ${ev.score||0}/100 | ${ev.correctness||''}`,
+      `Output: ${ev.output||'N/A'}`,
+      `Time: ${ev.timeComplexity||'?'} | Space: ${ev.spaceComplexity||'?'}`,
+      `\nFeedback: ${ev.feedback||''}`,
+      ev.improvements ? `\n💡 Improvement: ${ev.improvements}` : ''
+    ].filter(Boolean).join('\n');
+
+    if (ev.passes && ev.score >= 70) {
+      const probId = prob.id || prob.title;
+      if (!progress.solvedProblems.includes(probId)) {
+        progress.solvedProblems.push(probId);
+        progress.stats.codingSolved++;
+        saveProgress();
+        saveInterviewProgressToServer('coding', ev.score, 1);
+        showToast('🎉', `Problem solved! Score: ${ev.score}/100`);
+        speakText(`Accepted! Your score is ${ev.score} out of 100. Well done!`, 'coach');
+      }
+    } else {
+      speakText(ev.feedback || 'Your code needs some improvements. Check the output for details.', 'coach');
+    }
+  } catch(e) {
+    outputEl.className = 'output-box';
+    outputEl.textContent = '⚠️ Evaluation failed. Check your code syntax and try again.';
+  }
+  btn.disabled = false;
+  btn.textContent = '▶ Run & Evaluate';
+}
+
+/* ═══════════════════════════════════════════
+   GROUP DISCUSSION — with AI voices
+═══════════════════════════════════════════ */
+async function startGD() {
+  const btn = document.querySelector('#gd-setup .start-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Generating topic…';
+
+  const typeMap = {
+    'gd-social':'social issues (education, healthcare, environment, poverty)',
+    'gd-tech':'technology (AI, automation, social media, privacy)',
+    'gd-business':'business (startups, globalisation, work-from-home, leadership)',
+    'gd-abstract':'abstract topics (change is the only constant, failure is a stepping stone)',
+    'gd-current':'current affairs (recent events, global trends, policy changes)'
+  };
+
+  const sys = `Generate ONE interesting GD topic.
+Respond ONLY with JSON: {"topic":"The topic statement","context":"1-2 sentences of context","keyPoints":["point1","point2","point3"]}`;
+
+  try {
+    const r = await fetch('/api/claude', {
+      method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
+      body: JSON.stringify({system:sys, messages:[{role:'user',content:`Generate a GD topic for: ${typeMap[state.gd.type]||'general'}`}], max_tokens:300})
+    });
+    const d = await r.json();
+    let txt = (d.content?.[0]?.text||'').trim().replace(/```json|```/g,'').trim();
+    const fb = txt.indexOf('{'), lb = txt.lastIndexOf('}');
+    if (fb !== -1 && lb !== -1) txt = txt.slice(fb, lb+1);
+    const topicData = JSON.parse(txt);
+
+    state.gd.topic = topicData.topic || 'Social media does more harm than good.';
+    state.gd.messages = [];
+    state.gd.active = true;
+
+    document.getElementById('gd-topic').textContent = state.gd.topic;
+    document.getElementById('gd-convo').innerHTML = '';
+    document.getElementById('gd-feedback').classList.remove('show');
+    document.getElementById('gd-ans').value = '';
+
+    addGDMessage('system', `Context: ${topicData.context || ''}`);
+
+    const openingPoint = topicData.keyPoints?.[0] || 'there are multiple perspectives on this topic';
+    const openingMsg = `Let me start by saying that ${openingPoint}. What do you think?`;
+    addGDMessage('ai1', openingMsg);
+
+    // ✅ NEW: AI-1 speaks the opening
+    if (state.gd.aiVoiceEnabled) {
+      setTimeout(() => speakGDMessage('ai1', openingMsg), 500);
+    }
+
+    document.getElementById('gd-setup').style.display = 'none';
+    document.getElementById('gd-session').classList.add('active');
+    btn.disabled = false;
+    btn.textContent = '🗣️ Start Group Discussion';
+
+  } catch(e) {
+    state.gd.topic = 'Social media has done more harm than good to society.';
+    document.getElementById('gd-topic').textContent = state.gd.topic;
+    document.getElementById('gd-setup').style.display = 'none';
+    document.getElementById('gd-session').classList.add('active');
+    btn.disabled = false;
+    btn.textContent = '🗣️ Start Group Discussion';
+  }
+}
+
+function speakGDMessage(speaker, text) {
+  if (!state.gd.aiVoiceEnabled) return;
+  const indicator = document.getElementById('gd-ai-speaking');
+  const nameEl = document.getElementById('gd-ai-speaker-name');
+  const names = {ai1:"AI-1 (Devil's Advocate)", ai2:'AI-2 (Neutral)', ai3:'AI-3 (Supporter)'};
+  if (indicator) indicator.classList.add('show');
+  if (nameEl) nameEl.textContent = `${names[speaker] || 'AI'} is speaking…`;
+  speakText(text, speaker, () => {
+    if (indicator) indicator.classList.remove('show');
+  });
+}
+
+function addGDMessage(speaker, text) {
+  const convo = document.getElementById('gd-convo');
+  const speakerNames = {ai1:"🤖 AI-1 (Devil's Advocate)", ai2:'🤖 AI-2 (Neutral)', ai3:'🤖 AI-3 (Supporter)', user:'👤 You', system:'📌 Context'};
+
+  const msg = document.createElement('div');
+  msg.className = `gd-msg ${speaker}`;
+  msg.innerHTML = `<div class="gd-msg-speaker">${speakerNames[speaker] || speaker}</div>${text}`;
+  convo.appendChild(msg);
+  state.gd.messages.push({speaker, text});
+  convo.scrollTop = convo.scrollHeight;
+}
+
+async function gdUserTurn() {
+  const ans = document.getElementById('gd-ans').value.trim();
+  if (!ans) return;
+  stopMic('gd');
+  addGDMessage('user', ans);
+  document.getElementById('gd-ans').value = '';
+  setTimeout(() => gdAITurn(), 800);
+}
+
+async function gdAITurn() {
+  const recent = state.gd.messages.slice(-6).map(m => `${m.speaker}: ${m.text}`).join('\n');
+
+  const sys = `You are participating in a group discussion. Topic: "${state.gd.topic}"
+Pick ONE role based on balance needed: devil's advocate (ai1), neutral moderator (ai2), or supporting voice (ai3).
+Keep your response SHORT — 2-3 sentences. Be conversational. Reference what was just said.
+Respond ONLY with JSON: {"speaker":"ai1","text":"your response"}`;
+
+  try {
+    const r = await fetch('/api/claude', {
+      method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
+      body: JSON.stringify({system:sys, messages:[{role:'user',content:`Discussion:\n${recent}\n\nRespond as an AI participant.`}], max_tokens:200})
+    });
+    const d = await r.json();
+    let txt = (d.content?.[0]?.text||'').trim().replace(/```json|```/g,'').trim();
+    const fb = txt.indexOf('{'), lb = txt.lastIndexOf('}');
+    if (fb !== -1 && lb !== -1) txt = txt.slice(fb, lb+1);
+    const resp = JSON.parse(txt);
+    const speaker = resp.speaker || 'ai1';
+    const text = resp.text || 'That is an interesting point. Let me think about that.';
+    addGDMessage(speaker, text);
+    speakGDMessage(speaker, text);
+  } catch(e) {
+    const text = 'Building on the previous point — the key question is how we measure the impact here.';
+    addGDMessage('ai2', text);
+    speakGDMessage('ai2', text);
+  }
+}
+
+async function evaluateGD() {
+  const userMsgs = state.gd.messages.filter(m => m.speaker === 'user');
+  if (userMsgs.length < 2) { showToast('⚠️','Please make at least 2 contributions first.'); return; }
+
+  const feedbackEl = document.getElementById('gd-feedback');
+  const feedText = document.getElementById('gd-feedback-text');
+  feedbackEl.classList.add('show');
+  feedText.className = 'aifb-text wait';
+  feedText.innerHTML = 'Evaluating your GD performance<span class="typing-cur"></span>';
+
+  const allMessages = state.gd.messages.map(m => `${m.speaker}: ${m.text}`).join('\n');
+  const sys = `Evaluate this person's group discussion performance.
+Topic: "${state.gd.topic}"
+Respond ONLY with JSON: {"score":75,"feedback":"3-4 sentences","strengths":"specific strength","improvements":"specific improvement"}`;
+
+  try {
+    const r = await fetch('/api/claude', {
+      method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
+      body: JSON.stringify({system:sys, messages:[{role:'user',content:`Discussion:\n${allMessages}\n\nEvaluate the 'user' participant.`}], max_tokens:400})
+    });
+    const d = await r.json();
+    let txt = (d.content?.[0]?.text||'').trim().replace(/```json|```/g,'').trim();
+    const fb = txt.indexOf('{'), lb = txt.lastIndexOf('}');
+    if (fb !== -1 && lb !== -1) txt = txt.slice(fb, lb+1);
+    const ev = JSON.parse(txt);
+
+    feedText.className = 'aifb-text';
+    const display = `GD Score: ${ev.score||70}/100\n\n${ev.feedback||''}\n\nStrength: ${ev.strengths||''}\n\nImprove: ${ev.improvements||''}`;
+    typeTextInto(feedText, display, 12, () => {
+      speakText(`Your GD score is ${ev.score || 70} out of 100. ${ev.feedback || ''} ${ev.improvements || ''}`, 'coach');
+    });
+
+    progress.stats.sessions++;
+    progress.sessions.unshift({type:'gd', subtype:state.gd.type, score:ev.score||70, count:userMsgs.length, date: new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short'})});
+    saveProgress();
+    saveInterviewProgressToServer('gd', ev.score || 70, userMsgs.length);
+  } catch(e) {
+    feedText.className = 'aifb-text';
+    feedText.textContent = 'Could not evaluate. Please try again.';
+  }
+}
+
+function endGD() {
+  stopSpeaking();
+  stopMic('gd');
+  state.gd.active = false;
+  document.getElementById('gd-session').classList.remove('active');
+  document.getElementById('gd-setup').style.display = 'block';
+}
+
+/* ═══════════════════════════════════════════
+   STATS
+═══════════════════════════════════════════ */
+function renderStats() {
+  const s = progress.stats;
+  const sessions = progress.sessions || [];
+  document.getElementById('st-sessions').textContent = s.sessions || 0;
+  document.getElementById('st-questions').textContent = s.questions || 0;
+  document.getElementById('st-avg').textContent = s.sessions > 0 ? Math.round((s.totalScore||0)/s.sessions) + '%' : '0%';
+  document.getElementById('st-coding').textContent = s.codingSolved || 0;
+  document.getElementById('st-streak').textContent = Math.min(sessions.length, 7);
+
+  const cats = {hr:'🎤 HR Interview', tech:'⚙️ Technical', coding:'💻 Coding', gd:'🗣️ Group Discussion'};
+  const catScores = {};
+  sessions.forEach(ss => {
+    if (!catScores[ss.type]) catScores[ss.type] = [];
+    catScores[ss.type].push(ss.score || 0);
+  });
+  const catEl = document.getElementById('cat-scores');
+  catEl.innerHTML = Object.entries(cats).map(([k,label]) => {
+    const sc = catScores[k] || [];
+    const avg = sc.length ? Math.round(sc.reduce((a,b)=>a+b,0)/sc.length) : 0;
+    const color = avg >= 80 ? 'var(--green)' : avg >= 60 ? 'var(--gold)' : avg > 0 ? 'var(--rose)' : 'var(--t3)';
+    return `<div>
+      <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:5px">
+        <span style="color:var(--t2)">${label}</span>
+        <span style="font-family:var(--fm);color:${color};font-weight:600">${avg > 0 ? avg+'%' : '—'}</span>
+      </div>
+      <div style="height:4px;background:rgba(255,255,255,0.05);border-radius:99px;overflow:hidden">
+        <div style="height:100%;width:${avg}%;background:${color};border-radius:99px;transition:width 0.8s"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const histEl = document.getElementById('hist-list');
+  if (!sessions.length) {
+    histEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--t3);font-size:0.77rem">No sessions yet</div>';
+  } else {
+    const typeIcos = {hr:'🎤', tech:'⚙️', coding:'💻', gd:'🗣️'};
+    histEl.innerHTML = sessions.slice(0,15).map(ss => `
+      <div class="hist-item">
+        <div class="hist-ico">${typeIcos[ss.type]||'📋'}</div>
+        <div class="hist-t">${(ss.type||'?').toUpperCase()} — ${ss.count||0} Qs</div>
+        <div class="hist-sc">${ss.score||0}%</div>
+        <div class="hist-d">${ss.date||''}</div>
+      </div>`).join('');
+  }
+}
+
+/* ═══════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════ */
+function typeTextInto(el, text, speed=15, onComplete=null) {
+  el.innerHTML = '';
+  let i = 0;
+  const cur = document.createElement('span');
+  cur.className = 'typing-cur';
+  el.appendChild(cur);
+  const t = setInterval(() => {
+    if (i >= text.length) {
+      clearInterval(t);
+      cur.remove();
+      if (onComplete) onComplete();
+      return;
+    }
+    if (text[i] === '\n') cur.insertAdjacentHTML('beforebegin','<br>');
+    else cur.insertAdjacentText('beforebegin', text[i]);
+    i++;
+  }, speed);
+}
+
+function showToast(ico, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('t-ico').textContent = ico;
+  document.getElementById('t-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3400);
+}
+
+async function handleLogout() {
+  showToast('👋','Signing out…');
+  await fetch('/api/auth/logout', {method:'POST',credentials:'include'});
+  window.location.href = '/login';
+}
+
+// GD enter key
+document.getElementById('gd-ans').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); gdUserTurn(); }
+});
+
+// Load voices when available (Chrome needs this)
+if (typeof speechSynthesis !== 'undefined') {
+  speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
+}
+
+// Boot
+loadUser();
+</script>
+</body>
+</html>

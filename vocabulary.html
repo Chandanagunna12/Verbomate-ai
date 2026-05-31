@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VerboMate — Vocabulary Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+:root{
+  --bg:#07080d;--bg2:#0c0e17;--surface:#111420;--card:#161929;--card2:#1c2035;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --teal:#2dd4bf;--teal-dim:rgba(45,212,191,0.1);--teal-glow:rgba(45,212,191,0.18);
+  --indigo:#818cf8;--indigo-dim:rgba(129,140,248,0.1);
+  --green:#4ade80;--green-dim:rgba(74,222,128,0.1);
+  --amber:#fbbf24;--amber-dim:rgba(251,191,36,0.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,0.1);
+  --sky:#38bdf8;--sky-dim:rgba(56,189,248,0.1);
+  --t1:#f0f2ff;--t2:#9399b8;--t3:#5a6080;
+  --r:14px;--r2:20px;--r3:10px;
+  --font:'Cabinet Grotesk',sans-serif;
+  --serif:'Fraunces',serif;
+  --mono:'JetBrains Mono',monospace;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.5}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--card2);border-radius:2px}
+
+.shell{display:grid;grid-template-columns:72px 1fr;min-height:100vh;position:relative;z-index:1}
+.slim-bar{background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:6px;position:sticky;top:0;height:100vh}
+.sb-logo{width:40px;height:40px;background:linear-gradient(135deg,var(--teal),var(--indigo));border-radius:12px;display:grid;place-items:center;font-size:18px;margin-bottom:16px;box-shadow:0 0 20px rgba(45,212,191,.2)}
+.sb-icon{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:16px;cursor:pointer;transition:all .15s;color:var(--t3)}
+.sb-icon:hover,.sb-icon.active{background:var(--teal-dim);color:var(--teal)}
+.sb-divider{width:28px;height:1px;background:var(--border);margin:6px 0}
+.main-area{display:flex;flex-direction:column;overflow:hidden}
+
+.topbar{background:rgba(7,8,13,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:58px;padding:0 28px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50}
+.back-btn{display:flex;align-items:center;gap:6px;color:var(--t2);font-size:.82rem;font-weight:500;cursor:pointer;transition:color .15s;text-decoration:none}
+.back-btn:hover{color:var(--teal)}
+.top-sep{width:1px;height:16px;background:var(--border)}
+.top-module-name{font-size:.9rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.top-module-name .dot{width:7px;height:7px;background:var(--teal);border-radius:50%;box-shadow:0 0 8px var(--teal);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.xp-chip{display:flex;align-items:center;gap:6px;background:var(--amber-dim);border:1px solid rgba(251,191,36,.2);color:var(--amber);font-size:.75rem;font-weight:700;padding:5px 12px;border-radius:99px;font-family:var(--mono)}
+.user-ava{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--indigo),#6d28d9);display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;cursor:pointer;transition:all .2s;border:2px solid transparent}
+.user-ava:hover{border-color:var(--teal);box-shadow:0 0 12px rgba(45,212,191,.3)}
+
+.content{padding:28px;max-width:1240px;width:100%}
+
+/* HERO — no fake progress bar */
+.hero-strip{background:linear-gradient(135deg,rgba(45,212,191,.08),rgba(129,140,248,.06));border:1px solid rgba(45,212,191,.14);border-radius:var(--r2);padding:26px 30px;display:flex;align-items:center;gap:22px;margin-bottom:26px;animation:fadeUp .5s ease both;position:relative;overflow:hidden}
+.hero-strip::after{content:'📖';position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:80px;opacity:.06;pointer-events:none}
+.hero-ico{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--teal),var(--indigo));display:grid;place-items:center;font-size:26px;flex-shrink:0;box-shadow:0 8px 24px rgba(45,212,191,.25)}
+.hero-body{flex:1}
+.hero-tag{font-size:.65rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:5px}
+.hero-title{font-family:var(--serif);font-size:1.55rem;font-weight:600;letter-spacing:-.5px;margin-bottom:4px}
+.hero-title em{color:var(--teal);font-style:italic}
+.hero-sub{font-size:.82rem;color:var(--t2);max-width:480px;line-height:1.6}
+
+/* STATS — only 3 real stats */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px;animation:fadeUp .5s .06s ease both}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;transition:all .2s}
+.stat-box:hover{border-color:var(--border2);transform:translateY(-2px)}
+.stat-ico{font-size:1.1rem;margin-bottom:10px}
+.stat-num{font-family:var(--mono);font-size:1.6rem;font-weight:600;margin-bottom:3px}
+.stat-lbl{font-size:.72rem;color:var(--t2)}
+
+.tab-nav{display:flex;gap:4px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:4px;margin-bottom:24px;animation:fadeUp .5s .1s ease both}
+.tab-btn{flex:1;padding:9px 12px;border:none;border-radius:var(--r3);font-family:var(--font);font-size:.83rem;font-weight:600;cursor:pointer;background:transparent;color:var(--t2);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.tab-btn:hover{color:var(--t1);background:rgba(255,255,255,.04)}
+.tab-btn.active{background:var(--card2);color:var(--teal);box-shadow:0 0 0 1px rgba(45,212,191,.2)}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadeUp .35s ease both}
+
+/* AI TUTOR */
+.chat-layout{display:grid;grid-template-columns:1fr 310px;gap:18px}
+.chat-pane{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);display:flex;flex-direction:column;height:580px}
+.chat-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.chat-ai-ava{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--indigo));display:grid;place-items:center;font-size:17px;flex-shrink:0}
+.chat-ai-name{font-weight:700;font-size:.9rem}
+.chat-ai-status{font-size:.7rem;color:var(--green);display:flex;align-items:center;gap:4px}
+.chat-ai-status::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
+.chat-mode-toggle{margin-left:auto;display:flex;gap:4px;background:var(--bg2);border-radius:8px;padding:3px}
+.mode-btn{padding:5px 12px;border-radius:6px;border:none;font-family:var(--font);font-size:.72rem;font-weight:600;cursor:pointer;background:transparent;color:var(--t2);transition:all .15s}
+.mode-btn.active{background:var(--card2);color:var(--teal)}
+.chat-msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth}
+.msg-row{display:flex;gap:10px;align-items:flex-start}
+.msg-row.user{flex-direction:row-reverse}
+.msg-ava{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:12px;flex-shrink:0;font-weight:700}
+.msg-ava.ai{background:linear-gradient(135deg,var(--teal),var(--indigo))}
+.msg-ava.human{background:linear-gradient(135deg,var(--indigo),#6d28d9)}
+.msg-bubble{max-width:78%;padding:11px 14px;border-radius:14px;font-size:.84rem;line-height:1.6}
+.msg-row.ai .msg-bubble{background:var(--card2);border:1px solid var(--border);border-top-left-radius:4px}
+.msg-row.user .msg-bubble{background:var(--teal-dim);border:1px solid rgba(45,212,191,.18);border-top-right-radius:4px}
+.typing-ind{display:flex;gap:4px;padding:4px 2px}
+.typing-dot{width:6px;height:6px;background:var(--teal);border-radius:50%;animation:typAnim 1.4s ease infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes typAnim{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-6px);opacity:1}}
+.chat-input-area{padding:14px 16px;border-top:1px solid var(--border)}
+.chat-quick-btns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.quick-btn{padding:4px 12px;border-radius:99px;background:var(--bg2);border:1px solid var(--border);color:var(--t2);font-family:var(--font);font-size:.72rem;cursor:pointer;transition:all .15s}
+.quick-btn:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-dim)}
+.chat-row{display:flex;gap:8px}
+.chat-textarea{flex:1;padding:11px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);color:var(--t1);font-family:var(--font);font-size:.85rem;resize:none;outline:none;transition:border-color .2s;min-height:44px;max-height:100px}
+.chat-textarea:focus{border-color:rgba(45,212,191,.4)}
+.chat-textarea::placeholder{color:var(--t3)}
+.send-btn{width:44px;height:44px;border-radius:var(--r3);border:none;background:linear-gradient(135deg,var(--teal),var(--indigo));color:#07080d;font-size:18px;cursor:pointer;display:grid;place-items:center;transition:all .2s}
+.send-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(45,212,191,.35)}
+.send-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.right-panel{display:flex;flex-direction:column;gap:14px}
+.rp-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px}
+.rp-title{font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:12px}
+.wotd-word{font-family:var(--serif);font-size:1.5rem;font-weight:600;color:var(--teal);margin-bottom:3px;font-style:italic}
+.wotd-type{font-size:.72rem;color:var(--t3);margin-bottom:8px;font-family:var(--mono)}
+.wotd-def{font-size:.82rem;color:var(--t2);line-height:1.6;margin-bottom:8px}
+.wotd-ex{font-size:.78rem;color:var(--t2);font-style:italic;border-left:2px solid var(--teal);padding-left:10px}
+.word-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:var(--bg2);border:1px solid var(--border);font-size:.73rem;color:var(--t2);margin:3px;cursor:pointer;transition:all .15s}
+.word-chip:hover{border-color:var(--teal);color:var(--teal)}
+.word-chip .level{font-size:.6rem;opacity:.7}
+.topic-chip{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:var(--r3);background:var(--bg2);border:1px solid var(--border);font-size:.8rem;cursor:pointer;transition:all .15s;margin-bottom:6px}
+.topic-chip:hover{border-color:var(--teal);color:var(--teal)}
+
+/* FLASHCARDS */
+.flashcard-area{display:flex;flex-direction:column;align-items:center;gap:24px;padding:20px 0}
+.fc-progress-row{width:100%;max-width:600px;display:flex;align-items:center;gap:12px}
+.fc-prog-bar{flex:1;height:5px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden}
+.fc-prog-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--indigo));border-radius:99px;transition:width .5s ease}
+.fc-count{font-family:var(--mono);font-size:.75rem;color:var(--t2);white-space:nowrap}
+.flashcard-wrap{width:100%;max-width:600px;perspective:1200px}
+.flashcard{width:100%;height:340px;position:relative;cursor:pointer;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.22,1,.36,1)}
+.flashcard.flipped{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;border-radius:var(--r2);backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px;text-align:center}
+.fc-front{background:var(--card);border:1px solid var(--border)}
+.fc-back{background:linear-gradient(135deg,rgba(45,212,191,.08),rgba(129,140,248,.08));border:1px solid rgba(45,212,191,.2);transform:rotateY(180deg)}
+.fc-type{font-family:var(--mono);font-size:.65rem;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px}
+.fc-word{font-family:var(--serif);font-size:2.4rem;font-weight:600;color:var(--teal);font-style:italic;margin-bottom:6px}
+.fc-phonetic{font-family:var(--mono);font-size:.85rem;color:var(--t3);margin-bottom:20px}
+.fc-hint{font-size:.78rem;color:var(--t3);display:flex;align-items:center;gap:5px}
+.fc-def{font-size:.95rem;color:var(--t1);line-height:1.65;margin-bottom:14px}
+.fc-example{font-size:.82rem;color:var(--t2);font-style:italic;border-left:3px solid var(--teal);padding-left:12px;line-height:1.6;margin-bottom:14px;text-align:left;width:100%}
+.fc-synonyms{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.syn{padding:3px 10px;border-radius:99px;background:var(--indigo-dim);color:var(--indigo);font-size:.72rem;border:1px solid rgba(129,140,248,.25)}
+.fc-actions{display:flex;gap:12px;width:100%;max-width:600px}
+.fc-act-btn{flex:1;padding:13px;border-radius:var(--r);border:none;cursor:pointer;font-family:var(--font);font-size:.88rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.fc-act-btn:hover{transform:translateY(-2px)}
+.btn-hard{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,133,.25)}
+.btn-medium{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,.25)}
+.btn-easy{background:var(--green-dim);color:var(--green);border:1px solid rgba(74,222,128,.25)}
+.fc-flip-hint{font-size:.75rem;color:var(--t3);display:flex;align-items:center;gap:5px}
+.fc-complete{display:flex;flex-direction:column;align-items:center;justify-content:center;height:340px;background:linear-gradient(135deg,rgba(45,212,191,.08),rgba(129,140,248,.08));border:1px solid rgba(45,212,191,.2);border-radius:var(--r2);text-align:center;gap:16px;width:100%;max-width:600px}
+.fc-complete-emoji{font-size:3.5rem}
+.fc-complete-title{font-family:var(--serif);font-size:1.6rem;color:var(--teal);font-style:italic}
+.fc-complete-sub{font-size:.85rem;color:var(--t2)}
+.fc-restart-btn{padding:12px 28px;border-radius:var(--r);border:none;background:linear-gradient(135deg,var(--teal),var(--indigo));color:#07080d;font-family:var(--font);font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+
+/* QUIZ */
+.quiz-layout{display:grid;grid-template-columns:1fr 280px;gap:18px}
+.quiz-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:32px}
+.quiz-header{margin-bottom:28px}
+.quiz-type-tag{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:99px;font-size:.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+.tag-mcq{background:var(--sky-dim);color:var(--sky);border:1px solid rgba(56,189,248,.2)}
+.tag-fill{background:var(--indigo-dim);color:var(--indigo);border:1px solid rgba(129,140,248,.2)}
+.quiz-q-num{font-family:var(--mono);font-size:.72rem;color:var(--t3);margin-bottom:8px}
+.quiz-question{font-size:1.1rem;font-weight:700;line-height:1.5;margin-bottom:24px;letter-spacing:-.2px}
+.quiz-question .blank{display:inline-block;width:80px;height:3px;background:var(--teal);border-radius:2px;vertical-align:middle;margin:0 4px}
+.quiz-options{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.quiz-opt{padding:13px 16px;border-radius:var(--r);background:var(--bg2);border:1px solid var(--border);font-size:.88rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:12px}
+.quiz-opt:hover{border-color:var(--teal);background:var(--teal-dim);color:var(--teal)}
+.quiz-opt.selected{border-color:var(--teal);background:var(--teal-dim);color:var(--teal)}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-dim);color:var(--green)}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-dim);color:var(--red)}
+.opt-letter{width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,.06);display:grid;place-items:center;font-size:.7rem;font-weight:700;font-family:var(--mono);flex-shrink:0}
+.fill-input{width:100%;padding:13px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);font-family:var(--font);font-size:.95rem;outline:none;transition:border-color .2s;margin-bottom:16px}
+.fill-input:focus{border-color:rgba(45,212,191,.4)}
+.feedback-box{padding:14px 16px;border-radius:var(--r);font-size:.84rem;line-height:1.6;display:none;margin-bottom:20px}
+.feedback-box.show{display:block}
+.fb-correct{background:var(--green-dim);border:1px solid rgba(74,222,128,.2)}
+.fb-wrong{background:var(--red-dim);border:1px solid rgba(248,113,113,.2)}
+.quiz-nav{display:flex;gap:10px}
+.q-btn{padding:11px 24px;border-radius:var(--r);border:none;font-family:var(--font);font-size:.86rem;font-weight:700;cursor:pointer;transition:all .2s}
+.q-btn-primary{background:linear-gradient(135deg,var(--teal),var(--indigo));color:#07080d}
+.q-btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(45,212,191,.3)}
+.q-btn-secondary{background:var(--bg2);border:1px solid var(--border);color:var(--t2)}
+.quiz-sidebar{display:flex;flex-direction:column;gap:14px}
+.qsb-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px}
+.qsb-title{font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:12px}
+.q-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.q-dot{width:32px;height:32px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);display:grid;place-items:center;font-size:.72rem;font-family:var(--mono);cursor:pointer;transition:all .15s;color:var(--t3)}
+.q-dot.current{border-color:var(--teal);color:var(--teal);background:var(--teal-dim)}
+.q-dot.done-c{background:var(--green-dim);color:var(--green);border-color:rgba(74,222,128,.3)}
+.q-dot.done-w{background:var(--red-dim);color:var(--red);border-color:rgba(248,113,113,.3)}
+.score-display{text-align:center;padding:12px 0}
+.score-circle{width:70px;height:70px;border-radius:50%;margin:0 auto 10px;background:conic-gradient(var(--teal) calc(var(--pct) * 1%),rgba(255,255,255,.06) 0%);display:grid;place-items:center;font-family:var(--mono);font-size:1rem;font-weight:600;color:var(--teal);position:relative}
+.score-circle::before{content:'';position:absolute;inset:6px;background:var(--card);border-radius:50%}
+.score-val{position:relative;z-index:1}
+
+/* SENTENCE CORRECTION */
+.correction-layout{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.input-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:24px;display:flex;flex-direction:column;gap:14px}
+.panel-title{font-size:.88rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.panel-title::before{content:'';width:3px;height:14px;background:var(--teal);border-radius:2px}
+.correction-textarea{width:100%;flex:1;min-height:200px;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);font-family:var(--font);font-size:.9rem;line-height:1.7;resize:none;outline:none;transition:border-color .2s}
+.correction-textarea:focus{border-color:rgba(45,212,191,.4)}
+.correction-textarea::placeholder{color:var(--t3)}
+.analyze-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--teal),var(--indigo));color:#07080d;border:none;border-radius:var(--r);font-family:var(--font);font-size:.9rem;font-weight:800;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.analyze-btn:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(45,212,191,.3)}
+.analyze-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.result-panel{display:flex;flex-direction:column;gap:14px}
+.result-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:22px;flex:1}
+.error-list{display:flex;flex-direction:column;gap:10px}
+.error-item{padding:11px 13px;border-radius:var(--r);background:var(--bg2);border:1px solid var(--border);font-size:.81rem}
+.error-type{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.error-orig{color:var(--red)}
+.error-fix{color:var(--green)}
+.error-why{color:var(--t2);margin-top:4px;line-height:1.55}
+.scores-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.score-box{padding:12px;border-radius:var(--r);background:var(--bg2);border:1px solid var(--border);text-align:center}
+.score-box-val{font-family:var(--mono);font-size:1.3rem;font-weight:600}
+.score-box-lbl{font-size:.68rem;color:var(--t2);margin-top:2px}
+
+/* PROGRESS TAB */
+.progress-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.prog-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:24px}
+.skill-bars{display:flex;flex-direction:column;gap:14px;margin-top:4px}
+.skill-info{display:flex;justify-content:space-between;font-size:.78rem;color:var(--t2);margin-bottom:6px}
+.skill-bar{height:6px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden}
+.skill-fill{height:100%;border-radius:99px;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
+.milestone-list{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.milestone{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:var(--r);background:var(--bg2);border:1px solid var(--border);font-size:.82rem}
+.ms-ico{font-size:1.1rem}
+.ms-body{flex:1}
+.ms-name{font-weight:600}
+.ms-sub{font-size:.7rem;color:var(--t2)}
+.ms-status{font-size:.7rem;font-weight:700}
+.ms-done{color:var(--green)}
+.ms-pend{color:var(--t3)}
+
+/* PROFILE MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.profile-modal{background:var(--card);border:1px solid var(--border2);border-radius:var(--r2);padding:32px;width:380px;max-width:90vw;position:relative;animation:slideUp .3s cubic-bezier(.22,1,.36,1)}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);color:var(--t2);font-size:16px;cursor:pointer;display:grid;place-items:center;transition:all .15s}
+.modal-close:hover{color:var(--red);border-color:rgba(248,113,113,.3)}
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--indigo),#6d28d9);display:grid;place-items:center;font-size:26px;font-weight:700;color:#fff;margin:0 auto 14px;border:3px solid rgba(129,140,248,.3)}
+.profile-name{text-align:center;font-family:var(--serif);font-size:1.3rem;font-weight:600;margin-bottom:4px}
+.profile-email{text-align:center;font-size:.78rem;color:var(--t2);margin-bottom:20px}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.ps-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px;text-align:center}
+.ps-val{font-family:var(--mono);font-size:1.2rem;font-weight:600;color:var(--teal)}
+.ps-lbl{font-size:.65rem;color:var(--t2);margin-top:3px}
+.profile-info{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;font-size:.82rem;color:var(--t2);line-height:1.8;margin-bottom:16px}
+.logout-btn{width:100%;padding:12px;background:var(--red-dim);border:1px solid rgba(248,113,113,.25);color:var(--red);border-radius:var(--r);font-family:var(--font);font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s}
+.logout-btn:hover{background:rgba(248,113,113,.2)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.loading-spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--card2);border:1px solid var(--border2);border-radius:var(--r);padding:13px 18px;font-size:.83rem;z-index:999;display:flex;align-items:center;gap:9px;box-shadow:0 16px 48px rgba(0,0,0,.5);transform:translateY(70px);opacity:0;transition:all .4s cubic-bezier(.22,1,.36,1)}
+.toast.show{transform:translateY(0);opacity:1}
+
+@media(max-width:1100px){.chat-layout,.quiz-layout{grid-template-columns:1fr}.correction-layout{grid-template-columns:1fr}.progress-grid{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.content{padding:16px}.tab-btn span.tab-lbl{display:none}.fc-word{font-size:1.8rem}.stats-row{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profile-modal" onclick="if(event.target===this)closeProfile()">
+  <div class="profile-modal">
+    <button class="modal-close" onclick="closeProfile()">✕</button>
+    <div class="profile-avatar" id="pm-ava">?</div>
+    <div class="profile-name" id="pm-name">—</div>
+    <div class="profile-email" id="pm-email">—</div>
+    <div class="profile-stats">
+      <div class="ps-box"><div class="ps-val" id="pm-xp">0</div><div class="ps-lbl">XP Earned</div></div>
+      <div class="ps-box"><div class="ps-val" id="pm-words" style="color:var(--green)">0</div><div class="ps-lbl">Words Learned</div></div>
+      <div class="ps-box"><div class="ps-val" id="pm-quiz" style="color:var(--indigo)">0%</div><div class="ps-lbl">Quiz Accuracy</div></div>
+    </div>
+    <div class="profile-info" id="pm-info">Loading your activity...</div>
+    <button class="logout-btn" onclick="handleLogout()">🚪 Sign Out</button>
+  </div>
+</div>
+
+<div class="shell">
+  <nav class="slim-bar">
+    <div class="sb-logo">💬</div>
+    <div class="sb-icon active" title="Vocabulary">📖</div>
+    <div class="sb-icon" title="Dashboard" onclick="window.location.href='/dashboard'">🏠</div>
+    <div class="sb-divider"></div>
+    <!-- <div class="sb-icon" title="Speaking">🎙️</div>
+    <div class="sb-icon" title="Grammar">📝</div>
+    <div class="sb-icon" title="Listening">🎧</div>
+    <div class="sb-icon" title="Writing">✍️</div>
+    <div class="sb-icon" title="Interview">💼</div> -->
+    <div class="sb-divider"></div>
+    <!-- <div class="sb-icon" title="Settings" style="margin-top:auto">⚙️</div> -->
+    <div class="sb-icon" title="Sign Out" onclick="handleLogout()">🚪</div>
+  </nav>
+
+  <div class="main-area">
+    <header class="topbar">
+      <a class="back-btn" href="/dashboard">← Dashboard</a>
+      <div class="top-sep"></div>
+      <div class="top-module-name"><div class="dot"></div>📖 Vocabulary Builder</div>
+      <div class="top-right">
+        <div class="xp-chip">⚡ <span id="top-xp">0</span> XP</div>
+        <div class="user-ava" id="top-ava" onclick="openProfile()" title="View Profile">?</div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <div class="hero-strip">
+        <div class="hero-ico">📖</div>
+        <div class="hero-body">
+          <div class="hero-tag">🔥 Most Popular Module</div>
+          <div class="hero-title">Vocabulary <em>Builder</em></div>
+          <div class="hero-sub">Master words with AI-powered learning. Chat with the tutor, practice flashcards, take quizzes, and correct your sentences — all personalised to you.</div>
+        </div>
+      </div>
+
+      <!-- REAL STATS ONLY -->
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-ico">📚</div><div class="stat-num" style="color:var(--teal)" id="st-words">0</div><div class="stat-lbl">Words Learned This Session</div></div>
+        <div class="stat-box"><div class="stat-ico">🎯</div><div class="stat-num" style="color:var(--green)" id="st-acc">—</div><div class="stat-lbl">Quiz Accuracy</div></div>
+        <div class="stat-box"><div class="stat-ico">⚡</div><div class="stat-num" style="color:var(--amber)" id="st-xp">0</div><div class="stat-lbl">XP This Session</div></div>
+      </div>
+
+      <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('ai-tutor',this)">🤖 <span class="tab-lbl">AI Tutor</span></button>
+        <button class="tab-btn" onclick="switchTab('flashcards',this)">🎴 <span class="tab-lbl">Flashcards</span></button>
+        <button class="tab-btn" onclick="switchTab('quiz',this)">🎮 <span class="tab-lbl">Quiz</span></button>
+        <button class="tab-btn" onclick="switchTab('correction',this)">✍️ <span class="tab-lbl">Sentence Check</span></button>
+        <button class="tab-btn" onclick="switchTab('progress',this)">📊 <span class="tab-lbl">My Progress</span></button>
+      </div>
+
+      <!-- AI TUTOR -->
+      <div class="tab-panel active" id="panel-ai-tutor">
+        <div class="chat-layout">
+          <div class="chat-pane">
+            <div class="chat-header">
+              <div class="chat-ai-ava">🤖</div>
+              <div>
+                <div class="chat-ai-name">VocabAI Tutor</div>
+                <div class="chat-ai-status">Online — powered by Groq AI</div>
+              </div>
+              <div class="chat-mode-toggle">
+                <button class="mode-btn active" id="mode-learn" onclick="setMode('learn')">Learn</button>
+                <button class="mode-btn" id="mode-practice" onclick="setMode('practice')">Practice</button>
+                <button class="mode-btn" id="mode-interview" onclick="setMode('interview')">Interview</button>
+              </div>
+            </div>
+            <div class="chat-msgs" id="chat-msgs"></div>
+            <div class="chat-input-area">
+              <div class="chat-quick-btns">
+                <button class="quick-btn" onclick="quickSend('Teach me a new advanced English word with examples')">📖 New word</button>
+                <button class="quick-btn" onclick="quickSend('Give me an English idiom with its meaning and example')">💬 Idiom</button>
+                <button class="quick-btn" onclick="quickSend('Give me a business vocabulary word used in corporate settings')">💼 Business vocab</button>
+                <button class="quick-btn" onclick="quickSend('Correct this sentence and explain errors: I am knowing English since 5 years')">✅ Correct sentence</button>
+                <button class="quick-btn" onclick="quickSend('Give me a phrasal verb with examples')">🔤 Phrasal verb</button>
+                <button class="quick-btn" onclick="quickSend('Quiz me on vocabulary with a fill in the blank question')">🎮 Quick quiz</button>
+              </div>
+              <div class="chat-row">
+                <textarea class="chat-textarea" id="chat-input"
+                  placeholder="Ask anything — learn a word, fix your sentence, get examples…" rows="1"
+                  onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"
+                  oninput="autoResize(this)"></textarea>
+                <button class="send-btn" id="send-btn" onclick="sendChat()">➤</button>
+              </div>
+            </div>
+          </div>
+          <div class="right-panel">
+            <div class="rp-card">
+              <div class="rp-title">📅 Word of the Day</div>
+              <div class="wotd-word" id="wotd-word">—</div>
+              <div class="wotd-type" id="wotd-type">—</div>
+              <div class="wotd-def" id="wotd-def">—</div>
+              <div class="wotd-ex" id="wotd-ex">—</div>
+            </div>
+            <div class="rp-card">
+              <div class="rp-title">🎯 Practice Topics</div>
+              <div class="topic-chip" onclick="quickSend('Teach me vocabulary related to technology and IT')">💻 Technology & IT</div>
+              <div class="topic-chip" onclick="quickSend('Teach me vocabulary for job interviews and HR')">💼 Job Interview</div>
+              <div class="topic-chip" onclick="quickSend('Teach me academic vocabulary for essays')">🎓 Academic Writing</div>
+              <div class="topic-chip" onclick="quickSend('Teach me daily conversation vocabulary')">💬 Daily Conversation</div>
+              <div class="topic-chip" onclick="quickSend('Teach me medical and health vocabulary')">🏥 Medical / Health</div>
+            </div>
+            <div class="rp-card">
+              <div class="rp-title">✨ Tap to Learn</div>
+              <div id="recent-words">
+                <span class="word-chip" onclick="quickSend('Explain the word: eloquent with examples')">eloquent <span class="level">B2</span></span>
+                <span class="word-chip" onclick="quickSend('Explain the word: meticulous with examples')">meticulous <span class="level">C1</span></span>
+                <span class="word-chip" onclick="quickSend('Explain the word: leverage with examples')">leverage <span class="level">B2</span></span>
+                <span class="word-chip" onclick="quickSend('Explain the word: ambiguous with examples')">ambiguous <span class="level">B1</span></span>
+                <span class="word-chip" onclick="quickSend('Explain the word: collaborate with examples')">collaborate <span class="level">B1</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FLASHCARDS -->
+      <div class="tab-panel" id="panel-flashcards">
+        <div class="flashcard-area">
+          <div class="fc-progress-row">
+            <div class="fc-prog-bar"><div class="fc-prog-fill" id="fc-prog" style="width:0%"></div></div>
+            <div class="fc-count" id="fc-count">0 / 0</div>
+          </div>
+          <div id="flashcard-container" style="width:100%;max-width:600px">
+            <div class="flashcard-wrap">
+              <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="fc-face fc-front">
+                  <div class="fc-type" id="fc-type">VOCABULARY</div>
+                  <div class="fc-word" id="fc-word">Click Start</div>
+                  <div class="fc-phonetic" id="fc-phonetic">/ˈ…/</div>
+                  <div class="fc-hint">👆 Tap to reveal definition</div>
+                </div>
+                <div class="fc-face fc-back">
+                  <div class="fc-type">DEFINITION</div>
+                  <div class="fc-def" id="fc-def">—</div>
+                  <div class="fc-example" id="fc-example">—</div>
+                  <div class="fc-synonyms" id="fc-syns"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="fc-flip-hint" id="fc-flip-hint">👆 Tap card to see definition</div>
+          <div class="fc-actions" id="fc-actions" style="display:none">
+            <button class="fc-act-btn btn-hard" onclick="rateCard('hard')">😰 Hard</button>
+            <button class="fc-act-btn btn-medium" onclick="rateCard('medium')">🤔 Got It</button>
+            <button class="fc-act-btn btn-easy" onclick="rateCard('easy')">✅ Easy!</button>
+          </div>
+          <button class="fc-restart-btn" id="fc-start-btn" onclick="generateFlashcards()">▶ Start Flashcards</button>
+        </div>
+      </div>
+
+      <!-- QUIZ -->
+      <div class="tab-panel" id="panel-quiz">
+        <div class="quiz-layout">
+          <div class="quiz-card">
+            <div class="quiz-header">
+              <div class="quiz-type-tag tag-mcq" id="quiz-type-tag">🔵 Multiple Choice</div>
+              <div class="quiz-q-num" id="quiz-q-num">Question 1 of 10</div>
+              <div class="quiz-question" id="quiz-question">Loading question…</div>
+            </div>
+            <div id="quiz-body"></div>
+            <div class="feedback-box" id="feedback-box"></div>
+            <div class="quiz-nav">
+              <button class="q-btn q-btn-primary" id="quiz-check-btn" onclick="checkAnswer()">Check Answer</button>
+              <button class="q-btn q-btn-secondary" id="quiz-next-btn" onclick="nextQuestion()" style="display:none">Next →</button>
+              <button class="q-btn q-btn-secondary" onclick="generateQuiz()">🔄 New Quiz</button>
+            </div>
+          </div>
+          <div class="quiz-sidebar">
+            <div class="qsb-card">
+              <div class="qsb-title">Question Map</div>
+              <div class="q-grid" id="q-grid"></div>
+            </div>
+            <div class="qsb-card">
+              <div class="qsb-title">Score</div>
+              <div class="score-display">
+                <div class="score-circle" id="score-circle" style="--pct:0"><span class="score-val" id="score-val">0%</span></div>
+                <div style="font-size:.8rem;color:var(--t2)"><span id="score-right">0</span> correct / <span id="score-total">0</span> answered</div>
+              </div>
+            </div>
+            <div class="qsb-card">
+              <div class="qsb-title">📚 Quiz Tips</div>
+              <div style="font-size:.78rem;color:var(--t2);line-height:1.7">• Read the question carefully<br>• Eliminate obviously wrong options<br>• Use context clues in sentences<br>• Feedback explains every answer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SENTENCE CHECK -->
+      <div class="tab-panel" id="panel-correction">
+        <div class="correction-layout">
+          <div class="input-panel">
+            <div class="panel-title">Your Sentence / Paragraph</div>
+            <textarea class="correction-textarea" id="corr-input" placeholder="Type or paste your sentence here…
+
+Example: I am knowing English since 5 years and I want to improving my speaking skills for get good job."></textarea>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="quick-btn" onclick="fillCorrection('I am knowing English since 5 years and want to improving my speaking.')">Try example 1</button>
+              <button class="quick-btn" onclick="fillCorrection('She don\'t have much knowledge about the new technologies in market.')">Try example 2</button>
+              <button class="quick-btn" onclick="fillCorrection('Yesterday I have went to the interview and the interviewer was asking me many questions.')">Try example 3</button>
+            </div>
+            <button class="analyze-btn" id="analyze-btn" onclick="analyzeText()">🔍 Analyze & Correct with AI</button>
+          </div>
+          <div class="result-panel">
+            <div class="result-box" id="correction-result" style="min-height:200px;display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:.85rem;flex-direction:column;gap:8px">
+              <span style="font-size:2rem">✍️</span>Type a sentence and click Analyze
+            </div>
+            <div class="rp-card" id="scores-box" style="display:none">
+              <div class="rp-title">📊 Sentence Quality</div>
+              <div class="scores-row" id="scores-row"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="tab-panel" id="panel-progress">
+        <div class="progress-grid">
+          <div class="prog-card">
+            <div class="panel-title">📈 Session Activity</div>
+            <div id="session-summary" style="margin-top:16px;font-size:.85rem;color:var(--t2);line-height:2">
+              Loading your session data...
+            </div>
+          </div>
+          <div class="prog-card">
+            <div class="panel-title">📊 Vocabulary Skills</div>
+            <div class="skill-bars" id="skill-bars" style="margin-top:16px"></div>
+          </div>
+          <div class="prog-card" style="grid-column:1/-1">
+            <div class="panel-title">🏆 Milestones</div>
+            <div class="milestone-list" id="milestones" style="margin-top:12px"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toast-ico">✅</span> <span id="toast-msg">Done</span></div>
+
+<script>
+/* ═══════════════════════════════
+   STATE — real usage only, per user+session
+═══════════════════════════════ */
+let currentUser = null;
+
+// Session stats — reset every time page loads (real usage only)
+let S = {
+  xp: 0,
+  wordsLearned: 0,      // from flashcards (easy rating)
+  quizRight: 0,
+  quizTotal: 0,
+  messagesCount: 0,
+  correctionsCount: 0,
+  flashcardsReviewed: 0,
+};
+
+function getKey(k){ return 'vm_' + (currentUser?.email||'guest') + '_' + k; }
+
+// Persist across page reloads for same user (but NOT fake random data)
+function loadPersist(){
+  try {
+    const d = JSON.parse(localStorage.getItem(getKey('session')) || '{}');
+    if(d.xp) S.xp = d.xp;
+    if(d.wordsLearned) S.wordsLearned = d.wordsLearned;
+    if(d.quizRight) S.quizRight = d.quizRight;
+    if(d.quizTotal) S.quizTotal = d.quizTotal;
+    if(d.messagesCount) S.messagesCount = d.messagesCount;
+    if(d.correctionsCount) S.correctionsCount = d.correctionsCount;
+    if(d.flashcardsReviewed) S.flashcardsReviewed = d.flashcardsReviewed;
+  } catch(e){}
+}
+function savePersist(){
+  localStorage.setItem(getKey('session'), JSON.stringify(S));
+}
+function addXP(n){
+  S.xp += n;
+  savePersist();
+  document.getElementById('top-xp').textContent = S.xp;
+  document.getElementById('st-xp').textContent = S.xp;
+}
+function renderStats(){
+  document.getElementById('st-words').textContent = S.wordsLearned;
+  document.getElementById('st-xp').textContent = S.xp;
+  document.getElementById('top-xp').textContent = S.xp;
+  const acc = S.quizTotal > 0 ? Math.round((S.quizRight/S.quizTotal)*100)+'%' : '—';
+  document.getElementById('st-acc').textContent = acc;
+}
+
+/* ═══════════════════════════════════════════
+   SAVE VOCABULARY PROGRESS TO SERVER (Real DB)
+═══════════════════════════════════════════ */
+async function saveVocabProgressToServer(action) {
+  try {
+    const actionLabels = {
+      chat:       '🤖 AI Tutor Chat',
+      flashcard:  '🎴 Flashcard Review',
+      quiz:       '🎮 Vocabulary Quiz',
+      correction: '✍️ Sentence Correction'
+    };
+    const xpMap = { chat:5, flashcard:15, quiz:20, correction:25 };
+
+    const quizAcc = S.quizTotal > 0
+      ? Math.round((S.quizRight / S.quizTotal) * 100)
+      : 80;
+
+    const totalActions = S.messagesCount + S.flashcardsReviewed + S.quizTotal + S.correctionsCount;
+    const modulePct = Math.min(Math.round((totalActions / 40) * 100), 100);
+
+    await fetch('/api/progress/update', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        module_key:          'vocabulary',
+        practice_minutes:    1,
+        accuracy:            quizAcc,
+        xp_earned:           xpMap[action] || 5,
+        activity_title:      `📖 Vocabulary — ${actionLabels[action]}`,
+        activity_meta:       `Words learned: ${S.wordsLearned} · Quiz: ${quizAcc}% · XP: ${S.xp}`,
+        module_progress_pct: modulePct,
+      })
+    });
+  } catch(e) {
+    console.warn('Vocabulary progress save failed:', e);
+  }
+}
+/* ═══════════════════════════════
+   INIT
+═══════════════════════════════ */
+async function initUser() {
+  try {
+    const r = await fetch('/api/auth/me', {credentials:'include'});
+    const d = await r.json();
+    if (d.success) currentUser = d.user;
+    else throw new Error('not authed');
+  } catch(e) {
+    currentUser = { name:'Demo User', email:'demo@verbomate.ai' };
+  }
+  loadPersist();
+  document.getElementById('top-ava').textContent = ini(currentUser.name);
+  renderStats();
+  loadWordOfDay();
+  addMsg('ai', `👋 Hello <strong>${currentUser.name.split(' ')[0]}</strong>! I'm your <strong>VocabAI Tutor</strong>.<br><br>
+I can help you:<br>
+• 📖 <strong>Learn new words</strong> with examples and memory tips<br>
+• ✅ <strong>Correct your sentences</strong> and explain every error<br>
+• 💬 <strong>Teach idioms, phrasal verbs</strong> and business vocabulary<br>
+• 🎮 <strong>Quiz you interactively</strong> on vocabulary<br><br>
+<em>Click any quick button below or just type your question!</em>`, false);
+}
+
+function ini(n){ return (n||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2); }
+
+/* ═══════════════════════════════
+   PROFILE MODAL
+═══════════════════════════════ */
+function openProfile(){
+  const modal = document.getElementById('profile-modal');
+  modal.classList.add('show');
+  document.getElementById('pm-ava').textContent = ini(currentUser.name);
+  document.getElementById('pm-name').textContent = currentUser.name;
+  document.getElementById('pm-email').textContent = currentUser.email;
+  document.getElementById('pm-xp').textContent = S.xp;
+  document.getElementById('pm-words').textContent = S.wordsLearned;
+  const acc = S.quizTotal > 0 ? Math.round((S.quizRight/S.quizTotal)*100)+'%' : '—';
+  document.getElementById('pm-quiz').textContent = acc;
+  const lines = [];
+  if(S.messagesCount > 0) lines.push(`💬 ${S.messagesCount} messages with AI Tutor`);
+  if(S.flashcardsReviewed > 0) lines.push(`🎴 ${S.flashcardsReviewed} flashcards reviewed`);
+  if(S.wordsLearned > 0) lines.push(`📚 ${S.wordsLearned} words marked as Easy`);
+  if(S.quizTotal > 0) lines.push(`🎮 ${S.quizTotal} quiz questions attempted`);
+  if(S.correctionsCount > 0) lines.push(`✍️ ${S.correctionsCount} sentences corrected`);
+  document.getElementById('pm-info').innerHTML = lines.length
+    ? lines.join('<br>')
+    : '📌 Start learning to see your activity here!';
+}
+function closeProfile(){
+  document.getElementById('profile-modal').classList.remove('show');
+}
+
+/* ═══════════════════════════════
+   TABS
+═══════════════════════════════ */
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+  if (id==='quiz' && questions.length===0) generateQuiz();
+  if (id==='progress') renderProgressTab();
+}
+
+/* ═══════════════════════════════
+   API CALL
+═══════════════════════════════ */
+async function callClaude(systemPrompt, messages, maxTokens=1000) {
+  const res = await fetch('/api/claude', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      max_tokens: maxTokens,
+      system: systemPrompt,
+      messages: messages
+    })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error?.message || 'API error '+res.status);
+  return data.content.map(b=>b.type==='text'?b.text:'').join('');
+}
+
+/* ═══════════════════════════════
+   CHAT
+═══════════════════════════════ */
+let chatMode = 'learn';
+let chatHistory = [];
+
+const MODE_PROMPTS = {
+  learn:`You are VocabAI, an expert English vocabulary tutor for Indian English learners. Help users expand their vocabulary interactively.
+When teaching a word: state it with part of speech and pronunciation, give a clear definition, provide 2-3 example sentences with the word bolded, list synonyms and antonyms, add a memory tip, mention common mistakes Indian speakers make.
+When correcting sentences: show the corrected version, explain each error with the grammar rule, give correct usage examples.
+Be warm, encouraging and detailed.`,
+  practice:`You are VocabAI in PRACTICE MODE for Indian English learners. Give interactive vocabulary exercises: fill-in-the-blank, choose the correct word from 4 options, identify errors, use the word in a sentence. After each answer give detailed feedback and award XP. Be conversational.`,
+  interview:`You are VocabAI in INTERVIEW MODE for Indian job seekers targeting IT and corporate roles. Focus on power words for interviews, how to use them naturally, common mistakes Indian candidates make, and sample interview Q&A with strong vocabulary. Be professional and encouraging.`
+};
+
+function setMode(m) {
+  chatMode = m;
+  chatHistory = [];
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('mode-'+m).classList.add('active');
+  const msgs = {
+    learn:'🎓 <strong>Learn mode</strong> activated! Ask me to teach you any word, idiom, or correct your sentence.',
+    practice:'💪 <strong>Practice mode</strong>! I\'ll give you exercises. Ready?',
+    interview:'💼 <strong>Interview mode</strong>! Let\'s build your professional vocabulary. Tell me your industry!'
+  };
+  addMsg('ai', msgs[m]);
+}
+
+function addMsg(role, html, animate=true) {
+  const area = document.getElementById('chat-msgs');
+  const av = role==='user' ? ini(currentUser?.name) : '🤖';
+  const div = document.createElement('div');
+  div.className = 'msg-row '+role;
+  div.innerHTML = `<div class="msg-ava ${role==='user'?'human':'ai'}">${av}</div><div class="msg-bubble">${html}</div>`;
+  area.appendChild(div);
+  if (animate) div.style.animation='fadeUp .3s ease both';
+  area.scrollTop = area.scrollHeight;
+}
+
+function showTyping() {
+  const area = document.getElementById('chat-msgs');
+  const div = document.createElement('div');
+  div.className='msg-row ai'; div.id='typing-ind';
+  div.innerHTML=`<div class="msg-ava ai">🤖</div><div class="msg-bubble"><div class="typing-ind"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+  area.appendChild(div);
+  area.scrollTop=area.scrollHeight;
+}
+function removeTyping(){ const t=document.getElementById('typing-ind'); if(t)t.remove(); }
+
+async function sendChat() {
+  const inp = document.getElementById('chat-input');
+  const msg = inp.value.trim();
+  if (!msg) return;
+  inp.value=''; inp.style.height='auto';
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true;
+  addMsg('user', escHtml(msg));
+  chatHistory.push({role:'user', content:msg});
+  showTyping();
+  try {
+    const reply = await callClaude(MODE_PROMPTS[chatMode], chatHistory);
+    removeTyping();
+    addMsg('ai', fmtReply(reply));
+    chatHistory.push({role:'assistant', content:reply});
+    S.messagesCount++;
+    addXP(5);
+    savePersist();
+    saveVocabProgressToServer('chat');
+  } catch(e) {
+    removeTyping();
+    addMsg('ai', `⚠️ <strong>Could not reach AI.</strong> Error: ${escHtml(e.message)}`);
+  }
+  btn.disabled=false;
+  inp.focus();
+}
+
+function quickSend(msg){ document.getElementById('chat-input').value=msg; sendChat(); }
+
+function fmtReply(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g,'<em>$1</em>')
+    .replace(/`(.*?)`/g,'<code style="background:rgba(45,212,191,.1);color:var(--teal);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:.88em">$1</code>')
+    .replace(/^### (.+)$/gm,'<div style="font-weight:800;color:var(--teal);margin:10px 0 4px;font-size:.9rem">$1</div>')
+    .replace(/^## (.+)$/gm,'<div style="font-weight:800;font-size:.95rem;margin:8px 0 4px">$1</div>')
+    .replace(/^- (.+)$/gm,'<div style="display:flex;gap:6px;margin:3px 0"><span style="color:var(--teal);flex-shrink:0">•</span><span>$1</span></div>')
+    .replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+}
+
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function autoResize(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,100)+'px'; }
+
+/* ═══════════════════════════════
+   WORD OF THE DAY
+═══════════════════════════════ */
+const WOTD = [
+  {word:'Eloquent',type:'adjective /ˈɛl.ə.kwənt/',def:'Fluent and persuasive in speaking or writing.',ex:'"She gave an eloquent speech that moved the entire audience."'},
+  {word:'Meticulous',type:'adjective /məˈtɪk.jʊ.ləs/',def:'Showing great attention to detail; very careful and precise.',ex:'"He was meticulous in his work, never missing a single detail."'},
+  {word:'Leverage',type:'noun/verb /ˈlev.ər.ɪdʒ/',def:'Use something to maximum advantage.',ex:'"She leveraged her network to land the dream job."'},
+  {word:'Pragmatic',type:'adjective /præɡˈmæt.ɪk/',def:'Dealing with things sensibly and realistically.',ex:'"We need a pragmatic solution, not an idealistic one."'},
+  {word:'Proficient',type:'adjective /prəˈfɪʃ.ənt/',def:'Competent or skilled in doing or using something.',ex:'"She is proficient in three programming languages."'},
+  {word:'Articulate',type:'adjective /ɑːˈtɪk.jʊ.lət/',def:'Able to speak fluently and coherently.',ex:'"He is very articulate and always explains complex ideas simply."'},
+  {word:'Perseverance',type:'noun /ˌpɜː.sɪˈvɪər.əns/',def:'Continued effort to do something despite difficulty.',ex:'"Her perseverance paid off when she finally cracked the interview."'},
+];
+function loadWordOfDay(){
+  const w=WOTD[new Date().getDay()%WOTD.length];
+  document.getElementById('wotd-word').textContent=w.word;
+  document.getElementById('wotd-type').textContent=w.type;
+  document.getElementById('wotd-def').textContent=w.def;
+  document.getElementById('wotd-ex').textContent=w.ex;
+}
+
+/* ═══════════════════════════════
+   FLASHCARDS
+═══════════════════════════════ */
+const FLASH_WORDS = [
+  {word:'Articulate',phonetic:'/ɑːˈtɪk.jʊ.lət/',def:'Able to speak fluently and coherently.',example:'She is very articulate and always explains her ideas clearly.',syns:['eloquent','fluent','expressive']},
+  {word:'Perseverance',phonetic:'/ˌpɜː.sɪˈvɪər.əns/',def:'Continued effort despite difficulty.',example:'His perseverance paid off when he finally cracked the interview.',syns:['persistence','determination','tenacity']},
+  {word:'Pragmatic',phonetic:'/præɡˈmæt.ɪk/',def:'Dealing with things sensibly and realistically.',example:'She took a pragmatic approach to solving the team conflict.',syns:['practical','sensible','realistic']},
+  {word:'Concise',phonetic:'/kənˈsaɪs/',def:'Giving a lot of information clearly and in few words.',example:'Please keep your email concise — no more than three paragraphs.',syns:['brief','succinct','terse']},
+  {word:'Proactive',phonetic:'/ˌprəʊˈæk.tɪv/',def:'Creating or controlling a situation rather than just responding to it.',example:'Good employees are proactive — they solve problems before being asked.',syns:['enterprising','dynamic','forward-thinking']},
+  {word:'Leverage',phonetic:'/ˈlev.ər.ɪdʒ/',def:'Use something to maximum advantage.',example:'She leveraged her technical skills to get a promotion.',syns:['utilize','exploit','capitalize on']},
+  {word:'Meticulous',phonetic:'/məˈtɪk.jʊ.ləs/',def:'Showing great attention to detail.',example:'The auditor was meticulous in reviewing every transaction.',syns:['thorough','precise','careful']},
+  {word:'Ambiguous',phonetic:'/æmˈbɪɡ.ju.əs/',def:'Open to more than one interpretation.',example:'The manager gave an ambiguous answer, leaving everyone confused.',syns:['unclear','vague','equivocal']},
+];
+
+let flashcards=[], fcIndex=0, fcFlipped=false, fcStarted=false;
+
+function generateFlashcards() {
+  flashcards=[...FLASH_WORDS].sort(()=>Math.random()-.5);
+  fcIndex=0; fcFlipped=false; fcStarted=true;
+  document.getElementById('fc-start-btn').style.display='none';
+  const container=document.getElementById('flashcard-container');
+  container.innerHTML=`
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="fc-face fc-front">
+          <div class="fc-type" id="fc-type">VOCABULARY</div>
+          <div class="fc-word" id="fc-word">—</div>
+          <div class="fc-phonetic" id="fc-phonetic">/ˈ…/</div>
+          <div class="fc-hint">👆 Tap to reveal definition</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-type">DEFINITION</div>
+          <div class="fc-def" id="fc-def">—</div>
+          <div class="fc-example" id="fc-example">—</div>
+          <div class="fc-synonyms" id="fc-syns"></div>
+        </div>
+      </div>
+    </div>`;
+  showFlashcard();
+}
+
+function showFlashcard() {
+  if (fcIndex >= flashcards.length) {
+    document.getElementById('flashcard-container').innerHTML = `
+      <div class="fc-complete">
+        <div class="fc-complete-emoji">🎉</div>
+        <div class="fc-complete-title">Session Complete!</div>
+        <div class="fc-complete-sub">You reviewed all ${flashcards.length} flashcards. Excellent work!</div>
+        <button class="fc-restart-btn" onclick="generateFlashcards()">🔄 Restart Session</button>
+      </div>`;
+    document.getElementById('fc-actions').style.display='none';
+    document.getElementById('fc-flip-hint').style.display='none';
+    document.getElementById('fc-prog').style.width='100%';
+    document.getElementById('fc-count').textContent=`${flashcards.length} / ${flashcards.length}`;
+    return;
+  }
+  const w=flashcards[fcIndex];
+  document.getElementById('fc-word').textContent=w.word;
+  document.getElementById('fc-phonetic').textContent=w.phonetic;
+  document.getElementById('fc-def').textContent=w.def;
+  document.getElementById('fc-example').textContent='"'+w.example+'"';
+  document.getElementById('fc-syns').innerHTML=w.syns.map(s=>`<span class="syn">${s}</span>`).join('');
+  const card=document.getElementById('flashcard');
+  if(card){ card.classList.remove('flipped'); fcFlipped=false; }
+  document.getElementById('fc-actions').style.display='none';
+  document.getElementById('fc-flip-hint').style.display='flex';
+  const pct=Math.round((fcIndex/flashcards.length)*100);
+  document.getElementById('fc-prog').style.width=pct+'%';
+  document.getElementById('fc-count').textContent=`${fcIndex} / ${flashcards.length}`;
+}
+
+function flipCard() {
+  if (!fcStarted || fcIndex>=flashcards.length) return;
+  fcFlipped=!fcFlipped;
+  const card=document.getElementById('flashcard');
+  if(card) card.classList.toggle('flipped',fcFlipped);
+  if(fcFlipped){
+    document.getElementById('fc-actions').style.display='flex';
+    document.getElementById('fc-flip-hint').style.display='none';
+  }
+}
+
+function rateCard(rating) {
+  S.flashcardsReviewed++;
+  if(rating==='easy'){ S.wordsLearned++; addXP(15); showToast('✅','+15 XP — Word learned!'); }
+  else if(rating==='medium'){ addXP(8); showToast('🔄','+8 XP — Keep reviewing!'); }
+  else { addXP(3); showToast('💪','+3 XP — You\'ll get it!'); }
+  savePersist();
+  renderStats();
+  saveVocabProgressToServer('flashcard'); 
+  fcIndex++;
+  showFlashcard();
+}
+
+/* ═══════════════════════════════
+   QUIZ
+═══════════════════════════════ */
+const QUIZ_BANK = [
+  {type:'mcq',question:'Choose the word that best completes: "Her _____ presentation impressed the entire board."',options:['ambiguous','eloquent','tedious','abrupt'],answer:1,explanation:'**Eloquent** means fluent and persuasive.',word:'eloquent'},
+  {type:'fill',question:'Fill in: "We need to _____ our existing resources instead of hiring new staff."',answer:'leverage',hint:'Use something to maximum advantage.',explanation:'**Leverage** means to use something effectively to achieve the best results.',word:'leverage'},
+  {type:'mcq',question:'What does "meticulous" mean?',options:['Very fast','Very careful and precise','Very creative','Very expensive'],answer:1,explanation:'**Meticulous** means showing great attention to detail.',word:'meticulous'},
+  {type:'fill',question:'Find the correct word: "She is very _____ in Python — she has been coding for 5 years."',answer:'proficient',hint:'Skilled and competent in something.',explanation:'**Proficient** means skilled and competent. We say "proficient in" a skill.',word:'proficient'},
+  {type:'mcq',question:'"Pragmatic" is closest in meaning to:',options:['Creative','Optimistic','Practical','Ambitious'],answer:2,explanation:'**Pragmatic** means dealing with things realistically and practically.',word:'pragmatic'},
+  {type:'fill',question:'Fill in: "His _____ answer confused everyone — nobody knew what he actually meant."',answer:'ambiguous',hint:'Unclear or having more than one interpretation.',explanation:'**Ambiguous** means open to more than one interpretation.',word:'ambiguous'},
+  {type:'mcq',question:'Which sentence uses "articulate" CORRECTLY?',options:['"He articulate his thoughts well."','"She is very articulate speaker."','"He is articulate and explains things clearly."','"They articulated the meeting."'],answer:2,explanation:'**Articulate** as an adjective: "He is articulate" is correct.',word:'articulate'},
+  {type:'fill',question:'"Despite many setbacks, her _____ kept her going until she finally succeeded."',answer:'perseverance',hint:'Continued effort despite difficulties.',explanation:'**Perseverance** means persistent effort despite obstacles.',word:'perseverance'},
+  {type:'mcq',question:'"Concise" means:',options:['Long and detailed','Short and clear','Confusing','Repetitive'],answer:1,explanation:'**Concise** means expressing a lot in a few words without losing meaning.',word:'concise'},
+  {type:'mcq',question:'A "proactive" employee is someone who:',options:['Waits for instructions','Only reacts to problems','Anticipates and acts before being told','Complains about problems'],answer:2,explanation:'**Proactive** = acting in advance to prevent problems or create opportunities.',word:'proactive'},
+];
+
+let questions=[], currentQ=0, selectedOpt=null, fillAnswer='', scores={right:0,wrong:0,answered:0}, qResults=[];
+
+function generateQuiz() {
+  questions=[...QUIZ_BANK].sort(()=>Math.random()-.5).slice(0,10);
+  currentQ=0; scores={right:0,wrong:0,answered:0};
+  qResults=new Array(questions.length).fill(null);
+  renderQuizQuestion(); renderQGrid(); updateScore();
+}
+
+function renderQuizQuestion() {
+  if(currentQ>=questions.length){ showQuizComplete(); return; }
+  const q=questions[currentQ];
+  selectedOpt=null; fillAnswer='';
+  const typeLabels={mcq:'🔵 Multiple Choice',fill:'✏️ Fill in the Blank'};
+  const tagCls={mcq:'tag-mcq',fill:'tag-fill'};
+  document.getElementById('quiz-type-tag').className='quiz-type-tag '+(tagCls[q.type]||'tag-mcq');
+  document.getElementById('quiz-type-tag').textContent=typeLabels[q.type]||'Question';
+  document.getElementById('quiz-q-num').textContent=`Question ${currentQ+1} of ${questions.length}`;
+  document.getElementById('quiz-question').innerHTML=escHtml(q.question).replace('_____','<span class="blank"></span>');
+  const body=document.getElementById('quiz-body');
+  if(q.type==='mcq'){
+    body.innerHTML=`<div class="quiz-options">${(q.options||[]).map((o,i)=>`
+      <div class="quiz-opt" onclick="selectOpt(${i})" id="opt-${i}">
+        <div class="opt-letter">${String.fromCharCode(65+i)}</div>${escHtml(o)}
+      </div>`).join('')}</div>`;
+  } else {
+    body.innerHTML=`
+      <div style="margin-bottom:10px;font-size:.78rem;color:var(--t3)">Hint: ${escHtml(q.hint||'')}</div>
+      <input class="fill-input" id="fill-inp" placeholder="Type your answer here…"
+        onkeydown="if(event.key==='Enter')checkAnswer()"
+        oninput="fillAnswer=this.value">`;
+    setTimeout(()=>{ const i=document.getElementById('fill-inp'); if(i)i.focus(); },100);
+  }
+  const fb=document.getElementById('feedback-box');
+  fb.className='feedback-box'; fb.innerHTML='';
+  document.getElementById('quiz-check-btn').style.display='inline-flex';
+  document.getElementById('quiz-next-btn').style.display='none';
+}
+
+function selectOpt(i){
+  selectedOpt=i;
+  document.querySelectorAll('.quiz-opt').forEach((o,j)=>o.classList.toggle('selected',j===i));
+}
+
+function checkAnswer() {
+  const q=questions[currentQ];
+  let correct=false;
+  if(q.type==='fill'){
+    const inp=document.getElementById('fill-inp');
+    fillAnswer=(inp?inp.value:fillAnswer).trim().toLowerCase();
+    const ans=q.answer.toLowerCase();
+    correct = fillAnswer===ans || fillAnswer.includes(ans) || ans.includes(fillAnswer);
+  } else {
+    if(selectedOpt===null){ showToast('⚠️','Please select an answer!'); return; }
+    correct=selectedOpt===q.answer;
+  }
+  qResults[currentQ]=correct?'c':'w';
+  if(correct){ scores.right++; S.quizRight++; addXP(20); }
+  else { S.quizTotal++; addXP(3); }
+  S.quizTotal = scores.right + scores.wrong + (correct?0:0);
+  scores.answered++;
+  S.quizRight = scores.right;
+  S.quizTotal = scores.answered;
+  savePersist(); renderStats();
+  saveVocabProgressToServer('quiz'); 
+
+  const fb=document.getElementById('feedback-box');
+  fb.className='feedback-box show '+(correct?'fb-correct':'fb-wrong');
+  fb.innerHTML=(correct
+    ? `<strong style="color:var(--green)">Correct! +20 XP</strong><br>`
+    : `<strong style="color:var(--red)">Not quite.</strong> Answer: <strong style="color:var(--teal)">${escHtml(String(q.answer))}</strong><br>`)
+    + fmtReply(q.explanation);
+  if(q.type==='mcq'){
+    document.querySelectorAll('.quiz-opt').forEach((o,i)=>{
+      if(i===q.answer) o.classList.add('correct');
+      else if(i===selectedOpt&&!correct) o.classList.add('wrong');
+    });
+  }
+  document.getElementById('quiz-check-btn').style.display='none';
+  document.getElementById('quiz-next-btn').style.display='inline-flex';
+  renderQGrid(); updateScore();
+}
+
+function nextQuestion(){ currentQ++; if(currentQ>=questions.length){showQuizComplete();return;} renderQuizQuestion(); renderQGrid(); }
+
+function showQuizComplete() {
+  const pct=scores.answered>0?Math.round((scores.right/scores.answered)*100):0;
+  document.getElementById('quiz-question').innerHTML=`<span style="color:var(--teal)">Quiz Complete!</span>`;
+  document.getElementById('quiz-body').innerHTML=`
+    <div style="padding:28px;text-align:center;border-radius:var(--r);background:var(--bg2);border:1px solid var(--border)">
+      <div style="font-size:3rem;margin-bottom:12px">${pct>=80?'🏆':pct>=60?'👍':'💪'}</div>
+      <div style="font-family:var(--mono);font-size:2rem;font-weight:600;color:${pct>=80?'var(--green)':pct>=60?'var(--amber)':'var(--red)'}">${pct}%</div>
+      <div style="color:var(--t2);font-size:.9rem;margin-top:8px">${scores.right} / ${scores.answered} correct</div>
+    </div>`;
+  document.getElementById('feedback-box').className='feedback-box';
+  document.getElementById('quiz-check-btn').style.display='none';
+  document.getElementById('quiz-next-btn').style.display='none';
+}
+
+function renderQGrid(){
+  document.getElementById('q-grid').innerHTML=questions.map((_,i)=>{
+    const cls=i===currentQ?'current':qResults[i]==='c'?'done-c':qResults[i]==='w'?'done-w':'';
+    return `<div class="q-dot ${cls}">${i+1}</div>`;
+  }).join('');
+}
+function updateScore(){
+  const pct=scores.answered?Math.round((scores.right/scores.answered)*100):0;
+  document.getElementById('score-val').textContent=pct+'%';
+  document.getElementById('score-circle').style.setProperty('--pct',pct);
+  document.getElementById('score-right').textContent=scores.right;
+  document.getElementById('score-total').textContent=scores.answered;
+}
+
+/* ═══════════════════════════════
+   SENTENCE CORRECTION
+═══════════════════════════════ */
+function fillCorrection(t){ document.getElementById('corr-input').value=t; }
+
+async function analyzeText() {
+  const text=document.getElementById('corr-input').value.trim();
+  if(!text){ showToast('⚠️','Please enter a sentence to analyze.'); return; }
+  const btn=document.getElementById('analyze-btn');
+  btn.disabled=true;
+  btn.innerHTML='<div class="loading-spin"></div> Analyzing with AI…';
+  const rb=document.getElementById('correction-result');
+  rb.style.cssText='min-height:200px;background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:22px';
+  rb.innerHTML='<div style="display:flex;align-items:center;gap:10px;color:var(--t2)"><div class="loading-spin"></div> Analyzing…</div>';
+  document.getElementById('scores-box').style.display='none';
+
+  const prompt=`You are an expert English grammar corrector for Indian English learners.
+Text: "${text}"
+Respond ONLY with valid JSON (no markdown):
+{"corrected":"corrected sentence","errors":[{"type":"Grammar/Tense/Article/Preposition","original":"wrong phrase","fixed":"correct phrase","explanation":"rule explanation"}],"vocabulary_suggestions":[{"original":"simple word","better":"better word","example":"example sentence"}],"scores":{"grammar":85,"vocabulary":70,"overall":78},"feedback":"encouraging feedback"}`;
+
+  try {
+    const raw=await callClaude(prompt,[{role:'user',content:'Analyze: '+text}], 1200);
+    const clean=raw.replace(/```json\n?|\n?```/g,'').trim();
+    const data=JSON.parse(clean);
+    let html=`<div class="panel-title" style="margin-bottom:14px">Corrected Version</div>
+      <div style="background:var(--teal-dim);padding:14px;border-radius:var(--r);border-left:3px solid var(--teal);font-size:.95rem;line-height:1.8;margin-bottom:16px">${escHtml(data.corrected||text)}</div>`;
+    if(data.errors?.length){
+      html+=`<div style="font-size:.72rem;font-weight:700;color:var(--t3);text-transform:uppercase;margin-bottom:8px">Errors Found (${data.errors.length})</div>
+      <div class="error-list">${data.errors.map(e=>`<div class="error-item">
+        <div class="error-type" style="color:var(--amber)">${escHtml(e.type||'')}</div>
+        ${e.original?`<div class="error-orig">✗ ${escHtml(e.original)}</div>`:''}
+        <div class="error-fix">✓ ${escHtml(e.fixed||'')}</div>
+        <div class="error-why">${escHtml(e.explanation||'')}</div>
+      </div>`).join('')}</div>`;
+    } else {
+      html+=`<div style="color:var(--green);font-size:.85rem;padding:12px;background:var(--green-dim);border-radius:var(--r)">No major errors found!</div>`;
+    }
+    if(data.vocabulary_suggestions?.length){
+      html+=`<div style="font-size:.72rem;font-weight:700;color:var(--t3);text-transform:uppercase;margin:14px 0 8px">Vocabulary Upgrades</div>
+      <div class="error-list">${data.vocabulary_suggestions.map(v=>`<div class="error-item">
+        <div style="color:var(--teal);font-weight:600">Use <strong>${escHtml(v.better||'')}</strong> instead of "${escHtml(v.original||'')}"</div>
+        <div class="error-why" style="font-style:italic">"${escHtml(v.example||'')}"</div>
+      </div>`).join('')}</div>`;
+    }
+    if(data.feedback) html+=`<div style="margin-top:14px;padding:12px;background:var(--indigo-dim);border-radius:var(--r);font-size:.82rem;color:var(--t2)">${escHtml(data.feedback)}</div>`;
+    rb.innerHTML=html;
+    if(data.scores){
+      document.getElementById('scores-box').style.display='block';
+      document.getElementById('scores-row').innerHTML=[
+        {label:'Grammar',val:data.scores.grammar,color:'var(--green)'},
+        {label:'Vocabulary',val:data.scores.vocabulary,color:'var(--indigo)'},
+        {label:'Overall',val:data.scores.overall,color:'var(--teal)'}
+      ].map(s=>`<div class="score-box"><div class="score-box-val" style="color:${s.color}">${s.val}%</div><div class="score-box-lbl">${s.label}</div></div>`).join('');
+    }
+    S.correctionsCount++; addXP(25); savePersist(); renderStats();
+    showToast('✅','+25 XP — Analyzed!');
+    saveVocabProgressToServer('correction');
+  } catch(e) {
+    rb.innerHTML=`<div style="color:var(--red);padding:16px">Could not analyze. ${escHtml(e.message)}</div>`;
+  }
+  btn.disabled=false;
+  btn.innerHTML='🔍 Analyze & Correct with AI';
+}
+
+/* ═══════════════════════════════
+   PROGRESS TAB
+═══════════════════════════════ */
+function renderProgressTab() {
+  // Session summary
+  const lines = [];
+  lines.push(`⚡ <strong style="color:var(--amber)">${S.xp} XP</strong> earned this session`);
+  lines.push(`💬 <strong style="color:var(--teal)">${S.messagesCount}</strong> messages with AI Tutor`);
+  lines.push(`🎴 <strong style="color:var(--indigo)">${S.flashcardsReviewed}</strong> flashcards reviewed`);
+  lines.push(`📚 <strong style="color:var(--green)">${S.wordsLearned}</strong> words marked as Easy`);
+  lines.push(`🎮 <strong style="color:var(--sky)">${S.quizTotal}</strong> quiz questions attempted`);
+  lines.push(`✍️ <strong style="color:var(--amber)">${S.correctionsCount}</strong> sentences corrected`);
+  document.getElementById('session-summary').innerHTML = lines.join('<br>');
+
+  // Skill bars based on actual usage
+  const skills=[
+    {name:'AI Tutor Usage',pct:Math.min(S.messagesCount*10,100),color:'var(--teal)'},
+    {name:'Flashcard Practice',pct:Math.min(S.flashcardsReviewed*12,100),color:'var(--indigo)'},
+    {name:'Quiz Performance',pct:S.quizTotal>0?Math.round((S.quizRight/S.quizTotal)*100):0,color:'var(--green)'},
+    {name:'Sentence Correction',pct:Math.min(S.correctionsCount*25,100),color:'var(--amber)'},
+  ];
+  document.getElementById('skill-bars').innerHTML=skills.map(s=>`
+    <div><div class="skill-info"><span>${s.name}</span><span style="color:${s.color};font-family:var(--mono)">${s.pct}%</span></div>
+    <div class="skill-bar"><div class="skill-fill" style="width:0%;background:${s.color}" data-w="${s.pct}"></div></div></div>`).join('');
+  setTimeout(()=>document.querySelectorAll('.skill-fill').forEach(b=>b.style.width=b.dataset.w+'%'),200);
+
+  // Milestones based on real activity
+  const ms=[
+    {ico:'💬',name:'First Conversation',sub:'Chat with the AI Tutor',done:S.messagesCount>=1},
+    {ico:'🎴',name:'First Flashcard',sub:'Review a flashcard',done:S.flashcardsReviewed>=1},
+    {ico:'📚',name:'First Word Learned',sub:'Rate a flashcard as Easy',done:S.wordsLearned>=1},
+    {ico:'🎮',name:'First Quiz',sub:'Attempt a quiz question',done:S.quizTotal>=1},
+    {ico:'✍️',name:'First Correction',sub:'Analyze a sentence',done:S.correctionsCount>=1},
+    {ico:'⚡',name:'50 XP Earned',sub:`${S.xp}/50 XP`,done:S.xp>=50},
+    {ico:'🏆',name:'100 XP Earned',sub:`${S.xp}/100 XP`,done:S.xp>=100},
+    {ico:'🌟',name:'5 Words Learned',sub:`${S.wordsLearned}/5 words`,done:S.wordsLearned>=5},
+  ];
+  document.getElementById('milestones').innerHTML=ms.map(m=>`
+    <div class="milestone">
+      <div class="ms-ico">${m.ico}</div>
+      <div class="ms-body"><div class="ms-name">${m.name}</div><div class="ms-sub">${m.sub}</div></div>
+      <div class="ms-status ${m.done?'ms-done':'ms-pend'}">${m.done?'✅ Done':'⏳ Pending'}</div>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════
+   LOGOUT + TOAST
+═══════════════════════════════ */
+async function handleLogout(){
+  closeProfile();
+  await fetch('/api/auth/logout',{method:'POST',credentials:'include'});
+  window.location.href='/';
+}
+
+function showToast(ico,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-ico').textContent=ico;
+  document.getElementById('toast-msg').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+window.addEventListener('load', initUser);
+</script>
+</body>
+</html>

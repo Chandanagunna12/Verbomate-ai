@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speaking Coach — VerboMate</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+:root{
+  --bg:#070709;
+  --s1:#0d0d12;
+  --s2:#13131a;
+  --s3:#1a1a24;
+  --b1:rgba(255,255,255,0.06);
+  --b2:rgba(255,255,255,0.1);
+  --b3:rgba(255,255,255,0.16);
+  --c1:#8b5cf6;
+  --c2:#06b6d4;
+  --c3:#10b981;
+  --c4:#f59e0b;
+  --c5:#f43f5e;
+  --t1:#f4f4f5;
+  --t2:#a1a1aa;
+  --t3:#52525b;
+  --sw:240px;
+  --th:56px;
+  --r:10px;
+  --rl:16px;
+  --f:'DM Sans',sans-serif;
+  --fh:'Syne',sans-serif;
+  --fm:'JetBrains Mono',monospace;
+}
+body{font-family:var(--f);background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#2a2a35;border-radius:3px}
+
+/* FOCUS MODE */
+body.focus-mode .sidebar,body.focus-mode .topbar{display:none}
+body.focus-mode .main{margin-left:0}
+body.focus-mode .content{padding:0;height:100vh;overflow:hidden}
+body.focus-mode .focus-zone{display:flex!important}
+body.focus-mode .normal-layout{display:none!important}
+
+/* ── SIDEBAR ─────────────────────────── */
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sw);background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;z-index:100}
+.slogo{display:flex;align-items:center;gap:10px;padding:20px 18px 18px;border-bottom:1px solid var(--b1)}
+.slm{width:34px;height:34px;background:var(--c1);border-radius:9px;display:grid;place-items:center;font-size:16px;flex-shrink:0}
+.sln{font-family:var(--fh);font-weight:800;font-size:0.95rem;letter-spacing:-0.3px}
+.sln span{color:var(--c1)}
+.sxp{padding:14px 18px;border-bottom:1px solid var(--b1)}
+.sxpt{display:flex;justify-content:space-between;font-size:0.69rem;color:var(--t2);margin-bottom:6px}
+.sxpt strong{color:var(--c1)}
+.sxpb{height:3px;background:rgba(255,255,255,0.05);border-radius:99px;overflow:hidden}
+.sxpf{height:100%;background:linear-gradient(90deg,var(--c1),var(--c2));border-radius:99px;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
+.snav{padding:10px 10px 0;flex:1;overflow-y:auto}
+.snl{font-size:0.6rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--t3);padding:8px 8px 4px}
+.sni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:0.82rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all 0.15s;margin-bottom:1px;text-decoration:none}
+.sni:hover{background:rgba(255,255,255,0.04);color:var(--t1)}
+.sni.active{background:rgba(139,92,246,0.12);color:var(--c1);font-weight:600}
+.sni-ico{width:18px;text-align:center;font-size:14px;flex-shrink:0}
+.sni-pill{margin-left:auto;font-size:0.58rem;font-weight:700;background:rgba(139,92,246,0.15);color:var(--c1);padding:2px 6px;border-radius:99px}
+.suser{padding:12px 14px;border-top:1px solid var(--b1)}
+.surow{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background 0.15s}
+.surow:hover{background:rgba(255,255,255,0.04)}
+.suava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c5));display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0;color:#fff}
+.suname{font-size:0.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sumeta{font-size:0.67rem;color:var(--c3)}
+
+/* ── MAIN ─────────────────────────────── */
+.main{margin-left:var(--sw);min-height:100vh;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:90;height:var(--th);background:rgba(7,7,9,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--b1);padding:0 24px;display:flex;align-items:center;gap:12px}
+.tb-title{font-family:var(--fh);font-size:0.9rem;font-weight:700;letter-spacing:-0.2px}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tb-streak{display:flex;align-items:center;gap:4px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:var(--c4);font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:99px}
+.tb-btn{display:flex;align-items:center;gap:5px;padding:6px 12px;background:var(--s2);border:1px solid var(--b1);border-radius:8px;font-size:0.74rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all 0.15s;text-decoration:none;font-family:var(--f)}
+.tb-btn:hover{border-color:var(--b2);color:var(--t1)}
+.tb-btn.primary{background:rgba(139,92,246,0.12);border-color:rgba(139,92,246,0.25);color:var(--c1)}
+.tb-ava{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c5));display:grid;place-items:center;font-size:12px;font-weight:700;cursor:pointer;color:#fff}
+
+/* ── CONTENT ──────────────────────────── */
+.content{padding:24px;flex:1}
+.normal-layout{display:flex;flex-direction:column;gap:20px}
+
+/* ── PAGE HEADER ─────────────────────── */
+.ph{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.ph-left{display:flex;align-items:center;gap:14px}
+.ph-ico{width:46px;height:46px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.2);border-radius:12px;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.ph-t{font-family:var(--fh);font-size:1.6rem;font-weight:700;letter-spacing:-0.5px;line-height:1}
+.ph-t span{color:var(--c1)}
+.ph-s{font-size:0.78rem;color:var(--t2);margin-top:3px}
+.ph-right{display:flex;gap:8px;align-items:center}
+.mode-tabs{display:flex;background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:3px;gap:2px}
+.mode-tab{padding:6px 14px;border-radius:7px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s;color:var(--t2);font-family:var(--f)}
+.mode-tab.active{background:rgba(139,92,246,0.2);color:var(--c1)}
+.mode-tab:hover:not(.active){color:var(--t1)}
+
+/* ── MAIN GRID ────────────────────────── */
+.sg{display:grid;grid-template-columns:1fr 320px;gap:16px;align-items:start}
+
+/* ── TOPIC PANEL ─────────────────────── */
+.topic-panel{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:20px;position:relative;overflow:hidden}
+.topic-panel::after{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(139,92,246,0.07),transparent 70%);pointer-events:none}
+.tp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.tp-mode-badge{display:flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+.tp-mode-badge.practice{background:rgba(139,92,246,0.12);color:var(--c1);border:1px solid rgba(139,92,246,0.2)}
+.tp-mode-badge.jam{background:rgba(245,158,11,0.1);color:var(--c4);border:1px solid rgba(245,158,11,0.2)}
+.tp-mode-badge.conversation{background:rgba(6,182,212,0.1);color:var(--c2);border:1px solid rgba(6,182,212,0.2)}
+.tp-mode-badge.accent{background:rgba(16,185,129,0.1);color:var(--c3);border:1px solid rgba(16,185,129,0.2)}
+.tp-actions{display:flex;gap:6px}
+.icon-btn{width:30px;height:30px;border-radius:7px;background:var(--s2);border:1px solid var(--b1);display:grid;place-items:center;font-size:13px;cursor:pointer;transition:all 0.15s;font-family:var(--f)}
+.icon-btn:hover{border-color:var(--b2);background:var(--s3)}
+.tp-title{font-family:var(--fh);font-size:1.2rem;font-weight:700;letter-spacing:-0.3px;line-height:1.3;margin-bottom:8px}
+.tp-desc{font-size:0.8rem;color:var(--t2);line-height:1.65;margin-bottom:14px}
+.tp-hints{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.tp-hint{display:flex;align-items:center;gap:4px;padding:3px 9px;background:rgba(255,255,255,0.03);border:1px solid var(--b1);border-radius:99px;font-size:0.68rem;color:var(--t2)}
+.tp-footer{display:flex;align-items:center;justify-content:space-between}
+.tp-meta{display:flex;gap:12px}
+.tp-mi{font-size:0.71rem;color:var(--t3);display:flex;align-items:center;gap:4px}
+.tp-mi strong{color:var(--t2);font-family:var(--fm);font-size:0.68rem}
+.btn-next{display:flex;align-items:center;gap:5px;padding:6px 12px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);border-radius:8px;font-size:0.73rem;font-weight:600;color:var(--c1);cursor:pointer;transition:all 0.15s;font-family:var(--f)}
+.btn-next:hover{background:rgba(139,92,246,0.18)}
+
+/* JAM TIMER */
+.jam-timer{display:none;align-items:center;gap:10px;padding:12px 16px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);border-radius:10px;margin-bottom:14px}
+.jam-timer.visible{display:flex}
+.jt-bar-wrap{flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden}
+.jt-bar{height:100%;background:var(--c4);border-radius:99px;transition:width 1s linear}
+.jt-time{font-family:var(--fm);font-size:0.85rem;font-weight:500;color:var(--c4);min-width:32px;text-align:right}
+
+/* ── ACCENT PANEL ─────────────────────── */
+.accent-panel{display:none;background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.12);border-radius:12px;padding:16px;margin-bottom:14px}
+.accent-panel.visible{display:block}
+.accent-label{font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--c3);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.accent-phrase{font-family:var(--fm);font-size:1rem;color:var(--t1);padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:8px;margin-bottom:8px;letter-spacing:0.5px}
+.accent-phonetic{font-size:0.78rem;color:var(--t2);margin-bottom:10px}
+.accent-tips{font-size:0.76rem;color:var(--t2);line-height:1.6}
+.btn-accent{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:7px;font-size:0.72rem;font-weight:600;color:var(--c3);cursor:pointer;transition:all 0.15s;margin-top:8px;font-family:var(--f)}
+.btn-accent:hover{background:rgba(16,185,129,0.18)}
+
+/* ── MIC ZONE ─────────────────────────── */
+.mic-zone{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:22px;text-align:center}
+.mz-label{font-size:0.68rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--t3);margin-bottom:18px}
+
+/* Waveform */
+.wf{display:flex;align-items:center;justify-content:center;gap:2px;height:52px;margin-bottom:20px}
+.wb{width:3px;border-radius:99px;background:var(--c1);opacity:0.2;transition:height 0.06s}
+.wb.on{opacity:1;animation:wa var(--d,.5s) ease-in-out infinite alternate}
+@keyframes wa{from{transform:scaleY(0.15)}to{transform:scaleY(1)}}
+
+/* Mic button */
+.mb-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px}
+.mr{position:absolute;width:90px;height:90px;border-radius:50%;border:1.5px solid var(--c1);opacity:0;transform:scale(0.8)}
+.mr1{animation:rip 1.8s ease-out infinite}
+.mr2{animation:rip 1.8s ease-out 0.6s infinite}
+.mr3{animation:rip 1.8s ease-out 1.2s infinite}
+@keyframes rip{0%{opacity:0.5;transform:scale(0.8)}100%{opacity:0;transform:scale(2.4)}}
+.mb{width:74px;height:74px;border-radius:50%;background:linear-gradient(135deg,var(--c1),#4f46e5);border:none;cursor:pointer;display:grid;place-items:center;font-size:26px;transition:all 0.2s;position:relative;z-index:1;box-shadow:0 0 24px rgba(139,92,246,0.3)}
+.mb:hover{transform:scale(1.05);box-shadow:0 0 40px rgba(139,92,246,0.5)}
+.mb.rec{background:linear-gradient(135deg,var(--c5),#be185d);box-shadow:0 0 32px rgba(244,63,94,0.4);animation:mp 1s ease-in-out infinite}
+@keyframes mp{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.mb.proc{background:linear-gradient(135deg,var(--c4),#d97706);cursor:not-allowed;animation:none}
+
+.ms{font-size:0.77rem;color:var(--t2);margin-bottom:10px;min-height:18px;transition:all 0.2s}
+.ms.on{color:var(--c5);font-weight:600}
+.ms.proc{color:var(--c4)}
+.ms.done{color:var(--c3)}
+
+.arow{display:flex;justify-content:center;gap:18px;padding-top:14px;border-top:1px solid var(--b1)}
+.av{text-align:center}
+.avv{font-family:var(--fm);font-size:1.05rem;font-weight:500;line-height:1}
+.avl{font-size:0.6rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.3px;margin-top:2px}
+
+/* ── TRANSCRIPT ───────────────────────── */
+.tc{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:18px}
+.ch{display:flex;align-items:center;margin-bottom:12px}
+.cht{font-size:0.84rem;font-weight:700;display:flex;align-items:center;gap:7px}
+.cht::before{content:'';width:3px;height:13px;background:var(--c2);border-radius:2px}
+.tbox{background:rgba(255,255,255,0.02);border:1px solid var(--b1);border-radius:8px;padding:14px;min-height:80px;font-size:0.83rem;line-height:1.85;font-family:var(--fm);color:var(--t1);position:relative}
+.tbox.empty{display:flex;align-items:center;justify-content:center;color:var(--t3);font-family:var(--f);font-size:0.77rem}
+.he{background:rgba(244,63,94,0.12);border-bottom:1.5px solid var(--c5);border-radius:2px;cursor:help}
+.hf{background:rgba(139,92,246,0.1);border-bottom:1.5px dashed var(--c1);border-radius:2px}
+.hp{background:rgba(245,158,11,0.08);border-bottom:1.5px solid var(--c4);border-radius:2px}
+
+/* ── CONVERSATION ─────────────────────── */
+.conv-panel{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);overflow:hidden}
+.conv-header{padding:14px 18px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--c3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.conv-name{font-size:0.84rem;font-weight:700}
+.conv-tag{font-size:0.62rem;color:var(--c2);background:rgba(6,182,212,0.1);padding:2px 7px;border-radius:99px}
+.tts-btn{margin-left:auto;display:flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);border-radius:7px;font-size:0.7rem;font-weight:600;color:var(--c2);cursor:pointer;transition:all 0.15s;font-family:var(--f)}
+.tts-btn:hover{background:rgba(6,182,212,0.15)}
+.tts-btn.sp{animation:tpulse 1s infinite}
+@keyframes tpulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.conv-messages{padding:14px 18px;min-height:100px;max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:88%;padding:10px 13px;border-radius:10px;font-size:0.81rem;line-height:1.65}
+.msg.ai{align-self:flex-start;background:var(--s2);border:1px solid var(--b1);color:var(--t1)}
+.msg.user{align-self:flex-end;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.2);color:var(--t1)}
+.msg.loading{color:var(--t3);font-style:italic}
+.typing-cur{display:inline-block;width:2px;height:12px;background:var(--c2);margin-left:2px;animation:bl 0.7s infinite;vertical-align:middle}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ── AI FEEDBACK ──────────────────────── */
+.aif{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:18px}
+.aif-text{font-size:0.82rem;line-height:1.75;color:var(--t1);min-height:56px}
+.aif-text.wait{color:var(--t3);font-style:italic}
+
+/* ── RIGHT PANEL ─────────────────────── */
+.rp{display:flex;flex-direction:column;gap:14px}
+
+/* Score */
+.score-c{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:18px}
+.ring-w{display:flex;justify-content:center;margin-bottom:14px;position:relative}
+.ring-w svg{transform:rotate(-90deg)}
+.ring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.ring-v{font-family:var(--fm);font-size:1.9rem;font-weight:500;line-height:1}
+.ring-l{font-size:0.6rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.5px}
+.sbd{display:flex;flex-direction:column;gap:8px}
+.sbr{display:flex;align-items:center;gap:8px}
+.sbl{font-size:0.71rem;color:var(--t2);width:84px;flex-shrink:0}
+.sbb{flex:1;height:4px;background:rgba(255,255,255,0.05);border-radius:99px;overflow:hidden}
+.sbf{height:100%;border-radius:99px;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
+.sbv{font-family:var(--fm);font-size:0.67rem;width:28px;text-align:right;flex-shrink:0}
+
+/* Delivery */
+.dlv-c{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:16px}
+.dlv-list{display:flex;flex-direction:column;gap:6px}
+.dlv-i{display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(255,255,255,0.02);border:1px solid var(--b1);border-radius:7px;font-size:0.75rem}
+.dlv-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dlv-l{flex:1;color:var(--t2)}
+.dlv-v{font-family:var(--fm);font-size:0.69rem;font-weight:500}
+
+/* Corrections */
+.corr-c{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:16px}
+.corr-list{display:flex;flex-direction:column;gap:7px;max-height:260px;overflow-y:auto}
+.ci{padding:10px;border-radius:8px;border:1px solid;font-size:0.75rem}
+.ci.tip{background:rgba(16,185,129,0.05);border-color:rgba(16,185,129,0.12)}
+.cbadge{display:inline-flex;align-items:center;gap:3px;font-size:0.58rem;font-weight:700;padding:2px 6px;border-radius:99px;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
+.cbadge.tip{background:rgba(16,185,129,0.1);color:var(--c3)}
+.cr{color:var(--c3);font-family:var(--fm);font-size:0.73rem;margin-bottom:3px}
+.cx{color:var(--t2);font-size:0.71rem;line-height:1.5}
+.corr-empty{text-align:center;padding:18px;color:var(--t3);font-size:0.77rem;line-height:1.6}
+
+/* Weak topics */
+.weak-c{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:16px}
+.weak-list{display:flex;flex-direction:column;gap:5px}
+.wi{display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(244,63,94,0.04);border:1px solid rgba(244,63,94,0.12);border-radius:7px;font-size:0.75rem}
+.wi-n{flex:1;color:var(--t1);font-weight:500}
+.wi-c{font-family:var(--fm);font-size:0.68rem;color:var(--c5)}
+.weak-empty{text-align:center;padding:14px;color:var(--t3);font-size:0.74rem;line-height:1.6}
+
+/* History */
+.hist-c{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:16px}
+.hl{display:flex;flex-direction:column;gap:4px;max-height:180px;overflow-y:auto}
+.hi{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:7px;background:rgba(255,255,255,0.02);border:1px solid var(--b1);font-size:0.72rem;cursor:pointer;transition:border-color 0.15s}
+.hi:hover{border-color:var(--b2)}
+.hi-t{flex:1;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hi-s{font-family:var(--fm);color:var(--c3)}
+.hi-d{color:var(--t3);font-size:0.65rem}
+
+/* Pace chart */
+.pace-c{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:16px}
+.pace-ch{display:flex;align-items:flex-end;gap:3px;height:44px}
+.pb{flex:1;border-radius:3px 3px 0 0;min-height:3px;transition:height 0.5s cubic-bezier(.22,1,.36,1)}
+.pace-leg{display:flex;justify-content:space-between;margin-top:5px;font-size:0.6rem;color:var(--t3)}
+
+/* Tips */
+.tips-c{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:16px}
+.tip-s{font-size:0.79rem;color:var(--t2);line-height:1.65;min-height:44px;transition:opacity 0.4s}
+
+/* Utility */
+.card-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.see-all{margin-left:auto;font-size:0.72rem;color:var(--c2);cursor:pointer;font-weight:500}
+.see-all:hover{opacity:0.7}
+.section-sep{height:1px;background:var(--b1);margin:2px 0}
+.empty-st{text-align:center;padding:20px;color:var(--t3);font-size:0.77rem;line-height:1.6}
+
+/* ── FOCUS MODE ────────────────────────── */
+.focus-zone{display:none;width:100%;height:100vh;align-items:stretch}
+.focus-left{flex:1;display:flex;flex-direction:column;gap:0;padding:32px;overflow-y:auto}
+.focus-right{width:380px;background:var(--s1);border-left:1px solid var(--b1);display:flex;flex-direction:column;overflow-y:auto}
+.focus-topic{margin-bottom:24px}
+.focus-title{font-family:var(--fh);font-size:2rem;font-weight:800;letter-spacing:-0.5px;line-height:1.2;margin-bottom:10px}
+.focus-desc{font-size:0.9rem;color:var(--t2);line-height:1.7;margin-bottom:20px}
+.focus-mic{display:flex;flex-direction:column;align-items:center;gap:16px;flex:1;justify-content:center}
+.focus-hints{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.focus-hint{font-size:0.75rem;color:var(--t3);padding:4px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--b1);border-radius:99px}
+.focus-feedback{padding:24px;border-top:1px solid var(--b1);flex:1}
+.focus-feedback .aif-text{font-size:0.87rem}
+.focus-corr{padding:0 24px 24px}
+.focus-exit{position:fixed;top:16px;right:16px;z-index:200;display:flex;align-items:center;gap:5px;padding:7px 14px;background:rgba(255,255,255,0.06);border:1px solid var(--b2);border-radius:8px;font-size:0.75rem;font-weight:600;color:var(--t1);cursor:pointer;transition:all 0.15s;backdrop-filter:blur(10px);font-family:var(--f)}
+.focus-exit:hover{background:rgba(255,255,255,0.1)}
+.focus-score{padding:24px;border-bottom:1px solid var(--b1)}
+
+/* ── MODAL ────────────────────────────── */
+.modal{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);backdrop-filter:blur(12px)}
+.modal.open{display:flex;animation:fi 0.2s ease}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.mbox{background:var(--s1);border:1px solid var(--b2);border-radius:var(--rl);padding:32px;max-width:400px;width:90%;text-align:center}
+.mico{font-size:2.5rem;margin-bottom:14px}
+.mt{font-family:var(--fh);font-size:1.1rem;font-weight:700;margin-bottom:7px}
+.md{font-size:0.81rem;color:var(--t2);line-height:1.6;margin-bottom:20px}
+.mbtn{width:100%;padding:11px;border:none;border-radius:8px;background:linear-gradient(135deg,var(--c1),#4f46e5);color:#fff;font-family:var(--fh);font-size:0.87rem;font-weight:700;cursor:pointer;transition:all 0.2s}
+.mbtn:hover{opacity:0.9}
+
+/* ── PREF MODAL ─────────────────────── */
+.pref-grid{display:flex;flex-direction:column;gap:12px;text-align:left;margin-bottom:20px}
+.pref-label{font-size:0.72rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--t2);margin-bottom:6px}
+.pref-chips{display:flex;flex-wrap:wrap;gap:6px}
+.pchip{padding:5px 12px;border-radius:99px;font-size:0.73rem;border:1px solid var(--b1);color:var(--t2);cursor:pointer;transition:all 0.15s;font-family:var(--f)}
+.pchip.sel{background:rgba(139,92,246,0.15);border-color:rgba(139,92,246,0.3);color:var(--c1)}
+.pchip:hover:not(.sel){border-color:var(--b2);color:var(--t1)}
+
+/* ── TOAST ────────────────────────────── */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:12px 16px;font-size:0.8rem;z-index:999;display:flex;align-items:center;gap:8px;box-shadow:0 12px 40px rgba(0,0,0,0.5);transform:translateY(70px);opacity:0;transition:all 0.35s cubic-bezier(.22,1,.36,1)}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ── ANALYSE BAR ─────────────────────── */
+#tx-action-bar{display:none;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+#tx-action-bar .analyse-note{font-size:0.75rem;color:var(--t2);flex:1}
+#tx-action-bar .analyse-btn{padding:7px 18px;background:linear-gradient(135deg,var(--c1),#4f46e5);border:none;border-radius:8px;color:#fff;font-family:var(--f);font-size:0.8rem;font-weight:700;cursor:pointer;transition:opacity 0.15s}
+#tx-action-bar .analyse-btn:hover{opacity:0.88}
+#tx-action-bar .discard-btn{padding:7px 12px;background:var(--s2);border:1px solid var(--b1);border-radius:8px;color:var(--t2);font-family:var(--f);font-size:0.78rem;cursor:pointer;transition:border-color 0.15s}
+#tx-action-bar .discard-btn:hover{border-color:var(--b2)}
+
+/* ── ANIMATIONS ─────────────────────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fa{animation:fadeUp 0.35s ease both}
+.fa1{animation-delay:0.05s}
+.fa2{animation-delay:0.1s}
+.fa3{animation-delay:0.15s}
+
+/* ── RESPONSIVE ─────────────────────── */
+@media(max-width:1100px){.sg{grid-template-columns:1fr}}
+@media(max-width:900px){:root{--sw:0px}.sidebar{display:none}.main{margin-left:0}.content{padding:14px}.card-row{grid-template-columns:1fr}.focus-right{display:none}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="slogo">
+    <div class="slm">💬</div>
+    <div class="sln">Verbo<span>Mate</span></div>
+  </div>
+  <div class="sxp">
+    <div class="sxpt"><span id="sb-level">Level — Explorer</span><strong id="sb-xp">— XP</strong></div>
+    <div class="sxpb"><div class="sxpf" id="sb-xp-fill" style="width:0%"></div></div>
+  </div>
+  <div class="snav">
+    <div class="snl">Main</div>
+    <a href="/dashboard" class="sni"><span class="sni-ico">🏠</span> Dashboard</a>
+    <!-- <div class="sni"><span class="sni-ico">📊</span> Progress</div>
+    <div class="sni"><span class="sni-ico">🏆</span> Leaderboard <span class="sni-pill">Live</span></div> -->
+    <div class="snl" style="margin-top:8px">Practice</div>
+    <!-- <a href="/vocabulary" class="sni"><span class="sni-ico">📖</span> Vocabulary</a> -->
+    <div class="sni active"><span class="sni-ico">🎙️</span> Speaking</div>
+    <!-- <div class="sni"><span class="sni-ico">📝</span> Grammar</div>
+    <div class="sni"><span class="sni-ico">🎧</span> Listening</div>
+    <div class="sni"><span class="sni-ico">✍️</span> Writing</div>
+    <div class="sni"><span class="sni-ico">💼</span> Interview Prep</div>
+    <div class="snl" style="margin-top:8px">Account</div>
+    <div class="sni"><span class="sni-ico">⚙️</span> Settings</div> -->
+    <div class="sni" onclick="handleLogout()"><span class="sni-ico">🚪</span> Sign Out</div>
+  </div>
+  <div class="suser">
+    <div class="surow">
+      <div class="suava" id="sb-ava">?</div>
+      <div>
+        <div class="suname" id="sb-name">Loading…</div>
+        <div class="sumeta" id="sb-rank">⚡ Explorer</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <a href="/dashboard" class="tb-btn">← Back</a>
+    <div class="tb-title">🎙️ Speaking Coach</div>
+    <div class="tb-right">
+      <div class="tb-streak" id="streak-badge">🔥 — day streak</div>
+      <button class="tb-btn primary" onclick="toggleFocusMode()">⛶ Focus Mode</button>
+      <button class="tb-btn" onclick="openPrefModal()">⚙ Preferences</button>
+      <div class="tb-ava" id="top-ava">?</div>
+    </div>
+  </header>
+
+  <div class="content">
+    <!-- ─── NORMAL LAYOUT ─── -->
+    <div class="normal-layout">
+
+      <!-- Page header -->
+      <div class="ph fa">
+        <div class="ph-left">
+          <div class="ph-ico">🎙️</div>
+          <div>
+            <div class="ph-t">Speaking <span>Coach</span></div>
+            <div class="ph-s">AI real-time feedback · Conversation practice · Accent training · JAM sessions</div>
+          </div>
+        </div>
+        <div class="ph-right">
+          <div class="mode-tabs">
+            <div class="mode-tab active" onclick="setMode('practice')">Practice</div>
+            <div class="mode-tab" onclick="setMode('jam')">⚡ JAM</div>
+            <div class="mode-tab" onclick="setMode('conversation')">💬 Conversation</div>
+            <div class="mode-tab" onclick="setMode('accent')">🗣 Accent</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="sg">
+        <!-- LEFT -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+
+          <!-- Topic card -->
+          <div class="topic-panel fa fa1">
+            <div class="tp-header">
+              <div class="tp-mode-badge practice" id="mode-badge">Practice</div>
+              <div class="tp-actions">
+                <div class="icon-btn" title="Regenerate topic with AI" onclick="generateAITopic()">🔄</div>
+                <div class="icon-btn" title="Bookmark" onclick="showToast('🔖','Topic bookmarked!')">🔖</div>
+              </div>
+            </div>
+            <div class="jam-timer" id="jam-timer">
+              <span style="font-size:0.7rem;color:var(--c4);font-weight:700;min-width:80px">JAM Session</span>
+              <div class="jt-bar-wrap"><div class="jt-bar" id="jt-bar" style="width:100%"></div></div>
+              <span class="jt-time" id="jt-time">90s</span>
+            </div>
+            <div class="accent-panel" id="accent-panel">
+              <div class="accent-label">🗣 Accent Drill — Read this phrase aloud</div>
+              <div class="accent-phrase" id="accent-phrase">Loading phrase…</div>
+              <div class="accent-phonetic" id="accent-phonetic">Phonetic: Loading…</div>
+              <div class="accent-tips" id="accent-tips">Loading pronunciation tips…</div>
+              <button class="btn-accent" onclick="nextAccentDrill()">Next Drill →</button>
+            </div>
+            <div class="tp-title" id="topic-title">Generating your first topic…</div>
+            <div class="tp-desc" id="topic-desc">Personalising topics based on your preferences.</div>
+            <div class="tp-hints" id="topic-hints"></div>
+            <div class="tp-footer">
+              <div class="tp-meta">
+                <div class="tp-mi">⏱ <strong id="topic-time">60s</strong></div>
+                <div class="tp-mi">🎯 <strong id="topic-diff">Intermediate</strong></div>
+                <div class="tp-mi">📚 <strong id="topic-cat">General</strong></div>
+              </div>
+              <div class="btn-next" id="topic-next-btn" onclick="generateAITopic()">⟳ Next Topic</div>
+            </div>
+          </div>
+
+          <!-- Conversation mode header -->
+          <div id="conv-mode-header" style="display:none;background:var(--s1);border:1px solid rgba(6,182,212,0.2);border-radius:var(--rl);padding:18px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+              <div style="width:38px;height:38px;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);border-radius:10px;display:grid;place-items:center;font-size:18px">💬</div>
+              <div>
+                <div style="font-family:var(--fh);font-size:1.05rem;font-weight:700">AI Conversation Mode</div>
+                <div style="font-size:0.75rem;color:var(--t2);margin-top:1px">Speak — AI responds naturally. Telugu ↔ English translation included.</div>
+              </div>
+              <div id="lang-toggle" style="margin-left:auto;display:flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);border-radius:8px;font-size:0.72rem;font-weight:600;color:var(--c2);cursor:pointer" onclick="toggleConvLang()">
+                <span id="lang-label">🌐 Auto-detect</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <div style="padding:3px 9px;background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.15);border-radius:99px;font-size:0.68rem;color:var(--c2)">🇮🇳 Telugu → English translation</div>
+              <div style="padding:3px 9px;background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.15);border-radius:99px;font-size:0.68rem;color:var(--c2)">🇬🇧 English → Telugu hints</div>
+              <div style="padding:3px 9px;background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.15);border-radius:99px;font-size:0.68rem;color:var(--c2)">✍️ Grammar correction inline</div>
+            </div>
+          </div>
+
+          <!-- Accent mode header -->
+          <div id="accent-mode-header" style="display:none;background:var(--s1);border:1px solid rgba(16,185,129,0.2);border-radius:var(--rl);padding:18px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+              <div style="width:38px;height:38px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:10px;display:grid;place-items:center;font-size:18px">🗣</div>
+              <div>
+                <div style="font-family:var(--fh);font-size:1.05rem;font-weight:700">Accent Neutralisation Training</div>
+                <div style="font-size:0.75rem;color:var(--t2);margin-top:1px">Read the phrase shown above aloud. AI analyses your pronunciation and gives targeted feedback.</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <div style="padding:3px 9px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);border-radius:99px;font-size:0.68rem;color:var(--c3)">🎯 IPA phonetics shown</div>
+              <div style="padding:3px 9px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);border-radius:99px;font-size:0.68rem;color:var(--c3)">🔤 Tongue twisters</div>
+              <div style="padding:3px 9px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);border-radius:99px;font-size:0.68rem;color:var(--c3)">🗣 Sound drills</div>
+            </div>
+          </div>
+
+          <!-- Conversation panel -->
+          <div class="conv-panel fa fa1" id="conv-panel" style="display:none">
+            <div class="conv-header">
+              <div class="ai-dot"></div>
+              <div class="conv-name">AI Conversation Partner</div>
+              <div class="conv-tag">Real-time · Adaptive</div>
+              <button class="tts-btn" id="conv-tts-btn" onclick="speakConvAI()">🔊 Listen</button>
+            </div>
+            <div class="conv-messages" id="conv-msgs">
+              <div class="msg ai">Hello! I'm your AI conversation partner. Start recording and we'll have a real conversation. I'll ask you questions, respond to what you say, and give you natural speaking practice.</div>
+            </div>
+          </div>
+
+          <!-- Mic zone -->
+          <div class="mic-zone fa fa2">
+            <div class="mz-label" id="mic-zone-label">Tap to speak — AI listens in real time</div>
+            <div class="wf" id="waveform"></div>
+            <div class="mb-wrap">
+              <div class="mr mr1" id="r1" style="display:none"></div>
+              <div class="mr mr2" id="r2" style="display:none"></div>
+              <div class="mr mr3" id="r3" style="display:none"></div>
+              <button class="mb" id="mic-btn" onclick="toggleMic()">🎙️</button>
+            </div>
+            <div class="ms" id="mic-status">Click the mic to start speaking</div>
+            <div class="arow">
+              <div class="av"><div class="avv" id="a-dur" style="color:var(--c1)">0s</div><div class="avl">Duration</div></div>
+              <div class="av"><div class="avv" id="a-wpm" style="color:var(--c2)">0</div><div class="avl">WPM</div></div>
+              <div class="av"><div class="avv" id="a-pauses" style="color:var(--c4)">0</div><div class="avl">Pauses</div></div>
+              <div class="av"><div class="avv" id="a-fillers" style="color:var(--c5)">0</div><div class="avl">Fillers</div></div>
+              <div class="av"><div class="avv" id="a-words" style="color:var(--c3)">0</div><div class="avl">Words</div></div>
+            </div>
+          </div>
+
+          <!-- Transcript -->
+          <div class="tc fa fa3">
+            <div class="ch">
+              <div class="cht">Live Transcript</div>
+              <span style="font-size:0.67rem;color:var(--t3);margin-left:auto">
+                <span style="border-bottom:1.5px dashed var(--c1)">fillers</span>
+              </span>
+            </div>
+            <div class="tbox empty" id="tbox"><span>Speech will appear here in real-time…</span></div>
+            <div id="tx-action-bar">
+              <span class="analyse-note">✏️ Edit transcript if needed, then click Analyse</span>
+              <button class="analyse-btn" id="analyse-btn" onclick="triggerAnalyse()">▶ Analyse Speech</button>
+              <button class="discard-btn" onclick="discardSession()">✕ Discard</button>
+            </div>
+          </div>
+
+          <!-- AI Feedback -->
+          <div class="aif fa fa3">
+            <div class="ch">
+              <div class="cht" style="--c:var(--c1)">AI Coach Feedback</div>
+              <button class="tts-btn" id="tts-btn" onclick="speakAIResponse()" style="display:none">🔊 Listen</button>
+            </div>
+            <div class="aif-text wait" id="ai-text">Waiting for your speech to generate personalised feedback…</div>
+          </div>
+
+          <!-- Bottom row: pace + tips -->
+          <div class="card-row fa fa3">
+            <div class="pace-c">
+              <div class="ch" style="margin-bottom:10px"><div class="cht">Pace (WPM)</div></div>
+              <div class="pace-ch" id="pace-ch"></div>
+              <div class="pace-leg"><span>&lt;80 Slow</span><span>100–130 ✓</span><span>&gt;150 Fast</span></div>
+            </div>
+            <div class="tips-c">
+              <div class="ch" style="margin-bottom:10px"><div class="cht">Speaking Tips</div></div>
+              <div class="tip-s" id="tip-s"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="rp">
+          <!-- Score -->
+          <div class="score-c">
+            <div class="ch" style="margin-bottom:14px"><div class="cht">Session Score</div></div>
+            <div class="ring-w">
+              <svg width="120" height="120" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="9"/>
+                <circle id="score-ring" cx="60" cy="60" r="50" fill="none" stroke="url(#sg)" stroke-width="9"
+                  stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16"
+                  style="transition:stroke-dashoffset 1.4s cubic-bezier(.22,1,.36,1)"/>
+                <defs>
+                  <linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#8b5cf6"/>
+                    <stop offset="100%" stop-color="#06b6d4"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div class="ring-center">
+                <div class="ring-v" id="score-val" style="color:var(--c1)">—</div>
+                <div class="ring-l">Overall</div>
+              </div>
+            </div>
+            <div class="sbd">
+              <div class="sbr"><span class="sbl">Fluency</span><div class="sbb"><div class="sbf" id="sb-flu" style="width:0%;background:var(--c1)"></div></div><span class="sbv" id="sv-flu" style="color:var(--c1)">—</span></div>
+              <div class="sbr"><span class="sbl">Pronunciation</span><div class="sbb"><div class="sbf" id="sb-pro" style="width:0%;background:var(--c2)"></div></div><span class="sbv" id="sv-pro" style="color:var(--c2)">—</span></div>
+              <div class="sbr"><span class="sbl">Vocabulary</span><div class="sbb"><div class="sbf" id="sb-voc" style="width:0%;background:var(--c3)"></div></div><span class="sbv" id="sv-voc" style="color:var(--c3)">—</span></div>
+              <div class="sbr"><span class="sbl">Confidence</span><div class="sbb"><div class="sbf" id="sb-con" style="width:0%;background:var(--c4)"></div></div><span class="sbv" id="sv-con" style="color:var(--c4)">—</span></div>
+              <div class="sbr"><span class="sbl">Grammar</span><div class="sbb"><div class="sbf" id="sb-grm" style="width:0%;background:var(--c5)"></div></div><span class="sbv" id="sv-grm" style="color:var(--c5)">—</span></div>
+            </div>
+          </div>
+
+          <!-- Delivery signals -->
+          <div class="dlv-c">
+            <div class="ch" style="margin-bottom:12px"><div class="cht">Delivery Signals</div></div>
+            <div class="dlv-list">
+              <div class="dlv-i"><div class="dlv-dot" id="dd-anx" style="background:var(--t3)"></div><span class="dlv-l">Anxiety Level</span><span class="dlv-v" id="dv-anx">—</span></div>
+              <div class="dlv-i"><div class="dlv-dot" id="dd-pace" style="background:var(--t3)"></div><span class="dlv-l">Speaking Pace</span><span class="dlv-v" id="dv-pace">—</span></div>
+              <div class="dlv-i"><div class="dlv-dot" id="dd-fill" style="background:var(--t3)"></div><span class="dlv-l">Filler Rate</span><span class="dlv-v" id="dv-fill">—</span></div>
+              <div class="dlv-i"><div class="dlv-dot" id="dd-pause" style="background:var(--t3)"></div><span class="dlv-l">Pause Freq.</span><span class="dlv-v" id="dv-pause">—</span></div>
+              <div class="dlv-i"><div class="dlv-dot" id="dd-conf" style="background:var(--t3)"></div><span class="dlv-l">Confidence</span><span class="dlv-v" id="dv-conf">—</span></div>
+            </div>
+          </div>
+
+          <!-- Corrections -->
+          <div class="corr-c">
+            <div class="ch" style="margin-bottom:12px"><div class="cht">Real-time Corrections</div></div>
+            <div class="corr-list" id="corr-list">
+              <div class="corr-empty">No corrections yet.<br>Start speaking for feedback!</div>
+            </div>
+          </div>
+
+          <!-- Weak topics -->
+          <div class="weak-c">
+            <div class="ch" style="margin-bottom:12px">
+              <div class="cht">Repeated Struggles</div>
+              <span class="see-all" onclick="clearWeakTopics()">Clear</span>
+            </div>
+            <div class="weak-list" id="weak-list">
+              <div class="weak-empty">No patterns yet.<br>Complete 2+ sessions to see trends.</div>
+            </div>
+          </div>
+
+          <!-- History -->
+          <div class="hist-c">
+            <div class="ch" style="margin-bottom:12px">
+              <div class="cht">Session History</div>
+              <span class="see-all" onclick="clearHistory()">Clear</span>
+            </div>
+            <div class="hl" id="hist-list">
+              <div class="empty-st" style="padding:14px;font-size:0.74rem">No sessions yet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── FOCUS ZONE ─── -->
+    <div class="focus-zone" id="focus-zone">
+      <button class="focus-exit" onclick="toggleFocusMode()">✕ Exit Focus</button>
+      <div class="focus-left">
+        <div class="focus-topic">
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--c1);margin-bottom:10px" id="f-mode-lbl">Practice Mode</div>
+          <div class="focus-title" id="f-title">Loading…</div>
+          <div class="focus-desc" id="f-desc">Preparing your topic…</div>
+          <div class="focus-hints" id="f-hints"></div>
+        </div>
+        <div class="focus-mic">
+          <div class="wf" id="f-waveform"></div>
+          <div class="mb-wrap" style="margin-bottom:0">
+            <button class="mb" id="f-mic-btn" onclick="toggleMic(true)" style="width:90px;height:90px;font-size:32px">🎙️</button>
+          </div>
+          <div class="ms" id="f-mic-status">Click to start speaking</div>
+          <div class="arow" style="border-top:none;padding-top:0">
+            <div class="av"><div class="avv" style="color:var(--c1)" id="f-dur">0s</div><div class="avl">Duration</div></div>
+            <div class="av"><div class="avv" style="color:var(--c2)" id="f-wpm">0</div><div class="avl">WPM</div></div>
+            <div class="av"><div class="avv" style="color:var(--c4)" id="f-pauses">0</div><div class="avl">Pauses</div></div>
+            <div class="av"><div class="avv" style="color:var(--c5)" id="f-fillers">0</div><div class="avl">Fillers</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="focus-right">
+        <div class="focus-score">
+          <div style="font-size:0.72rem;font-weight:700;color:var(--t2);margin-bottom:12px;letter-spacing:0.5px;text-transform:uppercase">Score</div>
+          <div class="ring-w">
+            <svg width="100" height="100" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="9"/>
+              <circle id="f-score-ring" cx="60" cy="60" r="50" fill="none" stroke="url(#sg)" stroke-width="9"
+                stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16"
+                style="transition:stroke-dashoffset 1.4s cubic-bezier(.22,1,.36,1)"/>
+            </svg>
+            <div class="ring-center">
+              <div class="ring-v" id="f-score-val" style="color:var(--c1);font-size:1.6rem">—</div>
+              <div class="ring-l">Overall</div>
+            </div>
+          </div>
+          <div class="sbd" style="margin-top:10px">
+            <div class="sbr"><span class="sbl" style="font-size:0.68rem">Fluency</span><div class="sbb"><div class="sbf" id="fs-flu" style="width:0%;background:var(--c1)"></div></div><span class="sbv" id="fv-flu" style="color:var(--c1)">—</span></div>
+            <div class="sbr"><span class="sbl" style="font-size:0.68rem">Grammar</span><div class="sbb"><div class="sbf" id="fs-grm" style="width:0%;background:var(--c5)"></div></div><span class="sbv" id="fv-grm" style="color:var(--c5)">—</span></div>
+            <div class="sbr"><span class="sbl" style="font-size:0.68rem">Confidence</span><div class="sbb"><div class="sbf" id="fs-con" style="width:0%;background:var(--c4)"></div></div><span class="sbv" id="fv-con" style="color:var(--c4)">—</span></div>
+          </div>
+        </div>
+        <div class="focus-feedback">
+          <div style="font-size:0.72rem;font-weight:700;color:var(--t2);margin-bottom:10px;letter-spacing:0.5px;text-transform:uppercase">AI Feedback</div>
+          <div class="aif-text wait" id="f-ai-text">Waiting for speech…</div>
+        </div>
+        <div class="focus-corr">
+          <div style="font-size:0.72rem;font-weight:700;color:var(--t2);margin-bottom:10px;letter-spacing:0.5px;text-transform:uppercase">Corrections</div>
+          <div class="corr-list" id="f-corr-list">
+            <div class="corr-empty">No corrections yet.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mic permission modal -->
+<div class="modal" id="perm-modal">
+  <div class="mbox">
+    <div class="mico">🎙️</div>
+    <div class="mt">Microphone Access</div>
+    <div class="md">VerboMate needs microphone access to provide real-time AI feedback. Your audio is processed on-device — never stored.</div>
+    <button class="mbtn" onclick="requestMic()">Allow Microphone Access</button>
+  </div>
+</div>
+
+<!-- Preferences modal -->
+<div class="modal" id="pref-modal">
+  <div class="mbox" style="max-width:480px">
+    <div class="mt" style="margin-bottom:4px">⚙ Speaking Preferences</div>
+    <div class="md" style="margin-bottom:0">Customise topics to match your goals</div>
+    <div class="pref-grid">
+      <div>
+        <div class="pref-label">Goal</div>
+        <div class="pref-chips">
+          <div class="pchip sel" data-g="goal" data-v="job_interview">Job Interview</div>
+          <div class="pchip" data-g="goal" data-v="daily_conversation">Daily Conversation</div>
+          <div class="pchip" data-g="goal" data-v="academic">Academic</div>
+          <div class="pchip" data-g="goal" data-v="public_speaking">Public Speaking</div>
+          <div class="pchip" data-g="goal" data-v="ielts_toefl">IELTS / TOEFL</div>
+        </div>
+      </div>
+      <div>
+        <div class="pref-label">Level</div>
+        <div class="pref-chips">
+          <div class="pchip" data-g="level" data-v="beginner">Beginner</div>
+          <div class="pchip sel" data-g="level" data-v="intermediate">Intermediate</div>
+          <div class="pchip" data-g="level" data-v="advanced">Advanced</div>
+        </div>
+      </div>
+      <div>
+        <div class="pref-label">Topics I Like</div>
+        <div class="pref-chips">
+          <div class="pchip sel" data-g="topic" data-v="tech">Technology</div>
+          <div class="pchip sel" data-g="topic" data-v="career">Career</div>
+          <div class="pchip" data-g="topic" data-v="culture">Culture</div>
+          <div class="pchip" data-g="topic" data-v="science">Science</div>
+          <div class="pchip" data-g="topic" data-v="personal">Personal Growth</div>
+          <div class="pchip" data-g="topic" data-v="current_affairs">Current Affairs</div>
+          <div class="pchip" data-g="topic" data-v="environment">Environment</div>
+          <div class="pchip" data-g="topic" data-v="storytelling">Storytelling</div>
+        </div>
+      </div>
+      <div>
+        <div class="pref-label">Accent Training</div>
+        <div class="pref-chips">
+          <div class="pchip sel" data-g="accent" data-v="neutral">Neutral / Clear</div>
+          <div class="pchip" data-g="accent" data-v="american">American</div>
+          <div class="pchip" data-g="accent" data-v="british">British</div>
+          <div class="pchip" data-g="accent" data-v="australian">Australian</div>
+        </div>
+      </div>
+    </div>
+    <button class="mbtn" onclick="savePrefs()">Save Preferences</button>
+    <div style="margin-top:10px"><span class="see-all" onclick="document.getElementById('pref-modal').classList.remove('open')">Cancel</span></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><span id="t-ico">✅</span><span id="t-msg">Done</span></div>
+
+<script>
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let currentUser = null;
+let recognition = null;
+let isRecording = false;
+let recStart = 0;
+let durTimer = null;
+
+let wordCount = 0;
+let pauseCount = 0;
+let fillerCount = 0;
+let fullTx = '';
+
+let pendingTx = '';
+let pendingDur = 0;
+let pendingWpm = 0;
+let pendingWordCount = 0;
+let pendingPauseCount = 0;
+let pendingFillerCount = 0;
+
+let currentAIResp = '';
+let isSpeaking = false;
+let paceHistory = [];
+let sessionHistory = [];
+let weakTopics = {};
+let usedTopics = new Set();
+let currentTopic = {};
+let currentMode = 'practice';
+let jamTimer = null;
+let jamSeconds = 90;
+let jamTotal = 90;
+let convHistory = [];
+let lastConvAIMsg = '';
+let isFocusMode = false;
+let accentIdx = 0;
+
+let prefs = {
+  goal: ['job_interview'],
+  level: ['intermediate'],
+  topic: ['tech','career'],
+  accent: ['neutral']
+};
+
+const FILLERS = ['um','uh','er','ah','like','you know','basically','literally','actually','sort of','kind of','right','okay so','i mean','well'];
+
+const TIPS = [
+  '💡 Speak at 100–130 WPM for natural fluency.',
+  '🎯 Pause intentionally — it shows confidence, not weakness.',
+  '🗣️ Replace "um" and "uh" with a brief intentional pause.',
+  '📢 Vary your pitch to emphasise key words.',
+  '🧘 Deep breath before you start — it calms nerves.',
+  '📚 Use connectors: "Furthermore", "On the other hand", "As a result".',
+  '🔁 Shadowing technique: repeat native speakers immediately.',
+  '✅ Record yourself — it reveals blind spots you cannot hear live.',
+  '🌟 Know your topic before you speak — confidence is preparation.',
+  '👁️ Maintain steady eye contact even in an imaginary audience.',
+  '⚡ Strong opening lines set the tone for everything after.',
+  '🔊 Project your voice from your diaphragm, not your throat.',
+];
+
+const ACCENT_DRILLS = [
+  {phrase:"The thirty-three thieves thought that they thrilled the throne throughout Thursday",phonetic:"/ðə ˈθɜːti θriː θiːvz/",tips:"Practise the 'th' sound — tongue between teeth for voiced (the) and voiceless (three) versions."},
+  {phrase:"She sells seashells by the seashore",phonetic:"/ʃiː sɛlz ˈsiːʃɛlz/",tips:"Focus on distinguishing /s/ and /ʃ/. The tongue position: /s/ is behind the upper teeth, /ʃ/ is retracted."},
+  {phrase:"How can a clam cram in a clean cream can",phonetic:"/haʊ kæn ə klæm kræm/",tips:"Practise the /æ/ vowel (as in 'cat'). Open your mouth wider than you think necessary."},
+  {phrase:"I thought a thought but the thought I thought wasn't the thought I thought",phonetic:"/aɪ θɔːt ə θɔːt/",tips:"Distinguish /θ/ (thought) from /t/ (taught). The key is tongue placement at the teeth."},
+  {phrase:"Peter Piper picked a peck of pickled peppers",phonetic:"/ˈpiːtər ˈpaɪpər pɪkt/",tips:"Practise the plosive /p/ sound. Use a piece of paper — it should flutter with each /p/."},
+  {phrase:"Would you rather wear warm woolly white or woollen winter wear",phonetic:"/wʊd juː ˈrɑːðər weər/",tips:"Focus on the /w/ sound — lips rounded and pushed forward, not the /v/ sound used in some accents."},
+  {phrase:"Betty Botter bought some butter but the butter was bitter",phonetic:"/ˈbɛti ˈbɒtər bɔːt/",tips:"Practise the /ɒ/ vowel (British 'hot') vs /ʌ/ (butter). Mouth shape changes significantly."},
+];
+
+/* ═══════════════════════════════════════════
+   SAVE SPEAKING PROGRESS TO SERVER (Real DB)
+═══════════════════════════════════════════ */
+async function saveSpeakingProgressToServer(avg, data) {
+  try {
+    const modeLabels = {
+      practice: 'Practice', jam: '⚡ JAM Session',
+      conversation: '💬 Conversation', accent: '🗣 Accent Training'
+    };
+    const totalSessions = sessionHistory.length;
+    const modulePct = Math.min(Math.round((totalSessions / 30) * 100), 100);
+    const weakAreas = data?.weakAreas?.join(', ') || '';
+
+    await fetch('/api/progress/update', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        module_key:          'speaking',
+        practice_minutes:    Math.ceil((pendingDur || 30) / 60),
+        accuracy:            avg,
+        xp_earned:           Math.round(avg * 1.2),
+        activity_title:      `🎙️ Speaking — ${modeLabels[currentMode] || currentMode}`,
+        activity_meta:       `Score: ${avg}% · Topic: ${(currentTopic.title || 'General').slice(0, 40)}${weakAreas ? ' · Weak: ' + weakAreas : ''}`,
+        module_progress_pct: modulePct,
+      })
+    });
+  } catch(e) {
+    console.warn('Speaking progress save failed:', e);
+  }
+}
+
+/* ══════════════════════════════════════════
+   AUTH
+══════════════════════════════════════════ */
+async function loadUser() {
+  try {
+    const r = await fetch('/api/auth/me', {credentials:'include'});
+    if (!r.ok) { window.location.href = '/login'; return; }
+    const d = await r.json();
+    if (!d.success) { window.location.href = '/login'; return; }
+    currentUser = d.user;
+    renderUser();
+    loadProgress();
+    initModule();
+  } catch(e) { window.location.href = '/login'; }
+}
+
+function getInitials(n) {
+  return n ? n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : '?';
+}
+
+function renderUser() {
+  const i = getInitials(currentUser.name);
+  document.getElementById('sb-name').textContent = currentUser.name || 'User';
+  document.getElementById('sb-ava').textContent = i;
+  document.getElementById('top-ava').textContent = i;
+}
+
+function seedRand(e='') {
+  let h = 0;
+  for(let i = 0; i < e.length; i++) h = Math.imul(31, h) + e.charCodeAt(i) | 0;
+  const r = (lo,hi) => { h = (h*1664525+1013904223)|0; return lo + Math.abs(h)%(hi-lo+1); };
+  return { streak:r(1,30), xp:r(1500,9500), maxXp:10000, level:r(5,20) };
+}
+
+function loadProgress() {
+  const d = seedRand(currentUser.email);
+  document.getElementById('sb-level').textContent = `Level ${d.level} — Explorer`;
+  document.getElementById('sb-xp').textContent = `${d.xp.toLocaleString()} / ${d.maxXp.toLocaleString()} XP`;
+  document.getElementById('sb-rank').textContent = `⚡ Explorer · Lvl ${d.level}`;
+  document.getElementById('streak-badge').textContent = `🔥 ${d.streak}-day streak`;
+  setTimeout(() => { document.getElementById('sb-xp-fill').style.width = Math.round(d.xp/d.maxXp*100)+'%'; }, 300);
+
+  const key = 'vm_speaking_v2_' + currentUser.email;
+  const stored = localStorage.getItem(key);
+  if (stored) {
+    try {
+      const p = JSON.parse(stored);
+      usedTopics = new Set(p.used || []);
+      sessionHistory = p.sessions || [];
+      weakTopics = p.weak || {};
+      if (p.prefs) prefs = {...prefs, ...p.prefs};
+    } catch(e) { console.warn('Could not parse stored progress'); }
+  }
+  renderHistory();
+  renderWeak();
+  loadPrefUI();
+}
+
+function saveProgress() {
+  const key = 'vm_speaking_v2_' + currentUser.email;
+  localStorage.setItem(key, JSON.stringify({
+    used: [...usedTopics],
+    sessions: sessionHistory,
+    weak: weakTopics,
+    prefs
+  }));
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+function initModule() {
+  buildWaveform('waveform');
+  buildWaveform('f-waveform');
+  buildPaceChart([]);
+  rotateTips();
+  checkSpeech();
+  generateAITopic();
+}
+
+/* ══════════════════════════════════════════
+   MODE
+   FIX 3: Show topic panel for accent mode (it contains the accent-panel drill).
+   Only hide topic panel in conversation mode.
+══════════════════════════════════════════ */
+function setMode(m) {
+  currentMode = m;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  const idx = {practice:0, jam:1, conversation:2, accent:3}[m];
+  document.querySelectorAll('.mode-tab')[idx].classList.add('active');
+
+  const badges = {
+    practice:     {cls:'practice',     txt:'Practice'},
+    jam:          {cls:'jam',          txt:'⚡ JAM Session'},
+    conversation: {cls:'conversation', txt:'💬 Conversation'},
+    accent:       {cls:'accent',       txt:'🗣 Accent Training'}
+  };
+  const b = badges[m];
+  const mb = document.getElementById('mode-badge');
+  mb.className = 'tp-mode-badge ' + b.cls;
+  mb.textContent = b.txt;
+  document.getElementById('f-mode-lbl').textContent = b.txt;
+
+  // FIX 3: topic panel is visible for practice, jam AND accent (accent drill is inside it).
+  // Only hide for conversation mode.
+  const topicPanel = document.querySelector('.topic-panel');
+  topicPanel.style.display = (m === 'conversation') ? 'none' : 'block';
+
+  // Show/hide topic footer (Next Topic button) — hide in accent mode since we use Next Drill instead
+  const topicFooter = document.querySelector('.tp-footer');
+  if (topicFooter) topicFooter.style.display = (m === 'accent') ? 'none' : 'flex';
+
+  document.getElementById('jam-timer').classList.toggle('visible', m==='jam');
+  document.getElementById('accent-panel').classList.toggle('visible', m==='accent');
+  document.getElementById('conv-panel').style.display = m==='conversation' ? 'block' : 'none';
+
+  const convHeader = document.getElementById('conv-mode-header');
+  if (convHeader) convHeader.style.display = m==='conversation' ? 'block' : 'none';
+  const accentHeader = document.getElementById('accent-mode-header');
+  if (accentHeader) accentHeader.style.display = m==='accent' ? 'block' : 'none';
+
+  // Update mic zone label for accent mode
+  const micLabel = document.getElementById('mic-zone-label');
+  if (micLabel) {
+    micLabel.textContent = m === 'accent'
+      ? 'Read the phrase above aloud — AI analyses pronunciation'
+      : 'Tap to speak — AI listens in real time';
+  }
+
+  hideTxActionBar();
+  resetSession();
+
+  if (m==='accent') loadAccentDrill();
+  else if (m==='conversation') initConversation();
+  else if (m==='jam') generateAITopic(true);
+  else generateAITopic();
+}
+
+/* ══════════════════════════════════════════
+   AI TOPIC GENERATION
+══════════════════════════════════════════ */
+async function generateAITopic(jam=false) {
+  document.getElementById('topic-title').textContent = 'Generating topic…';
+  document.getElementById('topic-desc').textContent = '';
+  document.getElementById('topic-hints').innerHTML = '';
+
+  const goalMap = {
+    job_interview: 'technical and behavioural interview',
+    daily_conversation: 'everyday conversation',
+    academic: 'academic discussion',
+    public_speaking: 'public speaking',
+    ielts_toefl: 'IELTS/TOEFL exam preparation'
+  };
+  const goalStr = prefs.goal.map(g => goalMap[g]||g).join(', ');
+  const topicStr = prefs.topic.join(', ');
+  const level = prefs.level[0] || 'intermediate';
+  const modeStr = jam
+    ? 'JAM session (spontaneous 90s topic)'
+    : currentMode==='conversation' ? 'conversation starter'
+    : currentMode==='accent' ? 'accent training'
+    : 'speaking practice';
+
+  const systemP = `You are a speaking coach AI. Generate a single speaking topic for ${modeStr}. Respond ONLY in JSON, no markdown, no extra text:
+{"title":"topic title (max 10 words)","desc":"2-sentence context (max 40 words)","hints":["hint1","hint2","hint3"],"time":"${jam?'90':'60'}s","difficulty":"${level}","category":"topic category","id":"unique_id_${Date.now()}"}`;
+
+  const userP = `Create a topic for: goal=${goalStr}, level=${level}, interests=${topicStr}.
+Mode: ${modeStr}.
+${jam ? 'Make it thought-provoking and spontaneous — no time to prepare!' : ''}
+Avoid these already-used topics (by category): ${[...usedTopics].slice(-10).join(', ')||'none'}`;
+
+  try {
+    const r = await fetch('/api/claude', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      credentials: 'include',
+      body: JSON.stringify({system:systemP, messages:[{role:'user',content:userP}], max_tokens:300})
+    });
+    const d = await r.json();
+    let txt = d.content?.[0]?.text || '';
+    txt = txt.replace(/```json|```/g,'').trim();
+    const firstBrace = txt.indexOf('{');
+    const lastBrace  = txt.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace !== -1) txt = txt.slice(firstBrace, lastBrace+1);
+    const topic = JSON.parse(txt);
+
+    currentTopic = topic;
+    if (topic.category) usedTopics.add(topic.category + '_' + (topic.title||'').slice(0,20));
+
+    document.getElementById('topic-title').textContent = topic.title || 'Untitled';
+    document.getElementById('f-title').textContent = topic.title || 'Untitled';
+    document.getElementById('topic-desc').textContent = topic.desc || '';
+    document.getElementById('f-desc').textContent = topic.desc || '';
+    document.getElementById('topic-time').textContent = topic.time || '60s';
+    document.getElementById('topic-diff').textContent = topic.difficulty || level;
+    document.getElementById('topic-cat').textContent = topic.category || 'General';
+
+    const hintsHtml = (topic.hints||[]).map(h=>`<div class="tp-hint">💡 ${h}</div>`).join('');
+    document.getElementById('topic-hints').innerHTML = hintsHtml;
+    document.getElementById('f-hints').innerHTML = (topic.hints||[]).map(h=>`<div class="focus-hint">💡 ${h}</div>`).join('');
+
+    if (jam) startJamTimer(parseInt(topic.time)||90);
+    resetSession();
+  } catch(e) {
+    console.error('generateAITopic error:', e);
+    document.getElementById('topic-title').textContent = 'Describe a challenge you overcame and what it taught you.';
+    document.getElementById('topic-desc').textContent = 'A classic behavioural interview question. Use the STAR method: Situation, Task, Action, Result.';
+    document.getElementById('topic-hints').innerHTML = ['Use past tense','Show growth','Be specific'].map(h=>`<div class="tp-hint">💡 ${h}</div>`).join('');
+  }
+}
+
+/* ══════════════════════════════════════════
+   JAM TIMER
+   FIX 1: Auto-trigger triggerAnalyse() when JAM timer ends,
+   so the speech is automatically sent for AI analysis without
+   requiring the user to manually click "Analyse Speech".
+══════════════════════════════════════════ */
+function startJamTimer(secs) {
+  jamSeconds = secs;
+  jamTotal = secs;
+  clearInterval(jamTimer);
+  updateJamUI();
+  jamTimer = setInterval(() => {
+    jamSeconds--;
+    updateJamUI();
+    if (jamSeconds <= 0) {
+      clearInterval(jamTimer);
+      if (isRecording) stopRecording();
+      showToast('⏰', 'JAM time up! Analysing your speech…');
+      // FIX 1: Auto-analyse after JAM ends — wait 900ms for stopRecording to finish
+      setTimeout(() => {
+        if (pendingTx && pendingTx.length > 2) {
+          triggerAnalyse();
+        }
+      }, 900);
+    }
+  }, 1000);
+}
+
+function updateJamUI() {
+  document.getElementById('jt-time').textContent = jamSeconds + 's';
+  document.getElementById('jt-bar').style.width = (jamSeconds/jamTotal*100) + '%';
+  document.getElementById('jt-bar').style.background = jamSeconds < 20 ? 'var(--c5)' : 'var(--c4)';
+}
+
+/* ══════════════════════════════════════════
+   ACCENT DRILL
+== ══════════════════════════════════════════ */
+function loadAccentDrill() {
+  const drill = ACCENT_DRILLS[accentIdx % ACCENT_DRILLS.length];
+  document.getElementById('accent-phrase').textContent = drill.phrase;
+  document.getElementById('accent-phonetic').textContent = 'Phonetic: ' + drill.phonetic;
+  document.getElementById('accent-tips').textContent = drill.tips;
+  // Set as current topic so AI feedback references the correct phrase
+  currentTopic = {
+    title: 'Accent Drill: ' + drill.phrase.slice(0, 40) + '…',
+    desc: drill.tips,
+    hints: [drill.phonetic]
+  };
+}
+
+function nextAccentDrill() {
+  accentIdx++;
+  loadAccentDrill();
+  resetSession();
+  showToast('🗣️', 'Next accent drill loaded! Read it aloud.');
+}
+
+/* ══════════════════════════════════════════
+   CONVERSATION MODE
+   FIX 2: Improved conversation handling — the speech captured from
+   stopRecording is passed to handleConversationTurn via pendingTx.
+   Added robust response parsing and better error handling.
+══════════════════════════════════════════ */
+function initConversation() {
+  convHistory = [];
+  const msgs = document.getElementById('conv-msgs');
+  msgs.innerHTML = '<div class="msg ai">Hello! I\'m your AI conversation partner. Tell me about yourself or respond to the topic — I\'ll keep the conversation flowing naturally!</div>';
+}
+
+function trimConvHistory() {
+  if (convHistory.length > 20) convHistory = convHistory.slice(-20);
+}
+
+async function handleConversationTurn(userSpeech) {
+  if (!userSpeech || !userSpeech.trim()) return;
+  const msgs = document.getElementById('conv-msgs');
+
+  const isTeluguScript = /[\u0C00-\u0C7F]/.test(userSpeech);
+  const teluguRomanHints = /\b(mee?ru|nenu|chep|cheppandi|ante|kaadu|avunu|ikkade|akkade|emiti|ela|enduku|okka|raa|vellandi|maa|naaku|nee|chestanu|chestunnanu|undi|ledu|telugu|manchi|baagu|baagundi)\b/i.test(userSpeech);
+  const isLikelyTelugu = isTeluguScript || teluguRomanHints;
+
+  const displaySpeech = isLikelyTelugu ? `🇮🇳 ${userSpeech}` : userSpeech;
+  msgs.innerHTML += `<div class="msg user">${displaySpeech}</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  const loadEl = document.createElement('div');
+  loadEl.className = 'msg ai loading';
+  loadEl.innerHTML = 'Thinking<span class="typing-cur"></span>';
+  msgs.appendChild(loadEl);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  const msgForAI = isLikelyTelugu
+    ? `[User spoke in Telugu/Telugu-romanised]: "${userSpeech}"`
+    : userSpeech;
+
+  convHistory.push({role:'user', content: msgForAI});
+  trimConvHistory();
+
+  const systemP = `You are an engaging bilingual AI conversation partner helping someone practise English speaking.
+Topic context: "${currentTopic.title||'general conversation'}".
+LANGUAGE RULES:
+1. If the user speaks in Telugu, first translate: "You said: [English translation]", then reply in English and gently encourage English.
+2. If English, reply naturally. Optionally end with Telugu translation in brackets.
+3. Ask ONE follow-up question. Keep responses to 3-4 sentences max.
+4. Correct grammar errors gently inline.
+Respond in plain text only.`;
+
+  try {
+    const r = await fetch('/api/claude', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      credentials: 'include',
+      body: JSON.stringify({system:systemP, messages:convHistory, max_tokens:250})
+    });
+    if (!r.ok) throw new Error('API ' + r.status);
+    const d = await r.json();
+    if (d.error) throw new Error(d.error.message || d.error || 'API error');
+
+    // FIX 2: robust response extraction — handle both {content:[{text}]} and direct text
+    let aiReply = '';
+    if (d.content && Array.isArray(d.content) && d.content[0] && d.content[0].text) {
+      aiReply = d.content[0].text;
+    } else if (typeof d.text === 'string') {
+      aiReply = d.text;
+    } else if (typeof d.response === 'string') {
+      aiReply = d.response;
+    } else if (typeof d.message === 'string') {
+      aiReply = d.message;
+    } else {
+      aiReply = "That's interesting! Can you tell me more about that?";
+    }
+
+    if (!aiReply.trim()) aiReply = "That's interesting! Can you tell me more?";
+
+    lastConvAIMsg = aiReply;
+    convHistory.push({role:'assistant', content:aiReply});
+    trimConvHistory();
+    loadEl.classList.remove('loading');
+    typeTextInto(loadEl, aiReply, 18);
+    msgs.scrollTop = msgs.scrollHeight;
+    document.getElementById('conv-tts-btn').style.display = 'flex';
+  } catch(e) {
+    console.error('Conversation API error:', e);
+    loadEl.classList.remove('loading');
+    loadEl.textContent = 'Connection issue — please try again. (' + e.message + ')';
+  }
+}
+
+function speakConvAI() {
+  if (!lastConvAIMsg) return;
+  speakText(lastConvAIMsg, document.getElementById('conv-tts-btn'));
+}
+
+/* ══════════════════════════════════════════
+   WAVEFORM
+══════════════════════════════════════════ */
+function buildWaveform(id) {
+  const wf = document.getElementById(id);
+  if (!wf) return;
+  wf.innerHTML = '';
+  for (let i = 0; i < 28; i++) {
+    const b = document.createElement('div');
+    b.className = 'wb';
+    b.style.height = (6 + Math.random()*10) + 'px';
+    b.style.setProperty('--d', (0.25 + Math.random()*0.5) + 's');
+    wf.appendChild(b);
+  }
+}
+
+function activateWave(on) {
+  ['waveform','f-waveform'].forEach(id => {
+    document.querySelectorAll('#'+id+' .wb').forEach(b => {
+      if (on) { b.classList.add('on'); b.style.height = (8+Math.random()*38)+'px'; b.style.setProperty('--d',(0.15+Math.random()*0.5)+'s'); }
+      else { b.classList.remove('on'); b.style.height = (6+Math.random()*10)+'px'; }
+    });
+  });
+}
+
+function animWave() {
+  if (!isRecording) return;
+  ['waveform','f-waveform'].forEach(id => {
+    document.querySelectorAll('#'+id+' .wb').forEach(b => { b.style.height = (4+Math.random()*46)+'px'; });
+  });
+  setTimeout(animWave, 75);
+}
+
+/* ══════════════════════════════════════════
+   SPEECH RECOGNITION
+   FIX 2 (additional): try en-IN first, fall back to en-US on error.
+   Also added interim result accumulation fix.
+══════════════════════════════════════════ */
+function checkSpeech() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    document.getElementById('mic-status').textContent = '⚠️ Speech recognition needs Chrome browser.';
+    document.getElementById('mic-btn').disabled = true;
+    document.getElementById('mic-btn').style.opacity = '0.4';
+    return;
+  }
+  setupRecognition(SR);
+}
+
+function setupRecognition(SR) {
+  recognition = new SR();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = 'en-IN';
+
+  let silTimer = null;
+  let langFallback = false;
+
+  recognition.onresult = (e) => {
+    clearTimeout(silTimer);
+    let interim = '', final_ = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      let bestT = '', bestConf = -1;
+      for (let a = 0; a < e.results[i].length; a++) {
+        if (e.results[i][a].confidence >= bestConf) {
+          bestConf = e.results[i][a].confidence;
+          bestT = e.results[i][a].transcript;
+        }
+      }
+      if (e.results[i].isFinal) {
+        final_ += bestT + ' ';
+        detectFillers(bestT);
+      } else {
+        interim += bestT;
+      }
+    }
+    if (final_) {
+      fullTx += final_;
+      wordCount += final_.trim().split(/\s+/).filter(w=>w).length;
+      updateCount('a-words', wordCount);
+    }
+    renderTx(fullTx + interim);
+    updateWPM();
+    silTimer = setTimeout(() => {
+      if (isRecording) {
+        pauseCount++;
+        updateCount('a-pauses', pauseCount);
+        updateCount('f-pauses', pauseCount);
+        updateDelivery();
+      }
+    }, 2000);
+  };
+
+  recognition.onerror = (e) => {
+    if (e.error === 'no-speech') return;
+    // FIX 2: fall back to en-US if en-IN is not supported
+    if ((e.error === 'language-not-supported' || e.error === 'service-not-allowed') && !langFallback) {
+      langFallback = true;
+      recognition.lang = 'en-US';
+      showToast('🌐', 'Switched to en-US recognition');
+      if (isRecording) {
+        try { recognition.stop(); } catch(ex) {}
+        setTimeout(() => { try { recognition.start(); } catch(ex) {} }, 200);
+      }
+      return;
+    }
+    if (e.error === 'not-allowed') {
+      showToast('⚠️', 'Mic permission denied. Please allow microphone.');
+      stopRecording();
+      return;
+    }
+    if (e.error === 'network') {
+      showToast('⚠️', 'Network error — check your internet connection.');
+      return;
+    }
+    showToast('⚠️', 'Mic error: ' + e.error);
+    stopRecording();
+  };
+
+  recognition.onend = () => {
+    if (isRecording) {
+      try { recognition.start(); } catch(ex) {}
+    }
+  };
+}
+
+function toggleMic(fromFocus=false) {
+  if (!recognition) { document.getElementById('perm-modal').classList.add('open'); return; }
+  isRecording ? stopRecording() : startRecording();
+}
+
+function requestMic() {
+  document.getElementById('perm-modal').classList.remove('open');
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SR) { setupRecognition(SR); showToast('✅','Mic ready!'); }
+  else showToast('⚠️','Try Chrome browser.');
+}
+
+function startRecording() {
+  if (isRecording) return;
+
+  hideTxActionBar();
+  fullTx = ''; wordCount = 0; pauseCount = 0; fillerCount = 0;
+  pendingTx = ''; pendingDur = 0; pendingWpm = 0;
+  pendingWordCount = 0; pendingPauseCount = 0; pendingFillerCount = 0;
+  const box = document.getElementById('tbox');
+  box.innerHTML = '<span>Speech will appear here in real-time…</span>';
+  box.className = 'tbox empty';
+  box.contentEditable = 'false';
+  box.style.outline = '';
+
+  isRecording = true;
+  recStart = Date.now();
+
+  try { recognition.start(); } catch(ex) {}
+  activateWave(true);
+  animWave();
+
+  ['mic-btn','f-mic-btn'].forEach(id => {
+    const b = document.getElementById(id);
+    if (b) { b.className = 'mb rec'; b.textContent = '⏹'; }
+  });
+  setStatus('on','🔴 Recording… speak now');
+  ['r1','r2','r3'].forEach(id => { const r = document.getElementById(id); if (r) r.style.display = ''; });
+
+  durTimer = setInterval(() => {
+    const s = Math.floor((Date.now()-recStart)/1000);
+    updateCount('a-dur', s+'s');
+    updateCount('f-dur', s+'s');
+  }, 500);
+}
+
+function stopRecording() {
+  if (!isRecording) return;
+  isRecording = false;
+
+  try { recognition.stop(); } catch(ex) {}
+  clearInterval(durTimer);
+  clearInterval(jamTimer);
+  activateWave(false);
+  ['r1','r2','r3'].forEach(id => { const r = document.getElementById(id); if (r) r.style.display = 'none'; });
+
+  // Capture snapshot into pending vars
+  pendingTx = fullTx.trim();
+  pendingDur = Math.max(1, Math.floor((Date.now()-recStart)/1000));
+  pendingWordCount = wordCount;
+  pendingPauseCount = pauseCount;
+  pendingFillerCount = fillerCount;
+  pendingWpm = pendingDur > 0 ? Math.round((pendingWordCount / pendingDur) * 60) : 0;
+
+  paceHistory.push(pendingWpm);
+  buildPaceChart(paceHistory);
+
+  // ── Conversation mode: bypass analyse step, send directly to AI ──
+  if (currentMode === 'conversation') {
+    const captured = pendingTx;
+    // Reset live counters for next turn
+    fullTx = ''; wordCount = 0; pauseCount = 0; fillerCount = 0;
+    updateCount('a-words',0); updateCount('a-pauses',0); updateCount('a-fillers',0);
+    updateCount('a-wpm',0); updateCount('f-wpm',0);
+    const box = document.getElementById('tbox');
+    box.innerHTML = '<span>Speech will appear here in real-time…</span>';
+    box.className = 'tbox empty';
+    box.contentEditable = 'false';
+    box.style.outline = '';
+    ['mic-btn','f-mic-btn'].forEach(id => { const b = document.getElementById(id); if (b) { b.className='mb'; b.textContent='🎙️'; } });
+    if (captured && captured.length > 2) {
+      setStatus('done', 'Tap mic to speak again…');
+      handleConversationTurn(captured);
+    } else {
+      setStatus('', 'Click the mic to start speaking');
+      showToast('💬', 'No speech detected. Please speak clearly and try again!');
+    }
+    return;
+  }
+
+  // ── Other modes (practice, jam, accent): show editable transcript + analyse bar ──
+  if (!pendingTx || pendingTx.length < 3) {
+    ['mic-btn','f-mic-btn'].forEach(id => { const b = document.getElementById(id); if (b) { b.className='mb'; b.textContent='🎙️'; } });
+    setStatus('', 'Click the mic to start speaking');
+    showToast('💬', 'No speech detected. Please speak clearly and try again!');
+    return;
+  }
+
+  showEditableTranscript(pendingTx);
+}
+
+/* ══════════════════════════════════════════
+   EDITABLE TRANSCRIPT + ANALYSE BAR
+══════════════════════════════════════════ */
+function showEditableTranscript(tx) {
+  const box = document.getElementById('tbox');
+  box.className = 'tbox';
+  box.contentEditable = 'true';
+  box.style.outline = '1px solid var(--c1)';
+  box.style.cursor = 'text';
+  box.textContent = tx;
+
+  document.getElementById('tx-action-bar').style.display = 'flex';
+
+  ['mic-btn','f-mic-btn'].forEach(id => { const b = document.getElementById(id); if (b) { b.className='mb'; b.textContent='🎙️'; } });
+  setStatus('done', 'Review & edit transcript, then click Analyse →');
+}
+
+function hideTxActionBar() {
+  document.getElementById('tx-action-bar').style.display = 'none';
+}
+
+function triggerAnalyse() {
+  const box = document.getElementById('tbox');
+  const editedTx = box.textContent.trim();
+
+  box.contentEditable = 'false';
+  box.style.outline = '';
+  box.style.cursor = '';
+  hideTxActionBar();
+
+  if (!editedTx || editedTx.length < 3) {
+    showToast('💬', 'Transcript is empty. Try recording again.');
+    return;
+  }
+
+  pendingTx = editedTx;
+
+  setStatus('proc', '⚙️ Analysing your speech…');
+  ['mic-btn','f-mic-btn'].forEach(id => { const b = document.getElementById(id); if (b) { b.className='mb proc'; b.textContent='⏳'; } });
+
+  analyzeWithAI(pendingTx, pendingDur, pendingWpm);
+}
+
+function discardSession() {
+  hideTxActionBar();
+  const box = document.getElementById('tbox');
+  box.contentEditable = 'false';
+  box.style.outline = '';
+  box.style.cursor = '';
+  box.innerHTML = '<span>Speech will appear here in real-time…</span>';
+  box.className = 'tbox empty';
+  fullTx = ''; wordCount = 0; pauseCount = 0; fillerCount = 0;
+  pendingTx = ''; pendingDur = 0; pendingWpm = 0;
+  ['mic-btn','f-mic-btn'].forEach(id => { const b = document.getElementById(id); if (b) { b.className='mb'; b.textContent='🎙️'; } });
+  setStatus('', 'Click the mic to start speaking');
+}
+
+/* ══════════════════════════════════════════
+   FILLER DETECTION
+══════════════════════════════════════════ */
+function detectFillers(t) {
+  const l = t.toLowerCase();
+  FILLERS.forEach(f => {
+    const re = new RegExp('\\b' + f + '\\b', 'gi');
+    fillerCount += (l.match(re) || []).length;
+  });
+  updateCount('a-fillers', fillerCount);
+  updateCount('f-fillers', fillerCount);
+}
+
+/* ══════════════════════════════════════════
+   TRANSCRIPT RENDER
+══════════════════════════════════════════ */
+function renderTx(text) {
+  if (!text.trim()) return;
+  const box = document.getElementById('tbox');
+  if (box.contentEditable === 'true') return;
+  box.className = 'tbox';
+  let html = text;
+  FILLERS.forEach(f => {
+    const re = new RegExp('\\b('+f+')\\b', 'gi');
+    html = html.replace(re, '<span class="hf" title="Filler word">$1</span>');
+  });
+  box.innerHTML = html;
+}
+
+/* ══════════════════════════════════════════
+   WPM + DELIVERY
+══════════════════════════════════════════ */
+function updateWPM() {
+  const elapsed = (Date.now() - recStart) / 60000;
+  if (elapsed <= 0) return;
+  const wpm = Math.round(wordCount / elapsed);
+  updateCount('a-wpm', wpm);
+  updateCount('f-wpm', wpm);
+  updateDelivery(wpm);
+}
+
+function updateCount(id, v) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = v;
+}
+
+function updateDelivery(wpm) {
+  const elapsed = Math.max(1, (Date.now()-recStart)/1000);
+  const w = wpm || Math.round((wordCount/elapsed)*60);
+  const fr = fillerCount / (elapsed/60);
+  const pr = pauseCount / (elapsed/60);
+
+  const pace  = w<80 ? ['Slow','var(--c4)']   : w<=130 ? ['Normal ✓','var(--c3)'] : w<=160 ? ['Fast','var(--c4)'] : ['Very Fast','var(--c5)'];
+  const fill  = fr<2 ? ['Low ✓','var(--c3)']  : fr<5   ? ['Moderate','var(--c4)'] : ['High ⚠','var(--c5)'];
+  const pause = pr<3 ? ['Natural ✓','var(--c3)'] : pr<6 ? ['Moderate','var(--c4)'] : ['Frequent','var(--c5)'];
+  const anx   = fr*2 + pr + (w>160||w<70 ? 2 : 0);
+  const anxl  = anx<5 ? ['Low ✓','var(--c3)'] : anx<10 ? ['Mild','var(--c4)'] : ['High ⚠','var(--c5)'];
+  const confl = anx<5 ? ['High ✓','var(--c3)'] : anx<10 ? ['Medium','var(--c4)'] : ['Low','var(--c5)'];
+
+  const set = (vid, did, v, c) => {
+    const ve = document.getElementById(vid), de = document.getElementById(did);
+    if (ve) ve.textContent = v;
+    if (de) de.style.background = c;
+  };
+  set('dv-pace','dd-pace',...pace);
+  set('dv-fill','dd-fill',...fill);
+  set('dv-pause','dd-pause',...pause);
+  set('dv-anx','dd-anx',...anxl);
+  set('dv-conf','dd-conf',...confl);
+}
+
+function resetDelivery() {
+  ['anx','pace','fill','pause','conf'].forEach(k => {
+    const ve = document.getElementById('dv-'+k), de = document.getElementById('dd-'+k);
+    if (ve) ve.textContent = '—';
+    if (de) de.style.background = 'var(--t3)';
+  });
+}
+
+/* ══════════════════════════════════════════
+   AI ANALYSIS
+══════════════════════════════════════════ */
+async function analyzeWithAI(tx, dur, wpm) {
+  const el  = document.getElementById('ai-text');
+  const fel = document.getElementById('f-ai-text');
+  el.className = 'aif-text';
+  el.innerHTML = 'Analysing your speech<span class="typing-cur"></span>';
+  if (fel) { fel.className = 'aif-text'; fel.innerHTML = 'Analysing<span class="typing-cur"></span>'; }
+
+  const sysP = `You are VerboMate, a friendly and encouraging English speaking coach. Your job is to help learners improve by giving warm, positive, constructive feedback. NEVER be harsh or demotivating.
+
+You MUST respond with ONLY a valid JSON object — no explanation before or after, no markdown code fences, no backticks, just the raw JSON starting with { and ending with }.
+
+The JSON must have exactly this structure:
+{"feedback":"Write 2-3 warm encouraging sentences. Always mention something positive first, then suggest one improvement area.","highlight":"One specific positive thing you noticed about their delivery or vocabulary.","scores":{"fluency":75,"pronunciation":72,"vocabulary":70,"confidence":68,"grammar":74},"corrections":[{"type":"tip","wrong":"","right":"A helpful suggestion","explain":"Encouraging explanation."},{"type":"tip","wrong":"","right":"Another suggestion","explain":"Another helpful tip."}],"weakAreas":["fluency","grammar"],"anxietyLevel":"low"}
+
+IMPORTANT RULES:
+- scores must be numbers between 50 and 95
+- type must be exactly "tip"
+- wrong can be empty string
+- anxietyLevel must be exactly "low", "mild", or "high"
+- Give 2-4 tips only
+- Be warm, encouraging, like a supportive coach`;
+
+  const usingWordCount   = pendingWordCount   || 0;
+  const usingPauseCount  = pendingPauseCount  || 0;
+  const usingFillerCount = pendingFillerCount || 0;
+
+  // For accent mode, add special instruction to analyse pronunciation
+  const accentNote = currentMode === 'accent'
+    ? `\nThis is an ACCENT DRILL. The user was reading: "${ACCENT_DRILLS[accentIdx % ACCENT_DRILLS.length].phrase}". Focus feedback on pronunciation, phonetics, and clarity.`
+    : '';
+
+  const userP = `Please analyse this English speech and give feedback.
+
+Topic the user was speaking about: "${currentTopic.title||'General English practice'}"${accentNote}
+What they said: "${tx}"
+Duration: ${dur} seconds | Word count: ${usingWordCount} | Speaking pace: ${wpm} WPM | Pauses detected: ${usingPauseCount} | Filler words: ${usingFillerCount}
+User's English level: ${prefs.level[0]||'intermediate'}
+User's goal: ${prefs.goal.map(g=>g.replace(/_/g,' ')).join(', ')}
+
+Now give your feedback in the JSON format described. Remember: only raw JSON, nothing else.`;
+
+  try {
+    const resp = await fetch('/api/claude', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      credentials: 'include',
+      body: JSON.stringify({
+        system: sysP,
+        messages: [{role:'user', content: userP}],
+        max_tokens: 1200
+      })
+    });
+
+    if (!resp.ok) {
+      const errTxt = await resp.text().catch(()=>'');
+      console.error('API error status', resp.status, errTxt);
+      throw new Error('API returned ' + resp.status);
+    }
+
+    const d = await resp.json();
+    console.log('API raw response:', JSON.stringify(d).slice(0,300));
+
+    if (d.error) throw new Error(d.error.message || 'API error');
+
+    let rawText = '';
+    if (d.content && d.content[0] && d.content[0].text) {
+      rawText = d.content[0].text;
+    } else if (typeof d.text === 'string') {
+      rawText = d.text;
+    } else if (typeof d.response === 'string') {
+      rawText = d.response;
+    } else {
+      throw new Error('Unexpected response shape: ' + JSON.stringify(d).slice(0,200));
+    }
+
+    console.log('Raw AI text:', rawText.slice(0,300));
+
+    let jsonStr = rawText.trim();
+    jsonStr = jsonStr.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
+    const firstBrace = jsonStr.indexOf('{');
+    const lastBrace  = jsonStr.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace !== -1) {
+      jsonStr = jsonStr.slice(firstBrace, lastBrace+1);
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(jsonStr);
+    } catch(parseErr) {
+      console.error('JSON parse failed:', parseErr, '\nString:', jsonStr.slice(0,400));
+      el.className = 'aif-text';
+      el.textContent = rawText || '⚠️ AI returned unexpected format. Your speech was recorded though!';
+      renderOffline(dur, wpm);
+      return;
+    }
+
+    if (parsed.scores) {
+      Object.keys(parsed.scores).forEach(k => {
+        parsed.scores[k] = Math.max(50, Math.min(100, Number(parsed.scores[k]) || 70));
+      });
+    } else {
+      parsed.scores = {fluency:72, pronunciation:70, vocabulary:72, confidence:68, grammar:71};
+    }
+
+    renderAIResults(parsed, dur, wpm);
+
+  } catch(err) {
+    console.error('analyzeWithAI error:', err);
+    el.className = 'aif-text';
+    el.textContent = `⚠️ Could not get AI feedback (${err.message}). Showing basic analysis instead.`;
+    if (fel) fel.textContent = '⚠️ AI connection issue.';
+    renderOffline(dur, wpm);
+  }
+}
+
+function renderAIResults(data, dur, wpm) {
+  const feedText = (data.highlight ? '✨ '+data.highlight+'\n\n' : '') + (data.feedback||'Great effort! Keep practising.');
+  const el  = document.getElementById('ai-text');
+  const fel = document.getElementById('f-ai-text');
+  el.className = 'aif-text';
+  typeTextInto(el, feedText);
+  if (fel) { fel.className = 'aif-text'; typeTextInto(fel, feedText, 14); }
+  currentAIResp = feedText;
+  document.getElementById('tts-btn').style.display = 'flex';
+
+  const scores = data.scores || {fluency:72, pronunciation:70, vocabulary:72, confidence:68, grammar:71};
+  renderScores(scores);
+  renderCorr(data.corrections || []);
+  const fCorrList = document.getElementById('f-corr-list');
+  if (fCorrList) fCorrList.innerHTML = document.getElementById('corr-list').innerHTML;
+
+  if (data.weakAreas && data.weakAreas.length) {
+    data.weakAreas.forEach(w => { if(w) weakTopics[w] = (weakTopics[w]||0)+1; });
+  }
+
+  if (data.anxietyLevel) {
+    const m = {low:['Low ✓','var(--c3)'], mild:['Mild','var(--c4)'], high:['High ⚠','var(--c5)']};
+    const [v,c] = m[data.anxietyLevel] || m.mild;
+    const dvAnx = document.getElementById('dv-anx');
+    const ddAnx = document.getElementById('dd-anx');
+    if (dvAnx) dvAnx.textContent = v;
+    if (ddAnx) ddAnx.style.background = c;
+  }
+
+  const avg = Math.round(Object.values(scores).reduce((a,b)=>a+b,0) / Object.keys(scores).length);
+  sessionHistory.unshift({
+    topic: currentTopic.title || 'Session',
+    score: avg,
+    date: new Date().toLocaleDateString('en-IN', {day:'numeric',month:'short'}),
+    dur, wpm,
+    mode: currentMode
+  });
+  if (sessionHistory.length > 30) sessionHistory.pop();
+
+  saveProgress();
+  saveSpeakingProgressToServer(avg, data); 
+  renderHistory();
+  renderWeak();
+  finishProcessing();
+  showToast('✅', `Analysis done! Score: ${avg}/100`);
+}
+
+function renderOffline(dur, wpm) {
+  const fc = pendingFillerCount || 0;
+  const pc = pendingPauseCount || 0;
+  const wc = pendingWordCount || 0;
+
+  const paceScore  = (wpm >= 90 && wpm <= 140) ? 82 : (wpm > 60 && wpm < 90) ? 68 : (wpm > 140) ? 72 : 60;
+  const fillerScore = Math.max(55, 95 - fc * 6);
+  const pauseScore  = Math.max(55, 90 - pc * 4);
+  const wordScore   = Math.min(90, 55 + wc * 1.5);
+
+  const scores = {
+    fluency:      Math.round((paceScore + fillerScore) / 2),
+    pronunciation: paceScore,
+    vocabulary:   Math.round(wordScore),
+    confidence:   Math.round(pauseScore),
+    grammar:      70
+  };
+
+  renderScores(scores);
+
+  const el = document.getElementById('ai-text');
+  el.className = 'aif-text';
+  el.textContent = `Good effort! You spoke for ${dur} seconds with ${wc} words at ${wpm} WPM. `
+    + (wpm >= 90 && wpm <= 140 ? 'Your pace is natural — well done! '
+      : wpm < 90 ? 'Try speaking a little faster for more natural flow. '
+      : 'Try slowing down slightly for clarity. ')
+    + (fc > 3 ? `You used ${fc} filler words — try pausing instead. ` : 'Good control of filler words! ')
+    + '(AI feedback unavailable — check your connection for full analysis.)';
+
+  const avg = Math.round(Object.values(scores).reduce((a,b)=>a+b,0)/5);
+  sessionHistory.unshift({topic:currentTopic.title||'Session',score:avg,date:new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short'}),dur,wpm,mode:currentMode});
+  saveProgress();
+  saveSpeakingProgressToServer(avg, null); 
+  renderHistory();
+  finishProcessing();
+}
+
+function finishProcessing() {
+  ['mic-btn','f-mic-btn'].forEach(id => { const b = document.getElementById(id); if (b) { b.className='mb'; b.textContent='🎙️'; } });
+  setStatus('done','Session complete! Start a new one anytime.');
+}
+
+/* ══════════════════════════════════════════
+   SCORES
+══════════════════════════════════════════ */
+function renderScores(s) {
+  const avg = Math.round(Object.values(s).reduce((a,b)=>a+b,0) / Object.keys(s).length);
+  const c = 314.16, o = c - (avg/100)*c;
+  document.getElementById('score-val').textContent = avg;
+  document.getElementById('score-ring').style.strokeDashoffset = o;
+  const fv = document.getElementById('f-score-val');
+  const fr = document.getElementById('f-score-ring');
+  if (fv) fv.textContent = avg;
+  if (fr) fr.style.strokeDashoffset = o;
+
+  const map = [['flu','fluency','c1'],['pro','pronunciation','c2'],['voc','vocabulary','c3'],['con','confidence','c4'],['grm','grammar','c5']];
+  map.forEach(([k, sk], i) => {
+    const v = s[sk] || 0;
+    setTimeout(() => {
+      const bf = document.getElementById('sb-'+k), bv = document.getElementById('sv-'+k);
+      const ff = document.getElementById('fs-'+k), fvv = document.getElementById('fv-'+k);
+      if (bf) bf.style.width = v+'%';
+      if (bv) bv.textContent = v;
+      if (ff) ff.style.width = v+'%';
+      if (fvv) fvv.textContent = v;
+    }, 280 + i*70);
+  });
+}
+
+function resetScoreRing() {
+  document.getElementById('score-val').textContent = '—';
+  document.getElementById('score-ring').style.strokeDashoffset = 314.16;
+  ['flu','pro','voc','con','grm'].forEach(k => {
+    const bf=document.getElementById('sb-'+k), bv=document.getElementById('sv-'+k);
+    if (bf) bf.style.width = '0%';
+    if (bv) bv.textContent = '—';
+    const ff=document.getElementById('fs-'+k), fvv=document.getElementById('fv-'+k);
+    if (ff) ff.style.width = '0%';
+    if (fvv) fvv.textContent = '—';
+  });
+}
+
+/* ══════════════════════════════════════════
+   CORRECTIONS
+══════════════════════════════════════════ */
+function renderCorr(corrections) {
+  const list = document.getElementById('corr-list');
+  if (!corrections || !corrections.length) {
+    list.innerHTML = '<div class="corr-empty">Great job! Keep it up.</div>';
+    return;
+  }
+  list.innerHTML = corrections.map(c => `
+    <div class="ci tip">
+      <div><span class="cbadge tip">💡 Tip</span></div>
+      ${c.wrong ? `<div style="font-size:0.73rem;color:var(--t2);font-family:var(--fm);margin-bottom:2px">You said: "${c.wrong}"</div>` : ''}
+      ${c.right ? `<div class="cr">✓ ${c.right}</div>` : ''}
+      <div class="cx">${c.explain||''}</div>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════════════════
+   PACE CHART
+══════════════════════════════════════════ */
+function buildPaceChart(data) {
+  const ch = document.getElementById('pace-ch');
+  const arr = (data && data.length) ? data : new Array(10).fill(0);
+  ch.innerHTML = arr.slice(-10).map(w => {
+    const h = w ? Math.min(100, Math.round(w/200*100)) : 3;
+    const c = !w ? 'rgba(255,255,255,0.05)' : (w>=90&&w<=140) ? 'var(--c3)' : w>140 ? 'var(--c5)' : 'var(--c4)';
+    return `<div class="pb" style="height:${h}%;background:${c}" title="${w} WPM"></div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════
+   HISTORY + WEAK
+══════════════════════════════════════════ */
+function renderHistory() {
+  const l = document.getElementById('hist-list');
+  if (!sessionHistory.length) {
+    l.innerHTML = '<div class="empty-st" style="padding:12px;font-size:0.72rem">No sessions yet</div>';
+    return;
+  }
+  const modeIco = {practice:'🎙️', jam:'⚡', conversation:'💬', accent:'🗣️'};
+  l.innerHTML = sessionHistory.slice(0,12).map(s => `
+    <div class="hi">
+      <span>${modeIco[s.mode]||'🎙️'}</span>
+      <span class="hi-t">${s.topic}</span>
+      <span class="hi-s">${s.score}</span>
+      <span class="hi-d">${s.date}</span>
+    </div>`).join('');
+}
+
+function clearHistory() {
+  sessionHistory = [];
+  usedTopics.clear();
+  saveProgress();
+  renderHistory();
+  showToast('🗑️','History cleared');
+}
+
+function renderWeak() {
+  const l = document.getElementById('weak-list');
+  const entries = Object.entries(weakTopics).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  if (!entries.length) {
+    l.innerHTML = '<div class="weak-empty">No patterns yet.<br>Complete 2+ sessions to see trends.</div>';
+    return;
+  }
+  const lbl = {grammar:'📝 Grammar',vocabulary:'📚 Vocabulary',filler_words:'💬 Fillers',pronunciation:'🗣️ Pronunciation',fluency:'🌊 Fluency',pace:'⏱️ Pace',confidence:'💪 Confidence'};
+  l.innerHTML = entries.map(([k,v]) => `
+    <div class="wi">
+      <span class="wi-n">${lbl[k]||k}</span>
+      <span class="wi-c">${v}× struggle</span>
+    </div>`).join('');
+}
+
+function clearWeakTopics() {
+  weakTopics = {};
+  saveProgress();
+  renderWeak();
+  showToast('✅','Weak areas reset');
+}
+
+/* ══════════════════════════════════════════
+   SESSION RESET
+══════════════════════════════════════════ */
+function resetSession() {
+  if (isRecording) return;
+
+  fullTx = ''; wordCount = 0; pauseCount = 0; fillerCount = 0; paceHistory = [];
+  pendingTx = ''; pendingDur = 0; pendingWpm = 0;
+  pendingWordCount = 0; pendingPauseCount = 0; pendingFillerCount = 0;
+
+  const box = document.getElementById('tbox');
+  box.innerHTML = '<span>Speech will appear here in real-time…</span>';
+  box.className = 'tbox empty';
+  box.contentEditable = 'false';
+  box.style.outline = '';
+  hideTxActionBar();
+
+  document.getElementById('ai-text').textContent = 'Waiting for your speech to generate personalised feedback…';
+  document.getElementById('ai-text').className = 'aif-text wait';
+  document.getElementById('f-ai-text').textContent = 'Waiting for speech…';
+  document.getElementById('f-ai-text').className = 'aif-text wait';
+  document.getElementById('tts-btn').style.display = 'none';
+  document.getElementById('corr-list').innerHTML = '<div class="corr-empty">No corrections yet.<br>Start speaking for feedback!</div>';
+  document.getElementById('f-corr-list').innerHTML = '<div class="corr-empty">No corrections yet.</div>';
+
+  ['a-dur','a-wpm','a-pauses','a-fillers','a-words','f-dur','f-wpm','f-pauses','f-fillers'].forEach(id => {
+    const e = document.getElementById(id);
+    if (e) e.textContent = id.includes('dur') ? '0s' : '0';
+  });
+  resetScoreRing();
+  resetDelivery();
+  buildPaceChart([]);
+  setStatus('','Click the mic to start speaking');
+}
+
+/* ══════════════════════════════════════════
+   TIPS ROTATION
+══════════════════════════════════════════ */
+let tipIdx = 0;
+function rotateTips() {
+  const el = document.getElementById('tip-s');
+  el.style.opacity = '0';
+  setTimeout(() => {
+    el.innerHTML = '<span style="font-size:1rem">💡</span> ' + TIPS[tipIdx % TIPS.length];
+    el.style.opacity = '1';
+    tipIdx++;
+  }, 350);
+  setTimeout(rotateTips, 6500);
+}
+
+/* ══════════════════════════════════════════
+   TTS
+══════════════════════════════════════════ */
+function speakAIResponse() {
+  if (!currentAIResp) return;
+  speakText(currentAIResp, document.getElementById('tts-btn'));
+}
+
+function speakText(text, btn) {
+  if (!btn) return;
+  if (isSpeaking) {
+    window.speechSynthesis.cancel();
+    isSpeaking = false;
+    btn.textContent = '🔊 Listen';
+    btn.classList.remove('sp');
+    return;
+  }
+  const u = new SpeechSynthesisUtterance(text.replace(/[*_#✨]/g,''));
+  u.rate = 0.95; u.pitch = 1; u.volume = 1;
+  const voices = window.speechSynthesis.getVoices();
+  const pref = voices.find(v=>v.lang.startsWith('en')&&v.name.includes('Google')) || voices.find(v=>v.lang.startsWith('en'));
+  if (pref) u.voice = pref;
+  u.onstart = () => { isSpeaking=true; btn.textContent='⏹ Stop'; btn.classList.add('sp'); };
+  u.onend = u.onerror = () => { isSpeaking=false; btn.textContent='🔊 Listen'; btn.classList.remove('sp'); };
+  window.speechSynthesis.speak(u);
+}
+
+/* ══════════════════════════════════════════
+   FOCUS MODE
+══════════════════════════════════════════ */
+function toggleFocusMode() {
+  isFocusMode = !isFocusMode;
+  document.body.classList.toggle('focus-mode', isFocusMode);
+  if (isFocusMode) showToast('⛶','Focus mode — distraction free!');
+}
+
+/* ══════════════════════════════════════════
+   PREFERENCES
+══════════════════════════════════════════ */
+function loadPrefUI() {
+  document.querySelectorAll('.pchip').forEach(c => {
+    const g = c.dataset.g, v = c.dataset.v;
+    if (prefs[g] && prefs[g].includes(v)) c.classList.add('sel');
+    else c.classList.remove('sel');
+    c.onclick = () => {
+      if (g==='level'||g==='accent') {
+        document.querySelectorAll(`.pchip[data-g="${g}"]`).forEach(x => x.classList.remove('sel'));
+        c.classList.add('sel');
+      } else {
+        c.classList.toggle('sel');
+      }
+    };
+  });
+}
+
+function openPrefModal() {
+  loadPrefUI();
+  document.getElementById('pref-modal').classList.add('open');
+}
+
+function savePrefs() {
+  const collect = (g) => [...document.querySelectorAll(`.pchip[data-g="${g}"].sel`)].map(c=>c.dataset.v);
+  prefs = { goal:collect('goal'), level:collect('level'), topic:collect('topic'), accent:collect('accent') };
+  if (!prefs.goal.length)  prefs.goal  = ['daily_conversation'];
+  if (!prefs.level.length) prefs.level = ['intermediate'];
+  if (!prefs.topic.length) prefs.topic = ['general'];
+  saveProgress();
+  document.getElementById('pref-modal').classList.remove('open');
+  showToast('✅','Preferences saved! Generating new topic…');
+  setTimeout(generateAITopic, 400);
+}
+
+/* ══════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════ */
+function setStatus(cls, text) {
+  ['mic-status','f-mic-status'].forEach(id => {
+    const e = document.getElementById(id);
+    if (e) { e.className = 'ms' + (cls ? ' '+cls : ''); e.textContent = text; }
+  });
+}
+
+function typeTextInto(el, text, speed=16) {
+  el.innerHTML = '';
+  let i = 0;
+  const cur = document.createElement('span');
+  cur.className = 'typing-cur';
+  el.appendChild(cur);
+  const t = setInterval(() => {
+    if (i >= text.length) { clearInterval(t); cur.remove(); return; }
+    if (text[i] === '\n') cur.insertAdjacentHTML('beforebegin','<br>');
+    else cur.insertAdjacentText('beforebegin', text[i]);
+    i++;
+  }, speed);
+}
+
+function showToast(ico, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('t-ico').textContent = ico;
+  document.getElementById('t-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ══════════════════════════════════════════
+   CONVERSATION LANGUAGE TOGGLE
+══════════════════════════════════════════ */
+let convLangMode = 'auto';
+function toggleConvLang() {
+  const modes  = ['auto','telugu','english'];
+  const labels = {auto:'🌐 Auto-detect', telugu:'🇮🇳 Telugu→English', english:'🇬🇧 English only'};
+  convLangMode = modes[(modes.indexOf(convLangMode)+1)%3];
+  const lbl = document.getElementById('lang-label');
+  if (lbl) lbl.textContent = labels[convLangMode];
+  showToast('🌐','Language mode: ' + labels[convLangMode]);
+}
+
+async function handleLogout() {
+  showToast('👋','Signing out…');
+  await fetch('/api/auth/logout', {method:'POST', credentials:'include'});
+  window.location.href = '/login';
+}
+
+/* ── BOOT ── */
+loadUser();
+</script>
+</body>
+</html>

@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing Studio — VerboMate</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+:root{
+  --bg:#09090b;
+  --surface:#111115;
+  --card:#18181c;
+  --card-hov:#1e1e24;
+  --border:rgba(255,255,255,0.07);
+  --border-lit:rgba(255,255,255,0.13);
+  --rose:#fb7185;
+  --rose-dim:rgba(251,113,133,0.1);
+  --rose-glow:rgba(251,113,133,0.15);
+  --violet:#a78bfa;
+  --violet-dim:rgba(167,139,250,0.1);
+  --cyan:#22d3ee;
+  --cyan-dim:rgba(34,211,238,0.1);
+  --emerald:#34d399;
+  --emerald-dim:rgba(52,211,153,0.08);
+  --amber:#fbbf24;
+  --amber-dim:rgba(251,191,36,0.1);
+  --text-1:#fafafa;
+  --text-2:#a1a1aa;
+  --text-3:#52525b;
+  --sw:260px;
+  --th:60px;
+  --r:14px;
+  --rl:20px;
+  --f:'Plus Jakarta Sans',sans-serif;
+  --fs:'Instrument Serif',serif;
+  --fm:'JetBrains Mono',monospace;
+}
+body{font-family:var(--f);background:var(--bg);color:var(--text-1);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#27272a;border-radius:2px}
+
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sw);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100}
+.slogo{display:flex;align-items:center;gap:11px;padding:22px 20px 20px;border-bottom:1px solid var(--border)}
+.slm{width:36px;height:36px;background:linear-gradient(135deg,var(--cyan),var(--violet));border-radius:10px;display:grid;place-items:center;font-size:17px;flex-shrink:0;box-shadow:0 0 20px rgba(34,211,238,0.2)}
+.sln{font-weight:800;font-size:1rem;letter-spacing:-0.3px}
+.sln em{font-style:normal;color:var(--cyan)}
+.sxp{padding:16px 20px;border-bottom:1px solid var(--border)}
+.sxpt{display:flex;justify-content:space-between;font-size:0.72rem;color:var(--text-2);margin-bottom:8px}
+.sxpt strong{color:var(--violet)}
+.sxpb{height:4px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden}
+.sxpf{height:100%;background:linear-gradient(90deg,var(--violet),var(--cyan));border-radius:99px;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
+.snav{padding:12px 12px 0;flex:1;overflow-y:auto}
+.snl{font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-3);padding:6px 8px 4px}
+.sni{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:0.855rem;font-weight:500;color:var(--text-2);cursor:pointer;transition:all 0.15s;margin-bottom:1px;text-decoration:none}
+.sni:hover{background:rgba(255,255,255,0.04);color:var(--text-1)}
+.sni.active{background:var(--rose-dim);color:var(--rose);font-weight:600}
+.sni-ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sni-pill{margin-left:auto;font-size:0.6rem;font-weight:700;background:var(--violet-dim);color:var(--violet);padding:2px 7px;border-radius:99px}
+.suser{padding:14px 16px;border-top:1px solid var(--border)}
+.surow{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;transition:background 0.15s}
+.surow:hover{background:rgba(255,255,255,0.04)}
+.suava{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--rose));display:grid;place-items:center;font-size:14px;font-weight:700;flex-shrink:0;border:2px solid rgba(167,139,250,0.3);color:#fff}
+.suname{font-size:0.84rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sumeta{font-size:0.7rem;color:var(--emerald)}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sw);min-height:100vh;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:90;height:var(--th);background:rgba(9,9,11,0.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:14px}
+.tb-title{font-size:0.95rem;font-weight:700;letter-spacing:-0.3px}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.tb-streak{display:flex;align-items:center;gap:5px;background:var(--amber-dim);border:1px solid rgba(251,191,36,0.2);color:var(--amber);font-size:0.76rem;font-weight:700;padding:5px 12px;border-radius:99px}
+.tb-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--card);border:1px solid var(--border);border-radius:8px;font-size:0.78rem;font-weight:600;color:var(--text-2);cursor:pointer;transition:all 0.15s;font-family:var(--f);text-decoration:none}
+.tb-btn:hover{border-color:var(--border-lit);color:var(--text-1)}
+.tb-btn.primary{background:var(--rose-dim);border-color:rgba(251,113,133,0.25);color:var(--rose)}
+.tb-ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--rose));display:grid;place-items:center;font-size:13px;font-weight:700;cursor:pointer;color:#fff;border:2px solid rgba(167,139,250,0.3)}
+
+/* ── CONTENT ── */
+.content{padding:28px;flex:1}
+
+/* ── PAGE HEADER ── */
+.ph{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.ph-left{display:flex;align-items:center;gap:16px}
+.ph-ico{width:52px;height:52px;background:var(--rose-dim);border:1px solid rgba(251,113,133,0.2);border-radius:14px;display:grid;place-items:center;font-size:22px;flex-shrink:0}
+.ph-t{font-family:var(--fs);font-size:1.8rem;font-weight:400;letter-spacing:-0.5px;line-height:1}
+.ph-t em{font-style:italic;color:var(--rose)}
+.ph-s{font-size:0.8rem;color:var(--text-2);margin-top:4px}
+.ph-right{display:flex;gap:8px;align-items:center}
+
+/* Mode tabs */
+.mode-tabs{display:flex;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:4px;gap:2px}
+.mode-tab{padding:7px 16px;border-radius:7px;font-size:0.76rem;font-weight:600;cursor:pointer;transition:all 0.15s;color:var(--text-2);font-family:var(--f);white-space:nowrap}
+.mode-tab.active{background:var(--rose-dim);color:var(--rose)}
+.mode-tab:hover:not(.active){color:var(--text-1)}
+
+/* ── MAIN GRID ── */
+.grid{display:grid;grid-template-columns:1fr 340px;gap:18px;align-items:start}
+
+/* ── LEFT PANEL ── */
+.left-panel{display:flex;flex-direction:column;gap:16px}
+
+/* ── TOPIC CARD ── */
+.topic-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:22px;position:relative;overflow:hidden}
+.topic-card::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(251,113,133,0.08),transparent 70%);pointer-events:none}
+.tc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.tc-badge{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+.tc-badge.freewrite{background:var(--rose-dim);color:var(--rose);border:1px solid rgba(251,113,133,0.2)}
+.tc-badge.email{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(34,211,238,0.2)}
+.tc-badge.essay{background:var(--violet-dim);color:var(--violet);border:1px solid rgba(167,139,250,0.2)}
+.tc-badge.report{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.2)}
+.tc-badge.timed{background:rgba(251,113,133,0.15);color:var(--rose);border:1px solid rgba(251,113,133,0.3);animation:badgePulse 2s infinite}
+@keyframes badgePulse{0%,100%{opacity:1}50%{opacity:0.6}}
+.tc-actions{display:flex;gap:6px}
+.icon-btn{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid var(--border);display:grid;place-items:center;font-size:14px;cursor:pointer;transition:all 0.15s}
+.icon-btn:hover{border-color:var(--border-lit);background:rgba(255,255,255,0.06)}
+
+/* Timed challenge bar */
+.timed-bar{display:none;align-items:center;gap:12px;padding:12px 16px;background:rgba(251,113,133,0.06);border:1px solid rgba(251,113,133,0.15);border-radius:10px;margin-bottom:14px}
+.timed-bar.visible{display:flex}
+.timer-ring{position:relative;width:44px;height:44px;flex-shrink:0}
+.timer-ring svg{transform:rotate(-90deg)}
+.timer-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--fm);font-size:0.68rem;font-weight:600;color:var(--rose)}
+.timer-info{flex:1}
+.timer-label{font-size:0.7rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--rose);margin-bottom:2px}
+.timer-sub{font-size:0.72rem;color:var(--text-2)}
+.timer-wc{font-family:var(--fm);font-size:0.78rem;font-weight:600;color:var(--text-2)}
+.btn-submit-timed{padding:7px 16px;background:linear-gradient(135deg,var(--rose),#be185d);border:none;border-radius:8px;color:#fff;font-family:var(--f);font-size:0.76rem;font-weight:700;cursor:pointer;transition:all 0.15s;flex-shrink:0}
+.btn-submit-timed:hover{opacity:0.88}
+
+.tc-title{font-size:1.15rem;font-weight:700;letter-spacing:-0.3px;line-height:1.4;margin-bottom:8px}
+.tc-desc{font-size:0.81rem;color:var(--text-2);line-height:1.65;margin-bottom:14px}
+.tc-hints{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.tc-hint{padding:3px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:99px;font-size:0.69rem;color:var(--text-2)}
+.tc-meta{display:flex;align-items:center;justify-content:space-between}
+.tc-tags{display:flex;gap:10px}
+.tc-tag{font-size:0.7rem;color:var(--text-3);display:flex;align-items:center;gap:4px}
+.tc-tag strong{color:var(--text-2);font-family:var(--fm);font-size:0.68rem}
+.btn-new{display:flex;align-items:center;gap:5px;padding:7px 14px;background:var(--rose-dim);border:1px solid rgba(251,113,133,0.2);border-radius:8px;font-size:0.74rem;font-weight:700;color:var(--rose);cursor:pointer;transition:all 0.15s;font-family:var(--f)}
+.btn-new:hover{background:rgba(251,113,133,0.18)}
+
+/* Template picker */
+.template-picker{display:none;flex-wrap:wrap;gap:8px;padding:14px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;margin-bottom:14px}
+.template-picker.visible{display:flex}
+.tpl-chip{display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--card);border:1px solid var(--border);border-radius:99px;font-size:0.75rem;font-weight:500;color:var(--text-2);cursor:pointer;transition:all 0.15s}
+.tpl-chip:hover{border-color:var(--rose);color:var(--rose)}
+.tpl-chip.active{background:var(--rose-dim);border-color:rgba(251,113,133,0.3);color:var(--rose)}
+
+/* ── EDITOR ── */
+.editor-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.editor-toolbar{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tool-btn{padding:4px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:6px;font-size:0.72rem;font-weight:600;color:var(--text-2);cursor:pointer;transition:all 0.15s;font-family:var(--f)}
+.tool-btn:hover{border-color:var(--border-lit);color:var(--text-1)}
+.tool-sep{width:1px;height:18px;background:var(--border);flex-shrink:0}
+.wc-display{margin-left:auto;font-family:var(--fm);font-size:0.72rem;color:var(--text-3);display:flex;align-items:center;gap:8px}
+.wc-num{color:var(--rose);font-weight:600}
+
+.editor-area{position:relative}
+#writing-input{width:100%;min-height:320px;background:transparent;border:none;outline:none;resize:none;font-family:var(--f);font-size:0.92rem;line-height:1.85;color:var(--text-1);padding:20px 22px;caret-color:var(--rose)}
+#writing-input::placeholder{color:var(--text-3)}
+.editor-footer{padding:10px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.readability-badge{display:flex;align-items:center;gap:6px;font-size:0.72rem;color:var(--text-2)}
+.rb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.analyse-btn{margin-left:auto;padding:8px 20px;background:linear-gradient(135deg,var(--rose),#be185d);border:none;border-radius:8px;color:#fff;font-family:var(--f);font-size:0.82rem;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:7px}
+.analyse-btn:hover{opacity:0.88;transform:translateY(-1px)}
+.analyse-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+
+/* ── FEEDBACK PANEL ── */
+.feedback-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:20px}
+.fb-head{display:flex;align-items:center;margin-bottom:16px}
+.fb-title{font-size:0.88rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.fb-title::before{content:'';width:3px;height:14px;background:var(--rose);border-radius:2px}
+.tts-btn{margin-left:auto;display:flex;align-items:center;gap:4px;padding:4px 10px;background:var(--rose-dim);border:1px solid rgba(251,113,133,0.2);border-radius:7px;font-size:0.7rem;font-weight:600;color:var(--rose);cursor:pointer;transition:all 0.15s;font-family:var(--f)}
+.tts-btn:hover{background:rgba(251,113,133,0.18)}
+.tts-btn.sp{animation:tpulse 1s infinite}
+@keyframes tpulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.fb-text{font-size:0.83rem;line-height:1.8;color:var(--text-1);min-height:60px}
+.fb-text.wait{color:var(--text-3);font-style:italic}
+.typing-cur{display:inline-block;width:2px;height:13px;background:var(--rose);margin-left:2px;animation:bl 0.7s infinite;vertical-align:middle}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ── RIGHT PANEL ── */
+.right-panel{display:flex;flex-direction:column;gap:14px}
+
+/* Score ring */
+.score-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:20px}
+.ring-wrap{display:flex;justify-content:center;margin-bottom:16px;position:relative}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.ring-val{font-family:var(--fm);font-size:2rem;font-weight:600;line-height:1}
+.ring-lbl{font-size:0.6rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px}
+.score-bars{display:flex;flex-direction:column;gap:9px}
+.sbar-row{display:flex;align-items:center;gap:8px}
+.sbar-l{font-size:0.71rem;color:var(--text-2);width:90px;flex-shrink:0}
+.sbar-track{flex:1;height:4px;background:rgba(255,255,255,0.05);border-radius:99px;overflow:hidden}
+.sbar-fill{height:100%;border-radius:99px;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
+.sbar-v{font-family:var(--fm);font-size:0.67rem;width:28px;text-align:right;flex-shrink:0}
+
+/* IELTS band */
+.ielts-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:18px}
+.ielts-display{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.ielts-band{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;border:3px solid var(--rose);flex-shrink:0}
+.ib-num{font-family:var(--fm);font-size:1.6rem;font-weight:600;color:var(--rose);line-height:1}
+.ib-lbl{font-size:0.55rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px}
+.ielts-info{}
+.ielts-grade{font-size:0.85rem;font-weight:700;margin-bottom:3px}
+.ielts-sub{font-size:0.73rem;color:var(--text-2);line-height:1.5}
+.ielts-scale{display:flex;gap:3px;margin-top:10px}
+.ielts-step{flex:1;height:6px;border-radius:2px;background:rgba(255,255,255,0.06);transition:background 0.4s}
+
+/* Corrections */
+.corr-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:18px}
+.corr-list{display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto}
+.corr-item{padding:11px 13px;border-radius:9px;border:1px solid;font-size:0.77rem}
+.corr-item.err{background:rgba(251,113,133,0.05);border-color:rgba(251,113,133,0.18)}
+.corr-item.sug{background:rgba(167,139,250,0.05);border-color:rgba(167,139,250,0.15)}
+.corr-item.tip{background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.12)}
+.corr-badge{display:inline-flex;align-items:center;gap:3px;font-size:0.6rem;font-weight:700;padding:2px 7px;border-radius:99px;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+.corr-badge.err{background:rgba(251,113,133,0.12);color:var(--rose)}
+.corr-badge.sug{background:rgba(167,139,250,0.12);color:var(--violet)}
+.corr-badge.tip{background:rgba(52,211,153,0.1);color:var(--emerald)}
+.corr-wrong{color:var(--rose);font-family:var(--fm);font-size:0.74rem;text-decoration:line-through;margin-bottom:3px}
+.corr-right{color:var(--emerald);font-family:var(--fm);font-size:0.74rem;margin-bottom:4px}
+.corr-why{color:var(--text-2);font-size:0.72rem;line-height:1.55}
+.corr-empty{text-align:center;padding:20px;color:var(--text-3);font-size:0.78rem;line-height:1.6}
+
+/* History */
+.hist-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:18px}
+.hist-list{display:flex;flex-direction:column;gap:5px;max-height:200px;overflow-y:auto}
+.hist-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid var(--border);font-size:0.74rem;cursor:pointer;transition:border-color 0.15s}
+.hist-item:hover{border-color:var(--border-lit)}
+.hist-ico{font-size:13px}
+.hist-t{flex:1;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-s{font-family:var(--fm);color:var(--rose);font-size:0.7rem}
+.hist-d{color:var(--text-3);font-size:0.65rem}
+
+/* Tips */
+.tips-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:18px}
+.tip-txt{font-size:0.8rem;color:var(--text-2);line-height:1.7;transition:opacity 0.35s}
+
+/* Card utility */
+.card-hd{display:flex;align-items:center;margin-bottom:14px}
+.card-hd-t{font-size:0.88rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.card-hd-t::before{content:'';width:3px;height:14px;background:var(--rose);border-radius:2px}
+.see-all{margin-left:auto;font-size:0.73rem;color:var(--rose);cursor:pointer;font-weight:500}
+.see-all:hover{opacity:0.7}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--border-lit);border-radius:var(--r);padding:13px 18px;font-size:0.83rem;z-index:999;display:flex;align-items:center;gap:10px;box-shadow:0 16px 48px rgba(0,0,0,0.5);transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(.22,1,.36,1)}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ── MODAL ── */
+.modal{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);backdrop-filter:blur(12px)}
+.modal.open{display:flex;animation:fi 0.2s ease}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.mbox{background:var(--surface);border:1px solid var(--border-lit);border-radius:var(--rl);padding:32px;max-width:500px;width:92%;position:relative;box-shadow:0 40px 100px rgba(0,0,0,0.7);animation:bi 0.3s cubic-bezier(.22,1,.36,1)}
+@keyframes bi{from{transform:scale(0.92);opacity:0}to{transform:scale(1);opacity:1}}
+.mclose{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);display:grid;place-items:center;cursor:pointer;font-size:16px;color:var(--text-2);transition:all 0.15s}
+.mclose:hover{background:var(--rose-dim);color:var(--rose)}
+.mico{font-size:2.5rem;text-align:center;margin-bottom:14px}
+.mt{font-size:1.2rem;font-weight:800;text-align:center;letter-spacing:-0.3px;margin-bottom:7px}
+.md{font-size:0.82rem;color:var(--text-2);text-align:center;line-height:1.65;margin-bottom:20px}
+.mbtn{width:100%;padding:12px;border:none;border-radius:9px;background:linear-gradient(135deg,var(--rose),#be185d);color:#fff;font-family:var(--f);font-size:0.88rem;font-weight:700;cursor:pointer;transition:all 0.2s;margin-bottom:8px}
+.mbtn:hover{opacity:0.9;transform:translateY(-1px)}
+.mbtn.secondary{background:var(--card);border:1px solid var(--border);color:var(--text-2);margin-bottom:0}
+.mbtn.secondary:hover{border-color:var(--border-lit);color:var(--text-1)}
+
+/* Time picker in modal */
+.time-picker{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.time-opt{padding:8px 18px;background:var(--card);border:1px solid var(--border);border-radius:99px;font-size:0.8rem;font-weight:600;color:var(--text-2);cursor:pointer;transition:all 0.15s;font-family:var(--f)}
+.time-opt.sel{background:var(--rose-dim);border-color:rgba(251,113,133,0.3);color:var(--rose)}
+.time-opt:hover:not(.sel){border-color:var(--border-lit);color:var(--text-1)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.fa{animation:fadeUp 0.4s ease both}
+.fa1{animation-delay:0.05s}
+.fa2{animation-delay:0.1s}
+.fa3{animation-delay:0.15s}
+.fa4{animation-delay:0.2s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1150px){.grid{grid-template-columns:1fr}}
+@media(max-width:900px){:root{--sw:0px}.sidebar{display:none}.main{margin-left:0}.content{padding:18px}}
+@media(max-width:600px){.mode-tabs{flex-wrap:wrap}.ph{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="slogo">
+    <div class="slm">💬</div>
+    <div class="sln">Verbo<em>Mate</em></div>
+  </div>
+  <div class="sxp">
+    <div class="sxpt"><span id="sb-level">Level — Explorer</span><strong id="sb-xp">— XP</strong></div>
+    <div class="sxpb"><div class="sxpf" id="sb-xp-fill" style="width:0%"></div></div>
+  </div>
+  <div class="snav">
+    <div class="snl">Main</div>
+    <a href="/dashboard" class="sni"><span class="sni-ico">🏠</span> Dashboard</a>
+    <!-- <div class="sni"><span class="sni-ico">📊</span> Progress</div>
+    <div class="sni"><span class="sni-ico">🏆</span> Leaderboard <span class="sni-pill">Live</span></div> -->
+    <div class="snl" style="margin-top:8px">Practice</div>
+    <!-- <a href="/vocabulary" class="sni"><span class="sni-ico">📖</span> Vocabulary</a>
+    <a href="/speaking" class="sni"><span class="sni-ico">🎙️</span> Speaking</a>
+    <a href="/grammar" class="sni"><span class="sni-ico">📝</span> Grammar</a>
+    <a href="/listening" class="sni"><span class="sni-ico">🎧</span> Listening</a> -->
+    <div class="sni active"><span class="sni-ico">✍️</span> Writing</div>
+    <!-- <a href="/interview" class="sni"><span class="sni-ico">💼</span> Interview Prep</a>
+    <div class="snl" style="margin-top:8px">Account</div>
+    <div class="sni"><span class="sni-ico">⚙️</span> Settings</div> -->
+    <div class="sni" onclick="handleLogout()"><span class="sni-ico">🚪</span> Sign Out</div>
+  </div>
+  <div class="suser">
+    <div class="surow">
+      <div class="suava" id="sb-ava">?</div>
+      <div>
+        <div class="suname" id="sb-name">Loading…</div>
+        <div class="sumeta" id="sb-rank">⚡ Explorer</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <a href="/dashboard" class="tb-btn">← Back</a>
+    <div class="tb-title">✍️ Writing Studio</div>
+    <div class="tb-right">
+      <div class="tb-streak" id="streak-badge">🔥 — day streak</div>
+      <button class="tb-btn primary" onclick="openTimedModal()">⏱ Timed Challenge</button>
+      <div class="tb-ava" id="top-ava">?</div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- Header -->
+    <div class="ph fa">
+      <div class="ph-left">
+        <div class="ph-ico">✍️</div>
+        <div>
+          <div class="ph-t">Writing <em>Studio</em></div>
+          <div class="ph-s">AI grammar & tone · IELTS band scorer · Email & essay templates · Timed challenges</div>
+        </div>
+      </div>
+      <div class="ph-right">
+        <div class="mode-tabs">
+          <div class="mode-tab active" onclick="setMode('freewrite')">✍️ Free Write</div>
+          <div class="mode-tab" onclick="setMode('email')">📧 Email</div>
+          <div class="mode-tab" onclick="setMode('essay')">📄 Essay</div>
+          <div class="mode-tab" onclick="setMode('report')">📊 Report</div>
+          <div class="mode-tab" onclick="openTimedModal()">⏱ Timed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid">
+
+      <!-- LEFT -->
+      <div class="left-panel">
+
+        <!-- Topic Card -->
+        <div class="topic-card fa fa1">
+          <div class="tc-header">
+            <div class="tc-badge freewrite" id="mode-badge">Free Write</div>
+            <div class="tc-actions">
+              <div class="icon-btn" title="Get new topic" onclick="generateTopic()">🔄</div>
+              <div class="icon-btn" title="Bookmark" onclick="showToast('🔖','Topic bookmarked!')">🔖</div>
+              <div class="icon-btn" title="Templates" onclick="toggleTemplates()">📋</div>
+            </div>
+          </div>
+
+          <!-- Timed countdown bar -->
+          <div class="timed-bar" id="timed-bar">
+            <div class="timer-ring">
+              <svg width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="18" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+                <circle id="timer-ring-path" cx="22" cy="22" r="18" fill="none" stroke="var(--rose)" stroke-width="3"
+                  stroke-linecap="round" stroke-dasharray="113.1" stroke-dashoffset="0"
+                  style="transition:stroke-dashoffset 1s linear"/>
+              </svg>
+              <div class="timer-num" id="timer-num">—</div>
+            </div>
+            <div class="timer-info">
+              <div class="timer-label" id="timer-label">Timed Challenge</div>
+              <div class="timer-sub" id="timer-sub">Write as much as you can!</div>
+            </div>
+            <div class="timer-wc" id="timed-wc">0 words</div>
+            <button class="btn-submit-timed" onclick="submitTimed()">Submit →</button>
+          </div>
+
+          <!-- Template picker -->
+          <div class="template-picker" id="template-picker">
+            <div class="tpl-chip active" onclick="selectTemplate('blank')" data-tpl="blank">✏️ Blank</div>
+            <div class="tpl-chip" onclick="selectTemplate('formal_email')" data-tpl="formal_email">📧 Formal Email</div>
+            <div class="tpl-chip" onclick="selectTemplate('complaint')" data-tpl="complaint">😤 Complaint</div>
+            <div class="tpl-chip" onclick="selectTemplate('cover_letter')" data-tpl="cover_letter">💼 Cover Letter</div>
+            <div class="tpl-chip" onclick="selectTemplate('ielts_agree')" data-tpl="ielts_agree">📝 IELTS Agree/Disagree</div>
+            <div class="tpl-chip" onclick="selectTemplate('ielts_discuss')" data-tpl="ielts_discuss">📝 IELTS Discuss</div>
+            <div class="tpl-chip" onclick="selectTemplate('report')" data-tpl="report">📊 Report</div>
+            <div class="tpl-chip" onclick="selectTemplate('narrative')" data-tpl="narrative">📖 Narrative</div>
+          </div>
+
+          <div class="tc-title" id="topic-title">Generating your writing topic…</div>
+          <div class="tc-desc" id="topic-desc">Personalising topics based on your mode and history.</div>
+          <div class="tc-hints" id="topic-hints"></div>
+          <div class="tc-meta">
+            <div class="tc-tags">
+              <div class="tc-tag">📝 <strong id="topic-type">Essay</strong></div>
+              <div class="tc-tag">🎯 <strong id="topic-diff">Intermediate</strong></div>
+              <div class="tc-tag">💡 <strong id="topic-words">200–250 words</strong></div>
+            </div>
+            <div class="btn-new" onclick="generateTopic()">⟳ New Topic</div>
+          </div>
+        </div>
+
+        <!-- Editor -->
+        <div class="editor-card fa fa2">
+          <div class="editor-toolbar">
+            <div class="tool-btn" onclick="formatText('bold')"><b>B</b></div>
+            <div class="tool-btn" onclick="formatText('italic')"><i>I</i></div>
+            <div class="tool-btn" onclick="formatText('underline')"><u>U</u></div>
+            <div class="tool-sep"></div>
+            <div class="tool-btn" onclick="insertPhrase('However, ')">However</div>
+            <div class="tool-btn" onclick="insertPhrase('Furthermore, ')">Furthermore</div>
+            <div class="tool-btn" onclick="insertPhrase('In conclusion, ')">In conclusion</div>
+            <div class="tool-btn" onclick="insertPhrase('On the other hand, ')">On the other hand</div>
+            <div class="tool-sep"></div>
+            <div class="tool-btn" onclick="clearEditor()">🗑 Clear</div>
+            <div class="wc-display">
+              <span>Words: <span class="wc-num" id="wc-live">0</span></span>
+              <span>Sentences: <span class="wc-num" id="sc-live">0</span></span>
+            </div>
+          </div>
+          <div class="editor-area">
+            <textarea id="writing-input" placeholder="Start writing here… Your words will be analysed by AI for grammar, tone, coherence and more."></textarea>
+          </div>
+          <div class="editor-footer">
+            <div class="readability-badge">
+              <div class="rb-dot" id="read-dot" style="background:var(--text-3)"></div>
+              <span id="read-label">Readability: —</span>
+            </div>
+            <div style="font-size:0.72rem;color:var(--text-3);margin-left:12px" id="tone-badge"></div>
+            <button class="analyse-btn" id="analyse-btn" onclick="analyseWriting()">
+              🤖 Analyse with AI
+            </button>
+          </div>
+        </div>
+
+        <!-- AI Feedback -->
+        <div class="feedback-card fa fa3">
+          <div class="fb-head">
+            <div class="fb-title">AI Writing Coach Feedback</div>
+            <button class="tts-btn" id="tts-btn" onclick="speakFeedback()" style="display:none">🔊 Listen</button>
+          </div>
+          <div class="fb-text wait" id="fb-text">Write something above and click "Analyse with AI" to get detailed feedback on your grammar, tone, coherence, and vocabulary.</div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="right-panel">
+
+        <!-- Score ring -->
+        <div class="score-card fa fa1">
+          <div class="card-hd"><div class="card-hd-t">Writing Score</div></div>
+          <div class="ring-wrap">
+            <svg width="120" height="120" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="9"/>
+              <circle id="score-ring" cx="60" cy="60" r="50" fill="none" stroke="url(#rg)" stroke-width="9"
+                stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16"
+                style="transition:stroke-dashoffset 1.4s cubic-bezier(.22,1,.36,1)"/>
+              <defs>
+                <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#fb7185"/>
+                  <stop offset="100%" stop-color="#a78bfa"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="ring-center">
+              <div class="ring-val" id="score-val" style="color:var(--rose)">—</div>
+              <div class="ring-lbl">Overall</div>
+            </div>
+          </div>
+          <div class="score-bars">
+            <div class="sbar-row"><span class="sbar-l">Grammar</span><div class="sbar-track"><div class="sbar-fill" id="sb-grm" style="width:0%;background:var(--rose)"></div></div><span class="sbar-v" id="sv-grm" style="color:var(--rose)">—</span></div>
+            <div class="sbar-row"><span class="sbar-l">Vocabulary</span><div class="sbar-track"><div class="sbar-fill" id="sb-voc" style="width:0%;background:var(--violet)"></div></div><span class="sbar-v" id="sv-voc" style="color:var(--violet)">—</span></div>
+            <div class="sbar-row"><span class="sbar-l">Coherence</span><div class="sbar-track"><div class="sbar-fill" id="sb-coh" style="width:0%;background:var(--cyan)"></div></div><span class="sbar-v" id="sv-coh" style="color:var(--cyan)">—</span></div>
+            <div class="sbar-row"><span class="sbar-l">Tone</span><div class="sbar-track"><div class="sbar-fill" id="sb-ton" style="width:0%;background:var(--emerald)"></div></div><span class="sbar-v" id="sv-ton" style="color:var(--emerald)">—</span></div>
+            <div class="sbar-row"><span class="sbar-l">Task Response</span><div class="sbar-track"><div class="sbar-fill" id="sb-tsk" style="width:0%;background:var(--amber)"></div></div><span class="sbar-v" id="sv-tsk" style="color:var(--amber)">—</span></div>
+          </div>
+        </div>
+
+        <!-- IELTS Band -->
+        <div class="ielts-card fa fa2">
+          <div class="card-hd"><div class="card-hd-t">IELTS Band Estimate</div></div>
+          <div class="ielts-display">
+            <div class="ielts-band">
+              <div>
+                <div class="ib-num" id="ielts-num">—</div>
+                <div class="ib-lbl">Band</div>
+              </div>
+            </div>
+            <div class="ielts-info">
+              <div class="ielts-grade" id="ielts-grade">Submit writing to see your band</div>
+              <div class="ielts-sub" id="ielts-sub">Based on task achievement, coherence, lexical resource &amp; grammar.</div>
+            </div>
+          </div>
+          <div class="ielts-scale" id="ielts-scale">
+            <!-- 9 steps populated by JS -->
+          </div>
+        </div>
+
+        <!-- Corrections -->
+        <div class="corr-card fa fa3">
+          <div class="card-hd">
+            <div class="card-hd-t">Corrections &amp; Suggestions</div>
+            <span class="see-all" onclick="clearCorr()">Clear</span>
+          </div>
+          <div class="corr-list" id="corr-list">
+            <div class="corr-empty">No corrections yet.<br>Write and analyse to see detailed feedback.</div>
+          </div>
+        </div>
+
+        <!-- History -->
+        <div class="hist-card fa fa4">
+          <div class="card-hd">
+            <div class="card-hd-t">Session History</div>
+            <span class="see-all" onclick="clearHistory()">Clear</span>
+          </div>
+          <div class="hist-list" id="hist-list">
+            <div style="text-align:center;padding:14px;color:var(--text-3);font-size:0.75rem">No sessions yet</div>
+          </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="tips-card fa fa4">
+          <div class="card-hd" style="margin-bottom:10px"><div class="card-hd-t">Writing Tips</div></div>
+          <div class="tip-txt" id="tip-txt"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Timed Challenge Modal -->
+<div class="modal" id="timed-modal">
+  <div class="mbox">
+    <div class="mclose" onclick="closeTimedModal()">✕</div>
+    <div class="mico">⏱️</div>
+    <div class="mt">Timed Writing Challenge</div>
+    <div class="md">Choose a time limit. A fresh topic will appear and the timer starts immediately. Write as much as you can — AI analyses everything when time is up or you submit early.</div>
+    <div class="time-picker">
+      <div class="time-opt" data-min="5" onclick="selectTime(5,this)">5 min</div>
+      <div class="time-opt sel" data-min="10" onclick="selectTime(10,this)">10 min</div>
+      <div class="time-opt" data-min="20" onclick="selectTime(20,this)">20 min</div>
+      <div class="time-opt" data-min="30" onclick="selectTime(30,this)">30 min</div>
+      <div class="time-opt" data-min="45" onclick="selectTime(45,this)">45 min</div>
+    </div>
+    <button class="mbtn" onclick="startTimed()">🚀 Start Challenge</button>
+    <button class="mbtn secondary" onclick="closeTimedModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><span id="t-ico">✅</span><span id="t-msg">Done</span></div>
+
+<script>
+/* ══════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════ */
+let currentUser = null;
+let currentMode = 'freewrite';
+let currentTopic = {};
+let usedTopics = new Set();      // tracks topic IDs per user — no repeats
+let sessionHistory = [];
+let currentFeedback = '';
+let isSpeaking = false;
+let timedMinutes = 10;
+let timedInterval = null;
+let timedSecondsLeft = 0;
+let timedTotal = 0;
+let isTimedActive = false;
+
+const WRITING_TIPS = [
+  '💡 Use topic sentences to open each paragraph clearly.',
+  '🎯 Aim for 1 idea per paragraph — focus beats variety.',
+  '📚 Replace "very good" with "excellent", "very bad" with "dreadful".',
+  '🔗 Connectors like "Furthermore", "Nevertheless", "Consequently" boost coherence.',
+  '📝 In IELTS Task 2, always give your opinion in the introduction.',
+  '✅ Vary sentence length — mix short punchy sentences with longer ones.',
+  '🔄 Read your writing aloud — awkward phrasing becomes obvious.',
+  '⚡ Use the active voice unless the passive is specifically needed.',
+  '🌟 Concrete examples are more persuasive than vague statements.',
+  '📊 In reports, use headings, bullet points, and formal language.',
+  '💌 Every professional email needs: greeting, purpose, action, close.',
+  '🎓 IELTS Band 7+ requires complex sentence structures and varied vocabulary.',
+  '🔍 Check subject-verb agreement: "The team is…" not "The team are…" (US English).',
+  '✍️ Avoid starting sentences with "I" more than twice in a row.',
+];
+
+const TEMPLATES = {
+  blank: '',
+  formal_email: `Dear [Recipient's Name],
+
+I am writing to [state your purpose clearly].
+
+[Explain the main point or context in 2–3 sentences.]
+
+I would be grateful if you could [specific action you need].
+
+Please do not hesitate to contact me if you require any further information.
+
+Yours sincerely,
+[Your Name]`,
+  complaint: `Dear [Manager's Name],
+
+I am writing to express my dissatisfaction with [product/service] which I purchased on [date].
+
+The problem I experienced was: [describe the issue clearly].
+
+This has caused me [inconvenience / financial loss / etc.] because [reason].
+
+I would appreciate it if you could [resolution you expect] within [timeframe].
+
+I look forward to your prompt response.
+
+Yours faithfully,
+[Your Name]`,
+  cover_letter: `Dear Hiring Manager,
+
+I am writing to apply for the position of [Job Title] at [Company Name], as advertised on [source].
+
+With [X years] of experience in [field], I have developed strong skills in [skill 1], [skill 2], and [skill 3]. In my current role at [Current Company], I [achievement/responsibility].
+
+I am particularly drawn to [Company Name] because [specific reason]. I believe my background in [relevant area] aligns well with your requirements.
+
+I would welcome the opportunity to discuss how I can contribute to your team. Thank you for considering my application.
+
+Yours sincerely,
+[Your Name]`,
+  ielts_agree: `Introduction:
+[Paraphrase the question. State your opinion clearly.]
+
+Body Paragraph 1 (Main reason to agree):
+[Topic sentence] [Explanation] [Example] [Link back]
+
+Body Paragraph 2 (Acknowledge opposite view, then refute):
+[Topic sentence] [Concession] [Counter-argument] [Example]
+
+Conclusion:
+[Restate opinion. Summarise main points. Do NOT introduce new ideas.]`,
+  ielts_discuss: `Introduction:
+[Paraphrase the question. Outline both views briefly.]
+
+Body Paragraph 1 (View A):
+[Topic sentence] [Reason] [Example] [Effect]
+
+Body Paragraph 2 (View B):
+[Topic sentence] [Reason] [Example] [Effect]
+
+Body Paragraph 3 (Your opinion — optional):
+[State your position and explain why.]
+
+Conclusion:
+[Summarise both views. State your balanced opinion.]`,
+  report: `REPORT: [Title in Capitals]
+
+Introduction
+This report aims to [state purpose]. The findings are based on [source of information].
+
+Findings
+[Section heading]
+[Key point 1]
+[Key point 2]
+
+[Section heading]
+[Key point 1]
+[Key point 2]
+
+Conclusions
+Based on the above findings, it is clear that [main conclusion].
+
+Recommendations
+1. [Recommendation 1]
+2. [Recommendation 2]`,
+  narrative: `[Opening — set the scene. Where? When? Who?]
+
+[Rising action — what happened that changed things?]
+
+[Climax — the most intense or important moment]
+
+[Falling action — how did the situation begin to resolve?]
+
+[Resolution — how did it end? What did you learn?]`,
+};
+
+const IELTS_GRADES = {
+  9:'Expert User',8.5:'Very Good',8:'Very Good',7.5:'Good',7:'Good',
+  6.5:'Competent',6:'Competent',5.5:'Modest',5:'Modest',
+  4.5:'Limited',4:'Limited',0:'Not assessed'
+};
+
+/* ═══════════════════════════════════════════
+   SAVE WRITING PROGRESS TO SERVER (Real DB)
+═══════════════════════════════════════════ */
+async function saveWritingProgressToServer(avg, data, wordCount) {
+  try {
+    const modeLabels = {
+      freewrite: '✍️ Free Write', email: '📧 Email',
+      essay: '📄 Essay', report: '📊 Report', timed: '⏱ Timed Challenge'
+    };
+    const band     = data?.ieltsband || 0;
+    const tone     = data?.tone || '';
+    const modulePct = Math.min(Math.round((sessionHistory.length / 20) * 100), 100);
+    const mins      = Math.max(1, Math.ceil((wordCount || 0) / 200));
+
+    await fetch('/api/progress/update', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        module_key:          'writing',
+        practice_minutes:    mins,
+        accuracy:            avg,
+        xp_earned:           Math.round(avg * 1.0),
+        activity_title:      `✍️ Writing — ${modeLabels[currentMode] || currentMode}`,
+        activity_meta:       `Score: ${avg}% · ${wordCount} words${band ? ' · IELTS Band ' + band : ''}${tone ? ' · ' + tone : ''}`,
+        module_progress_pct: modulePct,
+      })
+    });
+  } catch(e) {
+    console.warn('Writing progress save failed:', e);
+  }
+}
+/* ══════════════════════════════════════════════════
+   AUTH
+══════════════════════════════════════════════════ */
+async function loadUser() {
+  try {
+    const r = await fetch('/api/auth/me', {credentials:'include'});
+    if (!r.ok) { window.location.href='/login'; return; }
+    const d = await r.json();
+    if (!d.success) { window.location.href='/login'; return; }
+    currentUser = d.user;
+    renderUser();
+    loadProgress();
+    initModule();
+  } catch(e) { window.location.href='/login'; }
+}
+
+function getInitials(n) { return n ? n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : '?'; }
+
+function renderUser() {
+  const i = getInitials(currentUser.name);
+  ['sb-name','top-ava','sb-ava'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = id==='sb-name' ? currentUser.name||'User' : i;
+  });
+}
+
+function seedRand(e='') {
+  let h=0; for(let i=0;i<e.length;i++) h=Math.imul(31,h)+e.charCodeAt(i)|0;
+  const r=(lo,hi)=>{h=(h*1664525+1013904223)|0;return lo+Math.abs(h)%(hi-lo+1)};
+  return {streak:r(1,30),xp:r(1500,9500),maxXp:10000,level:r(5,20)};
+}
+
+function loadProgress() {
+  const d = seedRand(currentUser.email);
+  document.getElementById('sb-level').textContent = `Level ${d.level} — Explorer`;
+  document.getElementById('sb-xp').textContent = `${d.xp.toLocaleString()} / ${d.maxXp.toLocaleString()} XP`;
+  document.getElementById('sb-rank').textContent = `⚡ Explorer · Lvl ${d.level}`;
+  document.getElementById('streak-badge').textContent = `🔥 ${d.streak}-day streak`;
+  setTimeout(()=>{ document.getElementById('sb-xp-fill').style.width = Math.round(d.xp/d.maxXp*100)+'%'; },300);
+
+  const key = 'vm_writing_v1_' + currentUser.email;
+  const stored = localStorage.getItem(key);
+  if (stored) {
+    try {
+      const p = JSON.parse(stored);
+      usedTopics = new Set(p.used || []);
+      sessionHistory = p.sessions || [];
+    } catch(e){}
+  }
+  renderHistory();
+  buildIELTSScale();
+}
+
+function saveProgress() {
+  const key = 'vm_writing_v1_' + currentUser.email;
+  localStorage.setItem(key, JSON.stringify({
+    used: [...usedTopics],
+    sessions: sessionHistory
+  }));
+}
+
+/* ══════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════ */
+function initModule() {
+  buildWCListener();
+  rotateTips();
+  generateTopic();
+}
+
+/* ══════════════════════════════════════════════════
+   MODE
+══════════════════════════════════════════════════ */
+function setMode(m) {
+  currentMode = m;
+  document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.mode-tab')[['freewrite','email','essay','report','timed'].indexOf(m)].classList.add('active');
+
+  const badgeMap = {
+    freewrite:{cls:'freewrite',txt:'✍️ Free Write'},
+    email:{cls:'email',txt:'📧 Email'},
+    essay:{cls:'essay',txt:'📄 Essay'},
+    report:{cls:'report',txt:'📊 Report'},
+    timed:{cls:'timed',txt:'⏱ Timed'}
+  };
+  const b = badgeMap[m] || badgeMap.freewrite;
+  const badge = document.getElementById('mode-badge');
+  badge.className = 'tc-badge ' + b.cls;
+  badge.textContent = b.txt;
+
+  if (!isTimedActive) generateTopic();
+}
+
+/* ══════════════════════════════════════════════════
+   TOPIC GENERATION — NO REPEATS
+══════════════════════════════════════════════════ */
+async function generateTopic() {
+  if (isTimedActive) return; // don't replace timed topic mid-session
+  document.getElementById('topic-title').textContent = 'Generating topic…';
+  document.getElementById('topic-desc').textContent = '';
+  document.getElementById('topic-hints').innerHTML = '';
+
+  const modeDesc = {
+    freewrite:'creative or reflective writing',
+    email:'professional email writing',
+    essay:'IELTS-style argumentative or discuss essay',
+    report:'formal report or memo writing',
+    timed:'timed writing challenge (interesting and thought-provoking)'
+  }[currentMode] || 'writing practice';
+
+  const usedArr = [...usedTopics].slice(-15).join(', ') || 'none';
+
+  const sysP = `You are a writing coach. Generate ONE unique writing topic for ${modeDesc}. 
+Respond ONLY with valid JSON, no markdown, no backticks:
+{"id":"unique_${Date.now()}","title":"Topic title (max 12 words)","desc":"2-sentence task description (max 45 words)","hints":["hint1","hint2","hint3"],"type":"${currentMode}","difficulty":"Intermediate","wordTarget":"200-250 words"}`;
+
+  const userP = `Create a writing topic for: mode=${modeDesc}.
+IMPORTANT: Do NOT use any of these already-used topics: ${usedArr}
+Make it fresh, engaging and educational. For email mode, give a realistic scenario. For essay, give a clear stance or question.`;
+
+  try {
+    const r = await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
+      body:JSON.stringify({system:sysP,messages:[{role:'user',content:userP}],max_tokens:350})});
+    const d = await r.json();
+    let txt = (d.content?.[0]?.text||'').trim();
+    txt = txt.replace(/```json|```/g,'').trim();
+    const fi = txt.indexOf('{'), li = txt.lastIndexOf('}');
+    if (fi!==-1&&li!==-1) txt = txt.slice(fi,li+1);
+    const topic = JSON.parse(txt);
+    currentTopic = topic;
+    // Track used topic to prevent repeats
+    if (topic.id) usedTopics.add(topic.title.slice(0,30).toLowerCase());
+    saveProgress();
+
+    document.getElementById('topic-title').textContent = topic.title;
+    document.getElementById('topic-desc').textContent = topic.desc;
+    document.getElementById('topic-type').textContent = currentMode.charAt(0).toUpperCase()+currentMode.slice(1);
+    document.getElementById('topic-diff').textContent = topic.difficulty||'Intermediate';
+    document.getElementById('topic-words').textContent = topic.wordTarget||'200–250 words';
+    document.getElementById('topic-hints').innerHTML = (topic.hints||[]).map(h=>`<div class="tc-hint">💡 ${h}</div>`).join('');
+  } catch(e) {
+    document.getElementById('topic-title').textContent = 'Discuss the impact of social media on modern communication.';
+    document.getElementById('topic-desc').textContent = 'Write an essay discussing whether social media has improved or harmed the way people communicate. Give your opinion with examples.';
+    document.getElementById('topic-hints').innerHTML = ['Use 4 paragraphs','Include examples','State your opinion clearly'].map(h=>`<div class="tc-hint">💡 ${h}</div>`).join('');
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   TEMPLATES
+══════════════════════════════════════════════════ */
+function toggleTemplates() {
+  const p = document.getElementById('template-picker');
+  p.classList.toggle('visible');
+}
+
+function selectTemplate(key) {
+  document.querySelectorAll('.tpl-chip').forEach(c=>c.classList.remove('active'));
+  document.querySelector(`[data-tpl="${key}"]`)?.classList.add('active');
+  const ta = document.getElementById('writing-input');
+  ta.value = TEMPLATES[key]||'';
+  updateWC();
+  document.getElementById('template-picker').classList.remove('visible');
+  if (key!=='blank') showToast('📋',`Template loaded: ${key.replace(/_/g,' ')}`);
+}
+
+/* ══════════════════════════════════════════════════
+   TIMED CHALLENGE
+══════════════════════════════════════════════════ */
+function openTimedModal() { document.getElementById('timed-modal').classList.add('open'); }
+function closeTimedModal() { document.getElementById('timed-modal').classList.remove('open'); }
+
+function selectTime(min, el) {
+  timedMinutes = min;
+  document.querySelectorAll('.time-opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+async function startTimed() {
+  closeTimedModal();
+  // Force timed mode
+  currentMode = 'timed';
+  document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.mode-tab')[4].classList.add('active');
+  const badge = document.getElementById('mode-badge');
+  badge.className = 'tc-badge timed';
+  badge.textContent = '⏱ Timed';
+
+  // Clear editor
+  document.getElementById('writing-input').value = '';
+  updateWC();
+  resetScores();
+
+  // Generate a fresh unique timed topic
+  await generateTimedTopic();
+
+  // Start countdown
+  timedSecondsLeft = timedMinutes * 60;
+  timedTotal = timedSecondsLeft;
+  isTimedActive = true;
+  document.getElementById('timed-bar').classList.add('visible');
+  updateTimerUI();
+
+  timedInterval = setInterval(()=>{
+    timedSecondsLeft--;
+    updateTimerUI();
+    if (timedSecondsLeft<=0) {
+      clearInterval(timedInterval);
+      submitTimed(true);
+    }
+  },1000);
+
+  showToast('⏱️',`${timedMinutes}-minute challenge started!`);
+  document.getElementById('writing-input').focus();
+}
+
+async function generateTimedTopic() {
+  document.getElementById('topic-title').textContent = 'Preparing your timed topic…';
+  document.getElementById('topic-desc').textContent = '';
+  document.getElementById('topic-hints').innerHTML = '';
+
+  const usedArr = [...usedTopics].slice(-20).join(', ') || 'none';
+  const sysP = `You are a writing coach. Generate ONE unique timed writing challenge topic. 
+Respond ONLY with valid JSON, no markdown:
+{"id":"t_${Date.now()}","title":"Topic (max 10 words, must be thought-provoking)","desc":"One clear instruction sentence. What must they write? (max 30 words)","hints":["hint1","hint2"],"type":"timed","difficulty":"Intermediate","wordTarget":"${timedMinutes<10?'100-150':timedMinutes<25?'200-300':'400-500'} words"}`;
+
+  const userP = `Create a timed challenge topic for ${timedMinutes} minutes. NOT used before: ${usedArr}. Make it surprising and engaging.`;
+  try {
+    const r = await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
+      body:JSON.stringify({system:sysP,messages:[{role:'user',content:userP}],max_tokens:280})});
+    const d = await r.json();
+    let txt = (d.content?.[0]?.text||'').trim().replace(/```json|```/g,'').trim();
+    const fi = txt.indexOf('{'), li = txt.lastIndexOf('}');
+    if (fi!==-1&&li!==-1) txt=txt.slice(fi,li+1);
+    const topic = JSON.parse(txt);
+    currentTopic = topic;
+    usedTopics.add(topic.title.slice(0,30).toLowerCase());
+    saveProgress();
+    document.getElementById('topic-title').textContent = topic.title;
+    document.getElementById('topic-desc').textContent = topic.desc;
+    document.getElementById('topic-words').textContent = topic.wordTarget||'200–300 words';
+    document.getElementById('topic-hints').innerHTML = (topic.hints||[]).map(h=>`<div class="tc-hint">💡 ${h}</div>`).join('');
+  } catch(e) {
+    document.getElementById('topic-title').textContent = 'Describe a moment that changed your perspective on life.';
+    document.getElementById('topic-desc').textContent = `Write about a specific experience that shifted how you see the world. Be detailed and reflective. You have ${timedMinutes} minutes.`;
+    document.getElementById('topic-hints').innerHTML = ['Use past tense','Be specific, not vague','Include your feelings'].map(h=>`<div class="tc-hint">💡 ${h}</div>`).join('');
+  }
+}
+
+function updateTimerUI() {
+  const min = Math.floor(timedSecondsLeft/60).toString().padStart(2,'0');
+  const sec = (timedSecondsLeft%60).toString().padStart(2,'0');
+  document.getElementById('timer-num').textContent = timedSecondsLeft<60 ? timedSecondsLeft+'s' : `${min}:${sec}`;
+  const pct = timedSecondsLeft / timedTotal;
+  const circ = 113.1;
+  document.getElementById('timer-ring-path').style.strokeDashoffset = circ - (circ*pct);
+  document.getElementById('timer-ring-path').style.stroke = timedSecondsLeft<60 ? 'var(--rose)' : timedSecondsLeft<180 ? 'var(--amber)' : 'var(--rose)';
+  const label = document.getElementById('timer-label');
+  label.style.color = timedSecondsLeft<60 ? 'var(--rose)' : 'var(--text-1)';
+  document.getElementById('timed-wc').textContent = document.getElementById('wc-live').textContent + ' words';
+  if (timedSecondsLeft===60) showToast('⏰','1 minute remaining!');
+}
+
+function submitTimed(autoSubmit=false) {
+  clearInterval(timedInterval);
+  isTimedActive = false;
+  document.getElementById('timed-bar').classList.remove('visible');
+  const txt = document.getElementById('writing-input').value.trim();
+  if (!txt||txt.length<10) {
+    showToast('📝','Nothing written — try again!');
+    endTimedMode();
+    return;
+  }
+  if (autoSubmit) showToast('⏰','Time up! Analysing your writing…');
+  else showToast('✅','Submitted! Analysing your writing…');
+  analyseWriting(true);
+}
+
+function endTimedMode() {
+  isTimedActive = false;
+  currentMode = 'freewrite';
+  setMode('freewrite');
+}
+
+/* ══════════════════════════════════════════════════
+   WORD COUNT + READABILITY
+══════════════════════════════════════════════════ */
+function buildWCListener() {
+  document.getElementById('writing-input').addEventListener('input', updateWC);
+}
+
+function updateWC() {
+  const txt = document.getElementById('writing-input').value;
+  const words = txt.trim() ? txt.trim().split(/\s+/).filter(w=>w).length : 0;
+  const sentences = txt.split(/[.!?]+/).filter(s=>s.trim()).length;
+  document.getElementById('wc-live').textContent = words;
+  document.getElementById('sc-live').textContent = sentences;
+  updateReadability(words, sentences, txt);
+}
+
+function updateReadability(words, sentences, txt) {
+  const avgWPS = sentences > 0 ? words/sentences : 0;
+  let label, color;
+  if (words < 20) { label='—'; color='var(--text-3)'; }
+  else if (avgWPS < 10) { label='Simple'; color='var(--emerald)'; }
+  else if (avgWPS < 18) { label='Clear'; color='var(--cyan)'; }
+  else if (avgWPS < 25) { label='Moderate'; color='var(--amber)'; }
+  else { label='Complex'; color='var(--rose)'; }
+  document.getElementById('read-dot').style.background = color;
+  document.getElementById('read-label').textContent = 'Readability: ' + label;
+
+  // Detect tone hints
+  const lower = txt.toLowerCase();
+  let tone = '';
+  if (/\bplease\b|\bkindly\b|\bwould appreciate\b/.test(lower)) tone = '🤝 Formal / Polite';
+  else if (/\bi feel\b|\bmy experience\b|\bpersonally\b/.test(lower)) tone = '💬 Personal / Reflective';
+  else if (/\bmust\b|\bshould\b|\bcompelled\b/.test(lower)) tone = '📢 Assertive';
+  else if (/\bfurthermore\b|\bnevertheless\b|\bconsequently\b/.test(lower)) tone = '🎓 Academic';
+  document.getElementById('tone-badge').textContent = tone;
+}
+
+/* ══════════════════════════════════════════════════
+   EDITOR TOOLS
+══════════════════════════════════════════════════ */
+function formatText(cmd) {
+  const ta = document.getElementById('writing-input');
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const sel = ta.value.slice(start, end);
+  if (!sel) return;
+  const map = {bold:`**${sel}**`, italic:`_${sel}_`, underline:`__${sel}__`};
+  ta.setRangeText(map[cmd]||sel, start, end, 'end');
+  updateWC();
+}
+
+function insertPhrase(p) {
+  const ta = document.getElementById('writing-input');
+  const pos = ta.selectionStart;
+  ta.setRangeText(p, pos, pos, 'end');
+  ta.focus();
+  updateWC();
+}
+
+function clearEditor() {
+  if (!document.getElementById('writing-input').value.trim()) return;
+  if (confirm('Clear all text in the editor?')) {
+    document.getElementById('writing-input').value = '';
+    updateWC();
+    resetScores();
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   AI ANALYSIS
+══════════════════════════════════════════════════ */
+async function analyseWriting(fromTimed=false) {
+  const txt = document.getElementById('writing-input').value.trim();
+  if (!txt || txt.length < 30) {
+    showToast('✍️','Write at least a few sentences first!');
+    return;
+  }
+  const btn = document.getElementById('analyse-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Analysing…';
+
+  const fbEl = document.getElementById('fb-text');
+  fbEl.className = 'fb-text';
+  fbEl.innerHTML = 'Analysing your writing<span class="typing-cur"></span>';
+
+  const wordCount = txt.trim().split(/\s+/).filter(w=>w).length;
+  const topic = currentTopic.title || 'General writing practice';
+  const mode = currentMode;
+
+  const sysP = `You are VerboMate, a professional English writing coach. Analyse the student's writing and give warm, constructive, actionable feedback.
+Respond ONLY with a valid JSON object — no markdown, no backticks, just raw JSON.
+
+JSON structure:
+{
+  "feedback": "3-4 sentence warm overall feedback. Start positive. Be specific about what's good.",
+  "highlight": "One specific thing done particularly well",
+  "scores": {
+    "grammar": 78,
+    "vocabulary": 72,
+    "coherence": 75,
+    "tone": 80,
+    "taskResponse": 70
+  },
+  "ieltsband": 6.5,
+  "corrections": [
+    {
+      "type": "error",
+      "wrong": "exact phrase from text that is wrong",
+      "right": "corrected version",
+      "why": "clear explanation of why it is wrong and why the correction is better"
+    },
+    {
+      "type": "suggestion",
+      "wrong": "original phrase",
+      "right": "improved version",
+      "why": "why this improvement makes the writing stronger"
+    },
+    {
+      "type": "tip",
+      "wrong": "",
+      "right": "specific actionable tip",
+      "why": "explanation of how this tip will improve their writing"
+    }
+  ],
+  "tone": "formal|informal|academic|personal|assertive",
+  "summary": "1 sentence: what to improve most next time"
+}
+
+RULES:
+- scores: numbers 45-95 (never 0, be realistic)
+- ieltsband: one of [4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9]
+- Give 3-6 corrections. At least 1 must be type "error" with a real "wrong" from the text.
+- "wrong" for errors must be copied EXACTLY from their writing
+- Be warm and encouraging, not harsh`;
+
+  const userP = `Topic: "${topic}"
+Mode: ${mode}
+Word count: ${wordCount}
+Student's writing:
+"${txt}"
+
+Analyse this writing thoroughly. Find real grammar errors from the text. Be specific with corrections.`;
+
+  try {
+    const r = await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
+      body:JSON.stringify({system:sysP,messages:[{role:'user',content:userP}],max_tokens:1500})});
+    if (!r.ok) throw new Error('API '+r.status);
+    const d = await r.json();
+    if (d.error) throw new Error(d.error.message||'API error');
+    let raw = (d.content?.[0]?.text||'').trim();
+    raw = raw.replace(/^```json\s*/i,'').replace(/^```/,'').replace(/```\s*$/,'').trim();
+    const fi=raw.indexOf('{'), li=raw.lastIndexOf('}');
+    if(fi!==-1&&li!==-1) raw=raw.slice(fi,li+1);
+    const p = JSON.parse(raw);
+
+    // Sanitise scores
+    if (p.scores) Object.keys(p.scores).forEach(k=>{ p.scores[k]=Math.max(45,Math.min(95,Number(p.scores[k])||70)); });
+    else p.scores = {grammar:70,vocabulary:68,coherence:72,tone:70,taskResponse:68};
+
+    renderResults(p, wordCount);
+
+    if (fromTimed) endTimedMode();
+
+  } catch(e) {
+    console.error('analyseWriting error',e);
+    fbEl.className='fb-text';
+    fbEl.textContent='⚠️ AI feedback unavailable right now ('+e.message+'). Please try again.';
+    renderOffline(wordCount);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🤖 Analyse with AI';
+  }
+}
+
+function renderResults(data, wordCount) {
+  // Feedback text
+  const feedText = (data.highlight ? '✨ '+data.highlight+'\n\n' : '') + (data.feedback||'Good effort! Keep writing.') + (data.summary ? '\n\n💡 Next time: '+data.summary : '');
+  const fbEl = document.getElementById('fb-text');
+  fbEl.className = 'fb-text';
+  currentFeedback = feedText;
+  typeText(fbEl, feedText);
+  document.getElementById('tts-btn').style.display = 'flex';
+
+  // Scores
+  renderScores(data.scores||{});
+
+  // IELTS band
+  renderIELTS(data.ieltsband||0);
+
+  // Corrections
+  renderCorrections(data.corrections||[]);
+
+  // Save session
+  const avg = Math.round(Object.values(data.scores||{}).reduce((a,b)=>a+b,0)/5);
+  sessionHistory.unshift({
+    topic: currentTopic.title||'Session',
+    score: avg,
+    band: data.ieltsband||0,
+    date: new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short'}),
+    mode: currentMode,
+    words: wordCount
+  });
+  if (sessionHistory.length>20) sessionHistory.pop();
+  saveProgress();
+  renderHistory();
+  showToast('✅',`Analysis done! Score: ${avg}/100`);
+  saveWritingProgressToServer(avg, data, wordCount);
+}
+
+function renderOffline(wordCount) {
+  const words = wordCount||0;
+  const scores = {grammar:68,vocabulary:65,coherence:70,tone:68,taskResponse:65};
+  renderScores(scores);
+  renderIELTS(5.5);
+  saveWritingProgressToServer(67, null, wordCount);
+}
+
+/* ══════════════════════════════════════════════════
+   RENDER: SCORES
+══════════════════════════════════════════════════ */
+function renderScores(s) {
+  const avg = Math.round(Object.values(s).reduce((a,b)=>a+b,0)/Object.keys(s).length);
+  const circ=314.16, offset=circ-(avg/100)*circ;
+  document.getElementById('score-val').textContent=avg;
+  document.getElementById('score-ring').style.strokeDashoffset=offset;
+
+  const map=[['grm','grammar','rose'],['voc','vocabulary','violet'],['coh','coherence','cyan'],['ton','tone','emerald'],['tsk','taskResponse','amber']];
+  map.forEach(([k,sk,col],i)=>{
+    const v=s[sk]||0;
+    setTimeout(()=>{
+      const bf=document.getElementById('sb-'+k), bv=document.getElementById('sv-'+k);
+      if(bf)bf.style.width=v+'%';
+      if(bv)bv.textContent=v;
+    },250+i*60);
+  });
+}
+
+function resetScores() {
+  document.getElementById('score-val').textContent='—';
+  document.getElementById('score-ring').style.strokeDashoffset=314.16;
+  ['grm','voc','coh','ton','tsk'].forEach(k=>{
+    const bf=document.getElementById('sb-'+k), bv=document.getElementById('sv-'+k);
+    if(bf)bf.style.width='0%';
+    if(bv)bv.textContent='—';
+  });
+  document.getElementById('ielts-num').textContent='—';
+  document.getElementById('ielts-grade').textContent='Submit writing to see your band';
+  document.getElementById('ielts-sub').textContent='Based on task achievement, coherence, lexical resource & grammar.';
+  renderIELTSScale(0);
+  document.getElementById('corr-list').innerHTML='<div class="corr-empty">No corrections yet.<br>Write and analyse to see detailed feedback.</div>';
+}
+
+/* ══════════════════════════════════════════════════
+   RENDER: IELTS
+══════════════════════════════════════════════════ */
+function buildIELTSScale() {
+  const scale = document.getElementById('ielts-scale');
+  scale.innerHTML = Array.from({length:9},(_,i)=>`<div class="ielts-step" id="is-${i}" title="Band ${i+1}"></div>`).join('');
+}
+
+function renderIELTS(band) {
+  band = parseFloat(band)||0;
+  document.getElementById('ielts-num').textContent = band||'—';
+  const grade = IELTS_GRADES[band]||IELTS_GRADES[Math.floor(band)]||'Competent';
+  document.getElementById('ielts-grade').textContent = `Band ${band} — ${grade}`;
+  const sub = {
+    9:'Outstanding mastery of English.',
+    8.5:'Near-perfect writing.',
+    8:'Very good writer — minor issues only.',
+    7.5:'Good writer with occasional errors.',
+    7:'Good range of vocabulary and grammar.',
+    6.5:'Generally effective with some errors.',
+    6:'Competent — some inaccuracies.',
+    5.5:'Modest ability, noticeable limitations.',
+    5:'Limited range of vocabulary and grammar.',
+    4.5:'Frequent errors impede communication.',
+    4:'Limited English proficiency.'
+  };
+  document.getElementById('ielts-sub').textContent = sub[band]||sub[Math.floor(band)]||'Keep practising to improve your band.';
+  renderIELTSScale(band);
+}
+
+function renderIELTSScale(band) {
+  const colors=['#ef4444','#f97316','#f59e0b','#eab308','#84cc16','#22c55e','#10b981','#06b6d4','#6366f1'];
+  for(let i=0;i<9;i++){
+    const el=document.getElementById('is-'+i);
+    if(el) el.style.background = (i+1)<=Math.floor(band) ? colors[i] : 'rgba(255,255,255,0.06)';
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   RENDER: CORRECTIONS
+   Shows: what was wrong, correct version, WHY it was wrong
+══════════════════════════════════════════════════ */
+function renderCorrections(corrections) {
+  const list=document.getElementById('corr-list');
+  if(!corrections||!corrections.length){
+    list.innerHTML='<div class="corr-empty">Great writing! No major corrections.</div>';
+    return;
+  }
+  list.innerHTML=corrections.map(c=>{
+    const type = c.type==='error'?'err':c.type==='suggestion'?'sug':'tip';
+    const badgeLabel = c.type==='error'?'❌ Error':c.type==='suggestion'?'💡 Suggestion':'✨ Tip';
+    return `<div class="corr-item ${type}">
+      <span class="corr-badge ${type}">${badgeLabel}</span>
+      ${c.wrong ? `<div class="corr-wrong">"${c.wrong}"</div>` : ''}
+      ${c.right ? `<div class="corr-right">→ ${c.right}</div>` : ''}
+      <div class="corr-why">${c.why||''}</div>
+    </div>`;
+  }).join('');
+}
+
+function clearCorr() {
+  document.getElementById('corr-list').innerHTML='<div class="corr-empty">No corrections yet.<br>Write and analyse to see detailed feedback.</div>';
+}
+
+/* ══════════════════════════════════════════════════
+   HISTORY
+══════════════════════════════════════════════════ */
+function renderHistory() {
+  const list=document.getElementById('hist-list');
+  if(!sessionHistory.length){
+    list.innerHTML='<div style="text-align:center;padding:14px;color:var(--text-3);font-size:0.75rem">No sessions yet</div>';
+    return;
+  }
+  const mIco={freewrite:'✍️',email:'📧',essay:'📄',report:'📊',timed:'⏱️'};
+  list.innerHTML=sessionHistory.slice(0,10).map(s=>`
+    <div class="hist-item">
+      <span class="hist-ico">${mIco[s.mode]||'✍️'}</span>
+      <span class="hist-t">${s.topic}</span>
+      <span class="hist-s">${s.score}</span>
+      <span class="hist-d">${s.date}</span>
+    </div>`).join('');
+}
+
+function clearHistory() {
+  sessionHistory=[]; usedTopics.clear();
+  saveProgress(); renderHistory();
+  showToast('🗑️','History cleared');
+}
+
+/* ══════════════════════════════════════════════════
+   TTS
+══════════════════════════════════════════════════ */
+function speakFeedback() {
+  if (!currentFeedback) return;
+  const btn=document.getElementById('tts-btn');
+  if(isSpeaking){window.speechSynthesis.cancel();isSpeaking=false;btn.textContent='🔊 Listen';btn.classList.remove('sp');return;}
+  const u=new SpeechSynthesisUtterance(currentFeedback.replace(/[*_✨💡→❌]/g,''));
+  u.rate=0.95;u.pitch=1;
+  const voices=window.speechSynthesis.getVoices();
+  const pref=voices.find(v=>v.lang.startsWith('en')&&v.name.includes('Google'))||voices.find(v=>v.lang.startsWith('en'));
+  if(pref)u.voice=pref;
+  u.onstart=()=>{isSpeaking=true;btn.textContent='⏹ Stop';btn.classList.add('sp')};
+  u.onend=u.onerror=()=>{isSpeaking=false;btn.textContent='🔊 Listen';btn.classList.remove('sp')};
+  window.speechSynthesis.speak(u);
+}
+
+/* ══════════════════════════════════════════════════
+   TIPS ROTATION
+══════════════════════════════════════════════════ */
+let tipIdx=0;
+function rotateTips(){
+  const el=document.getElementById('tip-txt');
+  el.style.opacity='0';
+  setTimeout(()=>{el.textContent=WRITING_TIPS[tipIdx%WRITING_TIPS.length];el.style.opacity='1';tipIdx++;},350);
+  setTimeout(rotateTips,6000);
+}
+
+/* ══════════════════════════════════════════════════
+   TYPING ANIMATION
+══════════════════════════════════════════════════ */
+function typeText(el,text,speed=14){
+  el.innerHTML='';let i=0;
+  const cur=document.createElement('span');cur.className='typing-cur';el.appendChild(cur);
+  const t=setInterval(()=>{
+    if(i>=text.length){clearInterval(t);cur.remove();return}
+    if(text[i]==='\n')cur.insertAdjacentHTML('beforebegin','<br>');
+    else cur.insertAdjacentText('beforebegin',text[i]);
+    i++;
+  },speed);
+}
+
+/* ══════════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════════ */
+function showToast(ico,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('t-ico').textContent=ico;
+  document.getElementById('t-msg').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+/* ══════════════════════════════════════════════════
+   LOGOUT
+══════════════════════════════════════════════════ */
+async function handleLogout(){
+  showToast('👋','Signing out…');
+  await fetch('/api/auth/logout',{method:'POST',credentials:'include'});
+  window.location.href='/login';
+}
+
+/* ── BOOT ── */
+loadUser();
+</script>
+</body>
+</html>

@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VerboMate — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET & TOKENS ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+
+:root {
+  --bg:        #09090b;
+  --surface:   #111115;
+  --card:      #18181c;
+  --card-hov:  #1e1e24;
+  --border:    rgba(255,255,255,0.07);
+  --border-lit: rgba(255,255,255,0.13);
+
+  --cyan:      #22d3ee;
+  --cyan-dim:  rgba(34,211,238,0.12);
+  --violet:    #a78bfa;
+  --violet-dim:rgba(167,139,250,0.12);
+  --emerald:   #34d399;
+  --emerald-dim:rgba(52,211,153,0.1);
+  --amber:     #fbbf24;
+  --amber-dim: rgba(251,191,36,0.1);
+  --rose:      #fb7185;
+  --rose-dim:  rgba(251,113,133,0.1);
+
+  --text-1:    #fafafa;
+  --text-2:    #a1a1aa;
+  --text-3:    #71717a;
+
+  --sidebar-w: 260px;
+  --topbar-h:  60px;
+  --radius:    14px;
+  --radius-sm: 8px;
+  --radius-lg: 20px;
+
+  --font:      'Plus Jakarta Sans', sans-serif;
+  --font-serif:'Instrument Serif', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text-1);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── SCROLLBAR ──────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #27272a; border-radius: 2px; }
+
+/* ─── SIDEBAR ────────────────────────────────────────────────── */
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--sidebar-w);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  padding: 0;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 22px 20px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo-mark {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  flex-shrink: 0;
+  box-shadow: 0 0 20px rgba(34,211,238,0.2);
+}
+
+.logo-name {
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: -0.3px;
+}
+.logo-name em { font-style: normal; color: var(--cyan); }
+
+/* XP Progress in sidebar */
+.sidebar-xp {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.xp-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+.xp-top strong { color: var(--violet); }
+.xp-bar {
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--violet), var(--cyan));
+  border-radius: 99px;
+  transition: width 1.2s cubic-bezier(.22,1,.36,1);
+}
+
+/* Nav */
+.nav-section {
+  padding: 12px 12px 0;
+}
+.nav-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding: 6px 8px 4px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.855rem;
+  font-weight: 500;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  user-select: none;
+  margin-bottom: 1px;
+}
+.nav-item:hover { background: rgba(255,255,255,0.04); color: var(--text-1); }
+.nav-item.active {
+  background: var(--cyan-dim);
+  color: var(--cyan);
+  font-weight: 600;
+}
+.nav-ico { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+.nav-pill {
+  margin-left: auto;
+  font-size: 0.6rem;
+  font-weight: 700;
+  background: var(--violet-dim);
+  color: var(--violet);
+  padding: 2px 7px;
+  border-radius: 99px;
+}
+
+/* User profile at bottom */
+.sidebar-user {
+  margin-top: auto;
+  padding: 14px 16px;
+  border-top: 1px solid var(--border);
+}
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.user-row:hover { background: rgba(255,255,255,0.04); }
+.user-ava {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet), var(--rose));
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 2px solid rgba(167,139,250,0.3);
+  color: #fff;
+}
+.user-info { min-width: 0; flex: 1; }
+.user-name-text { font-size: 0.84rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-meta { font-size: 0.7rem; color: var(--emerald); }
+.user-dots { color: var(--text-3); font-size: 1rem; }
+
+/* ─── MAIN ───────────────────────────────────────────────────── */
+.main {
+  margin-left: var(--sidebar-w);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── TOPBAR ─────────────────────────────────────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  height: var(--topbar-h);
+  background: rgba(9,9,11,0.88);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.topbar-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.topbar-sub { font-size: 0.78rem; color: var(--text-2); margin-left: 4px; }
+
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+.streak-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--amber-dim);
+  border: 1px solid rgba(251,191,36,0.2);
+  color: var(--amber);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 99px;
+}
+
+.icon-btn {
+  width: 34px; height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font-size: 14px;
+  transition: border-color 0.15s;
+  position: relative;
+}
+.icon-btn:hover { border-color: var(--border-lit); }
+.notif-dot {
+  position: absolute;
+  top: 5px; right: 5px;
+  width: 7px; height: 7px;
+  background: var(--rose);
+  border-radius: 50%;
+  border: 1.5px solid var(--bg);
+}
+
+.topbar-ava {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet), var(--rose));
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+  border: 2px solid rgba(167,139,250,0.3);
+}
+
+/* ─── CONTENT ────────────────────────────────────────────────── */
+.content {
+  padding: 28px 28px 40px;
+  flex: 1;
+  max-width: 1300px;
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, var(--card) 25%, var(--card-hov) 50%, var(--card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 6px;
+}
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* ─── HERO GREETING ──────────────────────────────────────────── */
+.hero-greeting {
+  margin-bottom: 28px;
+  animation: fadeUp 0.5s ease both;
+}
+.greeting-line {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.greeting-line strong { font-style: italic; color: var(--cyan); }
+.greeting-sub { font-size: 0.88rem; color: var(--text-2); }
+
+/* ─── STATS GRID ─────────────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+  animation: fadeUp 0.5s 0.05s ease both;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.stat-card:hover { border-color: var(--border-lit); transform: translateY(-2px); }
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.stat-card:hover::after { opacity: 1; }
+.sc-cyan::after   { background: var(--cyan); }
+.sc-emerald::after{ background: var(--emerald); }
+.sc-amber::after  { background: var(--amber); }
+.sc-rose::after   { background: var(--rose); }
+
+.stat-ico { font-size: 1.2rem; margin-bottom: 12px; }
+.stat-val {
+  font-family: var(--font-mono);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-label { font-size: 0.76rem; color: var(--text-2); margin-bottom: 6px; }
+.stat-change { font-size: 0.7rem; color: var(--emerald); font-weight: 600; }
+.stat-change.neg { color: var(--rose); }
+
+/* ─── TWO COLUMN LAYOUT ──────────────────────────────────────── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 20px;
+  margin-bottom: 24px;
+  animation: fadeUp 0.5s 0.1s ease both;
+}
+
+/* ─── DAILY CHALLENGE ────────────────────────────────────────── */
+.daily-challenge {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 26px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.daily-challenge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--violet-dim), var(--cyan-dim));
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.daily-challenge:hover::before { opacity: 1; }
+.daily-challenge:hover { border-color: rgba(167,139,250,0.25); transform: translateY(-2px); box-shadow: 0 16px 48px rgba(0,0,0,0.4); }
+
+.dc-icon {
+  width: 58px; height: 58px;
+  background: linear-gradient(135deg, var(--violet), #6d28d9);
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 8px 24px rgba(124,58,237,0.35);
+  animation: dcPulse 2.5s ease-in-out infinite;
+}
+@keyframes dcPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+
+.dc-body { flex: 1; position: relative; z-index: 1; }
+.dc-tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--violet); margin-bottom: 5px; }
+.dc-title { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 4px; }
+.dc-desc { font-size: 0.8rem; color: var(--text-2); }
+
+.dc-action { flex-shrink: 0; position: relative; z-index: 1; text-align: center; }
+.dc-xp { font-family: var(--font-mono); font-size: 1.6rem; font-weight: 600; color: var(--amber); line-height: 1; }
+.dc-xp-label { font-size: 0.65rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.dc-btn {
+  background: linear-gradient(135deg, var(--violet), #6d28d9);
+  color: #fff;
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.dc-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+/* ─── LEADERBOARD CARD ───────────────────────────────────────── */
+.lb-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.card-head-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-head-title::before {
+  content: '';
+  width: 3px; height: 14px;
+  background: var(--cyan);
+  border-radius: 2px;
+}
+.card-see-all {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--cyan);
+  cursor: pointer;
+  font-weight: 500;
+}
+.card-see-all:hover { opacity: 0.7; }
+
+.lb-list { display: flex; flex-direction: column; gap: 2px; }
+.lb-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s;
+}
+.lb-row:hover { background: rgba(255,255,255,0.03); }
+.lb-row.you-row {
+  background: var(--cyan-dim);
+  border: 1px solid rgba(34,211,238,0.12);
+}
+.lb-rank { font-family: var(--font-mono); font-size: 0.72rem; width: 20px; text-align: center; color: var(--text-3); }
+.lb-rank.r1 { color: var(--amber); }
+.lb-rank.r2 { color: #94a3b8; }
+.lb-rank.r3 { color: #a16207; }
+.lb-ava {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: #fff;
+}
+.lb-name { flex: 1; font-size: 0.82rem; font-weight: 500; }
+.lb-score { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-2); }
+.you-tag { font-size: 0.6rem; background: var(--cyan-dim); color: var(--cyan); padding: 2px 7px; border-radius: 99px; font-weight: 700; }
+
+/* ─── MODULES GRID ───────────────────────────────────────────── */
+.modules-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  animation: fadeUp 0.5s 0.15s ease both;
+}
+
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+  animation: fadeUp 0.5s 0.2s ease both;
+}
+
+.module-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(.22,1,.36,1);
+  position: relative;
+  overflow: hidden;
+}
+.module-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.5);
+}
+.module-card:hover .mc-border { opacity: 1; }
+
+.mc-border {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  border: 1px solid;
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+.mc1 .mc-border { border-color: rgba(34,211,238,0.35); }
+.mc2 .mc-border { border-color: rgba(167,139,250,0.35); }
+.mc3 .mc-border { border-color: rgba(52,211,153,0.35); }
+.mc4 .mc-border { border-color: rgba(251,191,36,0.35); }
+.mc5 .mc-border { border-color: rgba(251,113,133,0.35); }
+.mc6 .mc-border { border-color: rgba(167,139,250,0.35); }
+
+.mc-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+.mc-ico {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+}
+.mc1 .mc-ico { background: var(--cyan-dim); }
+.mc2 .mc-ico { background: var(--violet-dim); }
+.mc3 .mc-ico { background: var(--emerald-dim); }
+.mc4 .mc-ico { background: var(--amber-dim); }
+.mc5 .mc-ico { background: var(--rose-dim); }
+.mc6 .mc-ico { background: var(--rose-dim); }
+
+.mc-tag {
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.tag-new { background: var(--emerald-dim); color: var(--emerald); }
+.tag-hot { background: var(--rose-dim); color: var(--rose); }
+.tag-pro { background: var(--amber-dim); color: var(--amber); }
+
+.mc-title { font-size: 0.95rem; font-weight: 700; letter-spacing: -0.2px; margin-bottom: 6px; }
+.mc-desc { font-size: 0.78rem; color: var(--text-2); line-height: 1.55; margin-bottom: 18px; }
+
+.mc-footer { display: flex; align-items: center; gap: 12px; }
+.mc-progress { flex: 1; }
+.mc-prog-info { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-3); margin-bottom: 5px; }
+.mc-prog-bar { height: 3px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; }
+.mc-prog-fill { height: 100%; border-radius: 99px; transition: width 1s cubic-bezier(.22,1,.36,1); }
+.mc1 .mc-prog-fill { background: var(--cyan); }
+.mc2 .mc-prog-fill { background: var(--violet); }
+.mc3 .mc-prog-fill { background: var(--emerald); }
+.mc4 .mc-prog-fill { background: var(--amber); }
+.mc5 .mc-prog-fill { background: var(--rose); }
+.mc6 .mc-prog-fill { background: var(--violet); }
+
+.mc-arrow {
+  width: 30px; height: 30px;
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.mc1 .mc-arrow { background: var(--cyan-dim); color: var(--cyan); }
+.mc2 .mc-arrow { background: var(--violet-dim); color: var(--violet); }
+.mc3 .mc-arrow { background: var(--emerald-dim); color: var(--emerald); }
+.mc4 .mc-arrow { background: var(--amber-dim); color: var(--amber); }
+.mc5 .mc-arrow { background: var(--rose-dim); color: var(--rose); }
+.mc6 .mc-arrow { background: var(--violet-dim); color: var(--violet); }
+.module-card:hover .mc-arrow { transform: translateX(3px); }
+
+/* ─── BOTTOM ROW ─────────────────────────────────────────────── */
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  animation: fadeUp 0.5s 0.25s ease both;
+}
+
+.info-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+}
+
+/* Activity list */
+.activity-list { display: flex; flex-direction: column; gap: 8px; }
+.act-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 13px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  transition: border-color 0.15s;
+}
+.act-item:hover { border-color: var(--border-lit); }
+.act-ico { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; }
+.act-body { flex: 1; min-width: 0; }
+.act-name { font-size: 0.82rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.act-meta { font-size: 0.7rem; color: var(--text-3); margin-top: 1px; }
+.act-xp { font-family: var(--font-mono); font-size: 0.75rem; color: var(--emerald); font-weight: 600; }
+
+/* ─── PROFILE CARD ───────────────────────────────────────────── */
+.profile-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  transition: border-color 0.15s;
+}
+.profile-row:hover { border-color: var(--border-lit); }
+.profile-row:last-child { margin-bottom: 0; }
+.pr-ico   { font-size: 15px; flex-shrink: 0; }
+.pr-label { font-size: 0.72rem; color: var(--text-3); min-width: 88px; }
+.pr-val   { font-size: 0.82rem; font-weight: 500; color: var(--text-1); margin-left: auto; text-align: right; word-break: break-all; }
+
+/* ─── MODULE OVERLAY ─────────────────────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(12px);
+}
+.overlay.open {
+  display: flex;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+.overlay-box {
+  background: var(--surface);
+  border: 1px solid var(--border-lit);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  max-width: 480px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+  animation: boxIn 0.3s cubic-bezier(.22,1,.36,1);
+}
+@keyframes boxIn { from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1} }
+
+.overlay-close {
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 32px; height: 32px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  display: grid; place-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text-2);
+  transition: all 0.15s;
+}
+.overlay-close:hover { background: var(--rose-dim); color: var(--rose); border-color: rgba(251,113,133,0.3); }
+
+.ov-ico {
+  width: 66px; height: 66px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  margin: 0 auto 16px;
+}
+
+.ov-tag { text-align: center; font-size: 0.65rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.ov-title { font-size: 1.4rem; font-weight: 800; text-align: center; letter-spacing: -0.5px; margin-bottom: 10px; }
+.ov-desc { font-size: 0.84rem; color: var(--text-2); text-align: center; line-height: 1.6; margin-bottom: 22px; }
+
+.ov-features { display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; }
+.ov-feat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 13px;
+  background: rgba(255,255,255,0.02);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+}
+.ov-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+.ov-btn {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.ov-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+/* ─── SECTION HEADER ─────────────────────────────────────────── */
+.section-hd {
+  font-size: 0.88rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-1);
+}
+.section-hd::before {
+  content: '';
+  width: 3px; height: 14px;
+  background: var(--cyan);
+  border-radius: 2px;
+}
+
+/* ─── ANIMATIONS ─────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 1200px) {
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .modules-grid { grid-template-columns: repeat(2,1fr); }
+  .two-col { grid-template-columns: 1fr; }
+  .bottom-row { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 900px) {
+  :root { --sidebar-w: 0px; }
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+  .modules-grid { grid-template-columns: 1fr; }
+  .bottom-row { grid-template-columns: 1fr; }
+  .content { padding: 20px; }
+}
+@media (max-width: 600px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ─── NOTIFICATION TOAST ─────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: var(--card);
+  border: 1px solid var(--border-lit);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  font-size: 0.84rem;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(.22,1,.36,1);
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* ─── NEW USER ZERO STATE ────────────────────────────────────── */
+.zero-state {
+  text-align: center;
+  padding: 28px 16px;
+  color: var(--text-3);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+.zero-state .zero-ico { font-size: 2rem; margin-bottom: 8px; }
+.zero-state strong { color: var(--text-2); display: block; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ─── SIDEBAR ──────────────────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">💬</div>
+    <div class="logo-name">Verbo<em>Mate</em></div>
+  </div>
+
+  <!-- XP bar -->
+  <div class="sidebar-xp">
+    <div class="xp-top">
+      <span id="sb-level">Level — Explorer</span>
+      <strong id="sb-xp">— XP</strong>
+    </div>
+    <div class="xp-bar"><div class="xp-fill" id="sb-xp-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- Nav -->
+  <div class="nav-section">
+    <div class="nav-label">Main</div>
+    <div class="nav-item active"><span class="nav-ico">🏠</span> Dashboard</div>
+  </div>
+
+  <div class="nav-section" style="margin-top:8px">
+    <div class="nav-label">Practice</div>
+    <div class="nav-item" onclick="openModule('vocabulary')"><span class="nav-ico">📖</span> Vocabulary</div>
+    <div class="nav-item" onclick="openModule('speaking')"><span class="nav-ico">🎙️</span> Speaking</div>
+    <div class="nav-item" onclick="openModule('grammar')"><span class="nav-ico">📝</span> Grammar</div>
+    <div class="nav-item" onclick="openModule('listening')"><span class="nav-ico">🎧</span> Listening</div>
+    <div class="nav-item" onclick="openModule('writing')"><span class="nav-ico">✍️</span> Writing</div>
+    <div class="nav-item" onclick="openModule('interview')"><span class="nav-ico">💼</span> Interview Prep</div>
+    <div class="nav-item" onclick="openModule('video')"><span class="nav-ico">🎬</span> Video Lessons</div>
+  </div>
+
+  <div class="nav-section" style="margin-top:8px">
+    <div class="nav-label">Account</div>
+    <div class="nav-item" onclick="handleLogout()"><span class="nav-ico">🚪</span> Sign Out</div>
+  </div>
+
+  <!-- User -->
+  <div class="sidebar-user">
+    <div class="user-row">
+      <div class="user-ava" id="sb-ava">?</div>
+      <div class="user-info">
+        <div class="user-name-text" id="sb-name">Loading…</div>
+        <div class="user-meta" id="sb-rank">⚡ Explorer · Lvl 1</div>
+      </div>
+      <div class="user-dots">⋯</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ─── MAIN ─────────────────────────────────────────────────── -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div>
+      <span class="topbar-title" id="top-greeting">Good morning 👋</span>
+      <span class="topbar-sub" id="top-date"></span>
+    </div>
+    <div class="topbar-right">
+      <div class="streak-badge" id="streak-badge">🔥 — day streak</div>
+      <div class="icon-btn" title="Notifications">🔔<div class="notif-dot"></div></div>
+      <div class="icon-btn" title="Settings">⚙️</div>
+      <div class="topbar-ava" id="top-ava">?</div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- Greeting -->
+    <div class="hero-greeting">
+      <div class="greeting-line">Welcome back, <strong id="greet-name">—</strong></div>
+      <div class="greeting-sub" id="greet-sub">Loading your progress…</div>
+    </div>
+
+    Stats
+    <div class="stats-grid">
+      <div class="stat-card sc-cyan">
+        <div class="stat-ico">📚</div>
+        <div class="stat-val" style="color:var(--cyan)" id="s-words">0</div>
+        <div class="stat-label">Words Learned</div>
+        <div class="stat-change" id="s-words-c">▲ +0 this week</div>
+      </div>
+      <div class="stat-card sc-emerald">
+        <div class="stat-ico">⏱️</div>
+        <div class="stat-val" style="color:var(--emerald)" id="s-time">0h</div>
+        <div class="stat-label">Practice Time</div>
+        <div class="stat-change" id="s-time-c">▲ +0h this week</div>
+      </div>
+      <div class="stat-card sc-amber">
+        <div class="stat-ico">🎯</div>
+        <div class="stat-val" style="color:var(--amber)" id="s-acc">0%</div>
+        <div class="stat-label">Avg. Accuracy</div>
+        <div class="stat-change" id="s-acc-c">▲ +0% this month</div>
+      </div>
+      <div class="stat-card sc-rose">
+        <div class="stat-ico">🏆</div>
+        <div class="stat-val" style="color:var(--rose)" id="s-rank">—</div>
+        <div class="stat-label">Global Rank</div>
+        <div class="stat-change" id="s-rank-c">▲ Up 0 places</div>
+      </div>
+    </div>
+
+    <!-- Daily challenge + Leaderboard -->
+    <div class="two-col">
+
+      <!-- Daily challenge -->
+      <div class="daily-challenge" onclick="openModule('speaking')">
+        <div class="dc-icon">⚡</div>
+        <div class="dc-body">
+          <div class="dc-tag">Daily Challenge</div>
+          <div class="dc-title">Describe Your Dream Job in 60 Seconds</div>
+          <div class="dc-desc">Practice fluency and vocabulary. Complete before midnight to keep your streak!</div>
+        </div>
+        <div class="dc-action">
+          <div class="dc-xp">+150</div>
+          <div class="dc-xp-label">XP Reward</div>
+          <button class="dc-btn">Start Now →</button>
+        </div>
+      </div>
+
+      <!-- Leaderboard -->
+      <div class="lb-card">
+        <div class="card-head">
+          <div class="card-head-title">Weekly Leaderboard</div>
+          <span class="card-see-all">View All →</span>
+        </div>
+        <div class="lb-list" id="lb-list">
+          <!-- populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Modules -->
+    <div class="modules-header">
+      <div class="section-hd">Learning Modules</div>
+      <span class="card-see-all" style="margin-left:auto">View All →</span>
+    </div>
+
+    <div class="modules-grid" id="modules-grid">
+      <!-- populated by JS -->
+    </div>
+
+    <!-- Bottom row: Activity | Progress | Profile -->
+    <div class="bottom-row">
+
+      <!-- Activity -->
+      <div class="info-card">
+        <div class="card-head" style="margin-bottom:14px">
+          <div class="card-head-title">Recent Activity</div>
+        </div>
+        <div class="activity-list" id="activity-list">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- Progress overview -->
+      <div class="info-card">
+        <div class="card-head" style="margin-bottom:14px">
+          <div class="card-head-title">Your Progress Overview</div>
+        </div>
+        <div id="progress-list" style="display:flex;flex-direction:column;gap:14px">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- My Profile card -->
+      <div class="info-card">
+        <div class="card-head" style="margin-bottom:16px">
+          <div class="card-head-title">My Profile</div>
+        </div>
+        <div id="profile-card">
+          <!-- populated by JS after /api/auth/me -->
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- MODULE OVERLAY -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeOverlay()">
+  <div class="overlay-box" id="overlay-box">
+    <div class="overlay-close" onclick="closeOverlay()">✕</div>
+    <div class="ov-ico" id="ov-ico"></div>
+    <div class="ov-tag" id="ov-tag"></div>
+    <div class="ov-title" id="ov-title"></div>
+    <div class="ov-desc" id="ov-desc"></div>
+    <div class="ov-features" id="ov-feats"></div>
+    <button class="ov-btn" id="ov-btn" onclick="closeOverlay()"></button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toast-ico">✅</span>
+  <span id="toast-msg">Action complete</span>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   VERBOMATE DASHBOARD  —  fully dynamic, real API data only
+   All fake seedRandom() code removed.
+   ══════════════════════════════════════════════════════════════ */
+
+let currentUser = null;
+
+/* ──────────────────────────────────────────────────────────────
+   1. BOOT — fetch user then fetch progress in parallel
+   ──────────────────────────────────────────────────────────── */
+async function loadUser() {
+  try {
+    const res = await fetch('/api/auth/me', { credentials: 'include' });
+    if (!res.ok) { window.location.href = '/login'; return; }
+    const data = await res.json();
+    if (!data.success) { window.location.href = '/login'; return; }
+    currentUser = data.user;
+
+    renderUserShell(currentUser);   // render name/avatar immediately
+    await loadProgress(currentUser); // then fetch real progress
+  } catch (e) {
+    console.error('Auth error', e);
+    window.location.href = '/login';
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   2. FETCH REAL PROGRESS from /api/progress/me
+   ──────────────────────────────────────────────────────────── */
+async function loadProgress(user) {
+  try {
+    const res = await fetch('/api/progress/me', { credentials: 'include' });
+    if (!res.ok) throw new Error('progress fetch failed');
+    const data = await res.json();
+    if (!data.success) throw new Error('progress not ok');
+
+    renderDashboard(user, data.progress, data.modules, data.activity);
+
+    // Ping streak update (once per session)
+    fetch('/api/progress/streak', { method: 'POST', credentials: 'include' });
+
+  } catch (e) {
+    console.error('Progress fetch error', e);
+    // Render with zeroed data so dashboard still shows
+    renderDashboard(user, {}, {}, []);
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   3. RENDER USER SHELL (name / avatar) — called immediately
+   ──────────────────────────────────────────────────────────── */
+function getInitials(name) {
+  if (!name) return '?';
+  return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+}
+
+function renderUserShell(user) {
+  const initials  = getInitials(user.name);
+  const firstName = (user.name || '').split(' ')[0];
+
+  document.getElementById('sb-name').textContent = user.name || 'User';
+  document.getElementById('sb-ava').textContent  = initials;
+  document.getElementById('top-ava').textContent = initials;
+
+  const hour = new Date().getHours();
+  const tod  = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening';
+  document.getElementById('top-greeting').textContent = `Good ${tod} 👋`;
+  document.getElementById('greet-name').textContent   = firstName;
+  document.getElementById('top-date').textContent =
+    new Date().toLocaleDateString('en-IN', { weekday:'long', month:'long', day:'numeric' });
+
+  /* Profile card */
+  const joinDate   = user.created_at
+    ? new Date(user.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' })
+    : 'N/A';
+  const authMethod = user.google_id ? '🔗 Google Account' : '🔑 Email & Password';
+  const verBadge   = user.is_verified
+    ? '<span style="color:var(--emerald);font-size:0.72rem">✅ Verified</span>'
+    : '<span style="color:var(--amber);font-size:0.72rem">⚠️ Not Verified</span>';
+
+  document.getElementById('profile-card').innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+      <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#fb7185);display:grid;place-items:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0;border:2px solid rgba(167,139,250,0.35)">${initials}</div>
+      <div style="min-width:0">
+        <div style="font-size:1rem;font-weight:700;letter-spacing:-0.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${user.name || 'User'}</div>
+        <div style="margin-top:3px">${verBadge}</div>
+      </div>
+    </div>
+    <div class="profile-row"><span class="pr-ico">📧</span><span class="pr-label">Email</span><span class="pr-val">${user.email || '—'}</span></div>
+    <div class="profile-row"><span class="pr-ico">🗓️</span><span class="pr-label">Joined</span><span class="pr-val">${joinDate}</span></div>
+    <div class="profile-row"><span class="pr-ico">🔐</span><span class="pr-label">Sign-in</span><span class="pr-val">${authMethod}</span></div>
+    <div class="profile-row"><span class="pr-ico">🌐</span><span class="pr-label">Language</span><span class="pr-val">English (India)</span></div>
+    <div class="profile-row"><span class="pr-ico">🆔</span><span class="pr-label">Account ID</span><span class="pr-val">${user.id ? '#' + user.id : '—'}</span></div>
+  `;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   4. RENDER DASHBOARD with REAL data from API
+      progress  = { words_learned, practice_minutes, avg_accuracy,
+                    global_rank, streak_days, xp_total, xp_level,
+                    words_learned_week, practice_minutes_week,
+                    accuracy_change_month, rank_change }
+      modules   = { vocabulary: 45, speaking: 30, ... }
+      activity  = [ { module_key, activity_title, activity_meta,
+                      xp_earned, created_at }, ... ]
+   ──────────────────────────────────────────────────────────── */
+function renderDashboard(user, progress, modules, activity) {
+  const p = progress || {};
+
+  /* ── XP / Level sidebar ── */
+  const level  = p.xp_level  || 1;
+  const xpTotal= p.xp_total  || 0;
+  const xpNext = level * 500;                    // 500 XP per level
+  const xpPct  = Math.min(Math.round((xpTotal % 500) / 500 * 100), 100);
+
+  document.getElementById('sb-level').textContent = `Level ${level} — Explorer`;
+  document.getElementById('sb-xp').textContent    = `${xpTotal.toLocaleString()} / ${xpNext.toLocaleString()} XP`;
+  document.getElementById('sb-rank').textContent  = `⚡ Explorer · Lvl ${level}`;
+  setTimeout(() => document.getElementById('sb-xp-fill').style.width = xpPct + '%', 200);
+
+  /* ── Streak ── */
+  const streak = p.streak_days || 0;
+  document.getElementById('streak-badge').textContent = `🔥 ${streak}-day streak`;
+  document.getElementById('greet-sub').textContent    =
+    streak > 0
+      ? `You have a ${streak}-day streak 🔥 — keep the momentum going!`
+      : `Start your first session today to begin your streak! 🚀`;
+
+  /* ── Stat cards ── */
+  const words   = p.words_learned          || 0;
+  const wordsW  = p.words_learned_week     || 0;
+  const mins    = p.practice_minutes       || 0;
+  const minsW   = p.practice_minutes_week  || 0;
+  const acc     = p.avg_accuracy           || 0;
+  const accM    = p.accuracy_change_month  || 0;
+  const rank    = p.global_rank            || 0;
+  const rankUp  = p.rank_change            || 0;
+
+  countUp('s-words', words);
+  document.getElementById('s-words-c').textContent = `▲ +${wordsW} this week`;
+
+  const hrs = Math.floor(mins / 60);
+  const rem = mins % 60;
+  document.getElementById('s-time').textContent  = hrs > 0 ? `${hrs}h ${rem}m` : `${mins}m`;
+  document.getElementById('s-time-c').textContent = `▲ +${Math.floor(minsW/60)}h this week`;
+
+  document.getElementById('s-acc').textContent  = `${acc}%`;
+  document.getElementById('s-acc-c').textContent = `▲ +${accM}% this month`;
+
+  document.getElementById('s-rank').textContent  = rank > 0 ? `#${rank}` : '—';
+  document.getElementById('s-rank-c').textContent = rankUp > 0 ? `▲ Up ${rankUp} places` : 'Start practicing to rank!';
+
+  /* ── Modules ── */
+  renderModules(modules || {});
+
+  /* ── Leaderboard (static peers + real user XP) ── */
+  renderLeaderboard(user, xpTotal, rank);
+
+  /* ── Activity ── */
+  renderActivity(activity || []);
+
+  /* ── Progress overview ── */
+  renderProgressOverview(modules || {});
+}
+
+/* ──────────────────────────────────────────────────────────────
+   5. COUNT-UP ANIMATION
+   ──────────────────────────────────────────────────────────── */
+function countUp(id, target) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let v = 0;
+  const step = Math.max(target / 50, 1);
+  const t = setInterval(() => {
+    v = Math.min(v + step, target);
+    el.textContent = Math.floor(v).toLocaleString();
+    if (v >= target) clearInterval(t);
+  }, 20);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   6. MODULES — progress% comes from real API modules object
+   ──────────────────────────────────────────────────────────── */
+const MODULES = [
+  { key:'vocabulary', cls:'mc1', ico:'📖', badge:'tag-hot', label:'🔥 Hot',
+    title:'Vocabulary Builder',
+    desc:'Master 5000+ words with smart flashcards and spaced repetition.' },
+  { key:'speaking',   cls:'mc2', ico:'🎙️', badge:'tag-new', label:'✨ New',
+    title:'Speaking Coach',
+    desc:'AI pronunciation feedback and real conversation practice.' },
+  { key:'grammar',    cls:'mc3', ico:'📝', badge:'tag-pro', label:'⭐ Pro',
+    title:'Grammar Mastery',
+    desc:'Structured lessons from tenses to conditionals with mistake analysis.' },
+  { key:'listening',  cls:'mc4', ico:'🎧', badge:'tag-hot', label:'🔥 Hot',
+    title:'Listening Lab',
+    desc:'Train your ear with podcasts and accents from US, UK and AU English.' },
+  { key:'writing',    cls:'mc5', ico:'✍️', badge:'tag-new', label:'✨ New',
+    title:'Writing Studio',
+    desc:'Craft emails and essays with real-time AI feedback on tone and grammar.' },
+  { key:'interview',  cls:'mc6', ico:'💼', badge:'tag-pro', label:'⭐ Pro',
+    title:'Interview Prep',
+    desc:'Practice HR rounds and technical Q&A with confidence scoring.' },
+];
+
+function renderModules(modules) {
+  const grid = document.getElementById('modules-grid');
+  grid.innerHTML = MODULES.map(m => {
+    const pct = modules[m.key] || 0;
+    return `
+    <div class="module-card ${m.cls}" onclick="openModule('${m.key}')">
+      <div class="mc-border"></div>
+      <div class="mc-top">
+        <div class="mc-ico">${m.ico}</div>
+        <span class="mc-tag ${m.badge}">${m.label}</span>
+      </div>
+      <div class="mc-title">${m.title}</div>
+      <div class="mc-desc">${m.desc}</div>
+      <div class="mc-footer">
+        <div class="mc-progress">
+          <div class="mc-prog-info"><span>Progress</span><span>${pct}%</span></div>
+          <div class="mc-prog-bar">
+            <div class="mc-prog-fill" style="width:0%" data-target="${pct}"></div>
+          </div>
+        </div>
+        <div class="mc-arrow">→</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  setTimeout(() => {
+    document.querySelectorAll('.mc-prog-fill').forEach(b => {
+      b.style.width = b.dataset.target + '%';
+    });
+  }, 350);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   7. LEADERBOARD — static peers + real user XP & rank
+   ──────────────────────────────────────────────────────────── */
+function renderLeaderboard(user, userXp, userRank) {
+  const firstName = (user.name || 'You').split(' ')[0];
+
+  const peers = [
+    { name:'Sneha R.',  xp:12480, bg:'linear-gradient(135deg,#f59e0b,#d97706)' },
+    { name:'Priya M.',  xp:11920, bg:'linear-gradient(135deg,#a78bfa,#6d28d9)' },
+    { name:'Rahul K.',  xp:10350, bg:'linear-gradient(135deg,#34d399,#059669)' },
+    { name:'Ananya S.', xp: 9880, bg:'linear-gradient(135deg,#64748b,#475569)' },
+    { name:'Vikram P.', xp: 7420, bg:'linear-gradient(135deg,#fb7185,#be185d)' },
+  ];
+
+  const me = {
+    name: firstName + ' (You)',
+    xp:   userXp,
+    bg:   'linear-gradient(135deg,#a78bfa,#fb7185)',
+    isYou: true
+  };
+
+  const all = [...peers, me].sort((a, b) => b.xp - a.xp).slice(0, 6);
+
+  const rankIco = ['🥇','🥈','🥉'];
+  const rCls    = ['r1','r2','r3'];
+
+  document.getElementById('lb-list').innerHTML = all.map((p, i) => {
+    const rank = i + 1;
+    const ico  = rank <= 3 ? rankIco[rank-1] : rank;
+    const rc   = rank <= 3 ? rCls[rank-1] : '';
+    return `
+    <div class="lb-row ${p.isYou ? 'you-row' : ''}">
+      <div class="lb-rank ${rc}">${ico}</div>
+      <div class="lb-ava" style="background:${p.bg}">${p.name[0]}</div>
+      <div class="lb-name">${p.isYou
+        ? `<strong style="color:var(--cyan)">${p.name}</strong>`
+        : p.name} ${p.isYou ? '<span class="you-tag">You</span>' : ''}</div>
+      <div class="lb-score">${p.xp.toLocaleString()} XP</div>
+    </div>`;
+  }).join('');
+}
+
+/* ──────────────────────────────────────────────────────────────
+   8. ACTIVITY — real rows from API, fallback zero-state
+   ──────────────────────────────────────────────────────────── */
+const MODULE_META = {
+  vocabulary: { ico:'📖', bg:'var(--cyan-dim)' },
+  speaking:   { ico:'🎙️', bg:'var(--violet-dim)' },
+  grammar:    { ico:'📝', bg:'var(--emerald-dim)' },
+  listening:  { ico:'🎧', bg:'var(--amber-dim)' },
+  writing:    { ico:'✍️', bg:'var(--rose-dim)' },
+  interview:  { ico:'💼', bg:'var(--violet-dim)' },
+  general:    { ico:'⚡', bg:'var(--cyan-dim)' },
+};
+
+function timeAgo(dateStr) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 2)  return 'Just now';
+  if (mins < 60) return `${mins} mins ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24)  return `${hrs} hr${hrs>1?'s':''} ago`;
+  const days = Math.floor(hrs / 24);
+  return `${days} day${days>1?'s':''} ago`;
+}
+
+function renderActivity(activity) {
+  const el = document.getElementById('activity-list');
+
+  if (!activity || activity.length === 0) {
+    el.innerHTML = `
+      <div class="zero-state">
+        <div class="zero-ico">🎯</div>
+        <strong>No activity yet</strong>
+        Complete your first module session to see activity here.
+      </div>`;
+    return;
+  }
+
+  el.innerHTML = activity.map(a => {
+    const meta = MODULE_META[a.module_key] || MODULE_META.general;
+    const when = a.created_at ? timeAgo(a.created_at) : '';
+    return `
+    <div class="act-item">
+      <div class="act-ico" style="background:${meta.bg}">${meta.ico}</div>
+      <div class="act-body">
+        <div class="act-name">${a.activity_title || a.module_key}</div>
+        <div class="act-meta">${a.activity_meta ? a.activity_meta + ' · ' : ''}${when}</div>
+      </div>
+      <div class="act-xp">+${a.xp_earned || 0} XP</div>
+    </div>`;
+  }).join('');
+}
+
+/* ──────────────────────────────────────────────────────────────
+   9. PROGRESS OVERVIEW — real module % from API
+   ──────────────────────────────────────────────────────────── */
+const PROG_COLORS = {
+  vocabulary:'var(--cyan)', speaking:'var(--violet)', grammar:'var(--emerald)',
+  listening:'var(--amber)', writing:'var(--rose)',    interview:'var(--violet)'
+};
+const PROG_LABELS = {
+  vocabulary:'📖 Vocabulary', speaking:'🎙️ Speaking', grammar:'📝 Grammar',
+  listening:'🎧 Listening',   writing:'✍️ Writing',   interview:'💼 Interview'
+};
+
+function renderProgressOverview(modules) {
+  const keys = Object.keys(PROG_LABELS);
+  document.getElementById('progress-list').innerHTML = keys.map(k => {
+    const v = modules[k] || 0;
+    return `
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:var(--text-2);margin-bottom:6px">
+        <span>${PROG_LABELS[k]}</span>
+        <span style="font-family:var(--font-mono);color:${PROG_COLORS[k]};font-weight:600">${v}%</span>
+      </div>
+      <div style="height:5px;background:rgba(255,255,255,0.05);border-radius:99px;overflow:hidden">
+        <div style="height:100%;width:0%;background:${PROG_COLORS[k]};border-radius:99px;transition:width 1.1s cubic-bezier(.22,1,.36,1)" data-w="${v}"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  setTimeout(() => {
+    document.querySelectorAll('#progress-list [data-w]').forEach(b => {
+      b.style.width = b.dataset.w + '%';
+    });
+  }, 400);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   10. MODULE OVERLAY — unchanged from original
+   ──────────────────────────────────────────────────────────── */
+const MODULE_DATA = {
+  vocabulary: {
+    ico:'📖', icoBg:'var(--cyan-dim)', icoColor:'var(--cyan)',
+    tag:'🔥 Most Popular Module', tagColor:'var(--cyan)',
+    title:'Vocabulary Builder', redirect:'/vocabulary',
+    desc:'Expand your vocabulary to 5000+ words. Smart spaced-repetition ensures you never forget what you learn. Includes idioms, phrasal verbs and business vocab.',
+    feats:[
+      {dot:'var(--cyan)',    ico:'🎴', text:'Smart flashcards with spaced repetition'},
+      {dot:'var(--emerald)', ico:'📰', text:'Real-world context sentences'},
+      {dot:'var(--violet)',  ico:'🎮', text:'Gamified quizzes and word games'},
+      {dot:'var(--amber)',   ico:'📊', text:'Daily vocabulary growth tracker'},
+    ],
+    btn:'▶ Start Vocabulary Practice',
+    btnBg:'linear-gradient(135deg,var(--cyan),#0099cc)', btnColor:'#09090b',
+  },
+  speaking: {
+    ico:'🎙️', icoBg:'var(--violet-dim)', icoColor:'var(--violet)',
+    tag:'✨ AI-Powered Feature', tagColor:'var(--violet)',
+    title:'Speaking Coach', redirect:'/speaking',
+    desc:'Practice speaking with AI. Get instant feedback on pronunciation, fluency, and confidence. Simulate real conversations and job interviews at your pace.',
+    feats:[
+      {dot:'var(--violet)',  ico:'🤖', text:'AI pronunciation feedback in real-time'},
+      {dot:'var(--rose)',    ico:'💬', text:'Simulate real conversation scenarios'},
+      {dot:'var(--cyan)',    ico:'🎯', text:'Accent neutralisation training'},
+      {dot:'var(--emerald)', ico:'📈', text:'Fluency score tracking over time'},
+    ],
+    btn:'🎙️ Start Speaking Session',
+    btnBg:'linear-gradient(135deg,var(--violet),#4f46e5)', btnColor:'#fff',
+  },
+  grammar: {
+    ico:'📝', icoBg:'var(--emerald-dim)', icoColor:'var(--emerald)',
+    tag:'⭐ Pro Module', tagColor:'var(--emerald)',
+    title:'Grammar Mastery', redirect:'/grammar',
+    desc:'Build rock-solid grammar with 200+ structured lessons on tenses, conditionals, passive voice and more. Perfect for exams and professional communication.',
+    feats:[
+      {dot:'var(--emerald)', ico:'📚', text:'200+ structured grammar lessons'},
+      {dot:'var(--cyan)',    ico:'✅', text:'Interactive exercises with explanations'},
+      {dot:'var(--amber)',   ico:'🔍', text:'Personal mistake analysis and correction'},
+      {dot:'var(--violet)',  ico:'🎓', text:'IELTS / TOEFL prep included'},
+    ],
+    btn:'📝 Open Grammar Module',
+    btnBg:'linear-gradient(135deg,var(--emerald),#059669)', btnColor:'#fff',
+  },
+  listening: {
+    ico:'🎧', icoBg:'var(--amber-dim)', icoColor:'var(--amber)',
+    tag:'🎵 Audio Learning', tagColor:'var(--amber)',
+    title:'Listening Lab', redirect:'/listening',
+    desc:'Train your ears to understand native speakers through podcasts, news and stories. Supports US, UK and Australian accents.',
+    feats:[
+      {dot:'var(--amber)',   ico:'🎵', text:'500+ audio exercises across all levels'},
+      {dot:'var(--cyan)',    ico:'🌍', text:'Multiple accent tracks — US, UK, AU'},
+      {dot:'var(--emerald)', ico:'📄', text:'Interactive transcripts and vocabulary'},
+      {dot:'var(--rose)',    ico:'🔁', text:'Shadowing exercises for fluency'},
+    ],
+    btn:'🎧 Start Listening Lab',
+    btnBg:'linear-gradient(135deg,var(--amber),#d97706)', btnColor:'#09090b',
+  },
+  writing: {
+    ico:'✍️', icoBg:'var(--rose-dim)', icoColor:'var(--rose)',
+    tag:'✨ New Module', tagColor:'var(--rose)',
+    title:'Writing Studio', redirect:'/writing',
+    desc:'Become a confident writer. From professional emails to IELTS essays — write and receive instant AI feedback on grammar, coherence, vocabulary, and tone.',
+    feats:[
+      {dot:'var(--rose)',    ico:'📧', text:'Professional email and report writing'},
+      {dot:'var(--violet)',  ico:'🤖', text:'AI grammar and tone suggestions'},
+      {dot:'var(--cyan)',    ico:'📋', text:'Essay templates and structures'},
+      {dot:'var(--emerald)', ico:'🎯', text:'Band score estimator for IELTS'},
+    ],
+    btn:'✍️ Open Writing Studio',
+    btnBg:'linear-gradient(135deg,var(--rose),#be185d)', btnColor:'#fff',
+  },
+  interview: {
+    ico:'💼', icoBg:'var(--violet-dim)', icoColor:'var(--violet)',
+    tag:'⭐ Career Booster', tagColor:'var(--rose)',
+    title:'Interview Prep', redirect:'/interview',
+    desc:'Crack your next English interview. Practice HR rounds, technical interviews and GDs. Get scored on vocabulary, fluency, confidence and grammar.',
+    feats:[
+      {dot:'var(--rose)',    ico:'🎤', text:'Mock HR and technical interviews'},
+      {dot:'var(--amber)',   ico:'💡', text:'300+ common interview questions'},
+      {dot:'var(--cyan)',    ico:'📊', text:'Performance scoring and feedback'},
+      {dot:'var(--emerald)', ico:'🗣️', text:'Group discussion practice'},
+    ],
+    btn:'💼 Start Interview Prep',
+    btnBg:'linear-gradient(135deg,var(--rose),#9f1239)', btnColor:'#fff',
+  },
+  video: {
+    ico:'🎬', icoBg:'rgba(34,211,238,0.12)', icoColor:'var(--cyan)',
+    tag:'✨ New Feature', tagColor:'var(--cyan)',
+    title:'Video Lessons', redirect:'/video-lessons',
+    desc:'Learn English through curated YouTube videos. Search any topic and get AI-powered explanations alongside expert video content.',
+    feats:[
+      {dot:'var(--cyan)',    ico:'▶',  text:'Curated videos from top English channels'},
+      {dot:'var(--violet)',  ico:'🤖', text:'AI explanation for every topic'},
+      {dot:'var(--emerald)', ico:'🔍', text:'Search any grammar or vocabulary topic'},
+      {dot:'var(--amber)',   ico:'🎓', text:'IELTS, Business & Speaking content'},
+    ],
+    btn:'🎬 Open Video Lessons',
+    btnBg:'linear-gradient(135deg,var(--cyan),#0099cc)', btnColor:'#09090b',
+  },
+};
+
+function openModule(key) {
+  const m = MODULE_DATA[key];
+  if (!m) return;
+
+  const ico = document.getElementById('ov-ico');
+  ico.textContent = m.ico;
+  ico.style.background = m.icoBg;
+  ico.style.border = `1px solid ${m.icoColor}40`;
+
+  document.getElementById('ov-tag').textContent = m.tag;
+  document.getElementById('ov-tag').style.color  = m.tagColor;
+  document.getElementById('ov-title').textContent = m.title;
+  document.getElementById('ov-desc').textContent  = m.desc;
+
+  document.getElementById('ov-feats').innerHTML = m.feats.map(f => `
+    <div class="ov-feat">
+      <div class="ov-dot" style="background:${f.dot}"></div>
+      <span style="font-size:1rem;margin-right:2px">${f.ico}</span>
+      <span>${f.text}</span>
+    </div>
+  `).join('');
+
+  const btn = document.getElementById('ov-btn');
+  btn.textContent   = m.btn;
+  btn.style.background = m.btnBg;
+  btn.style.color   = m.btnColor;
+  btn.onclick = m.redirect ? () => { window.location.href = m.redirect; } : closeOverlay;
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeOverlay() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeOverlay(); });
+
+/* ──────────────────────────────────────────────────────────────
+   11. LOGOUT
+   ──────────────────────────────────────────────────────────── */
+async function handleLogout() {
+  showToast('👋', 'Signing you out…');
+  await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+  window.location.href = '/login';
+}
+
+/* ──────────────────────────────────────────────────────────────
+   12. TOAST
+   ──────────────────────────────────────────────────────────── */
+function showToast(ico, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-ico').textContent = ico;
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   13. INIT
+   ──────────────────────────────────────────────────────────── */
+loadUser();
+</script>
+</body>
+</html>

@@ -1,0 +1,2335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VerboMate — Master English Communication</title>
+<!-- <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap)" rel="stylesheet"> -->
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c14;
+    --bg2: #0d1321;
+    --card: #111827;
+    --card2: #161e2e;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --gold: #f59e0b;
+    --pink: #ec4899;
+    --text: #f0f4ff;
+    --muted: #8892a4;
+    --border: rgba(255,255,255,0.07);
+    --glow: 0 0 40px rgba(0,212,255,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1.5px solid rgba(0,212,255,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.3s cubic-bezier(0.23,1,0.32,1);
+  }
+
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='[w3.org](http://www.w3.org/2000/svg)'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 60px;
+    background: rgba(8,12,20,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    animation: slideDown 0.8s cubic-bezier(0.23,1,0.32,1) both;
+  }
+
+  @keyframes slideDown {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .fp-overlay {
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+  animation:fpFadeIn 0.25s ease;
+}
+@keyframes fpFadeIn { from{opacity:0} to{opacity:1} }
+ 
+.fp-modal {
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:36px 32px;width:100%;max-width:420px;
+  position:relative;animation:fpSlide 0.35s cubic-bezier(0.23,1,0.32,1);
+}
+@keyframes fpSlide { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+ 
+.fp-modal::before {
+  content:'';position:absolute;top:-1px;left:20%;right:20%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent2),transparent);
+}
+ 
+.fp-close {
+  position:absolute;top:14px;right:16px;
+  background:rgba(255,255,255,0.05);border:1px solid var(--border);
+  color:var(--muted);border-radius:6px;width:28px;height:28px;
+  cursor:none;font-size:0.75rem;display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+}
+.fp-close:hover { background:rgba(255,255,255,0.1);color:var(--text); }
+ 
+.fp-steps {
+  display:flex;align-items:center;gap:0;margin-bottom:28px;
+}
+.fp-step {
+  display:flex;align-items:center;gap:6px;font-size:0.72rem;
+  color:var(--muted);font-weight:500;white-space:nowrap;
+  transition:color 0.3s;
+}
+.fp-step span {
+  width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.4);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:0.68rem;font-weight:700;transition:all 0.3s;
+}
+.fp-step.active { color:var(--accent2); }
+.fp-step.active span { border-color:var(--accent2);background:rgba(124,58,237,0.12);color:var(--accent2); }
+.fp-step.done { color:var(--accent3); }
+.fp-step.done span { border-color:var(--accent3);background:rgba(16,185,129,0.1);color:var(--accent3); }
+.fp-conn { flex:1;height:1px;background:var(--border);margin:0 8px 0 8px;transition:background 0.3s; }
+.fp-conn.done { background:var(--accent3); }
+ 
+.fp-title {
+  font-family:'Clash Display',sans-serif;font-size:1.5rem;
+  font-weight:700;letter-spacing:-1px;margin-bottom:6px;
+}
+.fp-sub { font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:20px; }
+ 
+.fp-err {
+  background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);
+  color:#f87171;border-radius:8px;padding:9px 13px;font-size:0.8rem;
+  margin-bottom:14px;display:none;
+}
+ 
+.fp-field { position:relative;margin-bottom:16px; }
+.fp-icon { position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px; }
+.fp-input {
+  width:100%;padding:12px 14px 12px 40px;background:rgba(0,0,0,0.3);
+  border:1px solid var(--border);border-radius:10px;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;transition:all 0.2s;
+}
+.fp-input::placeholder { color:rgba(136,146,164,0.5); }
+.fp-input:focus { border-color:rgba(124,58,237,0.4);box-shadow:0 0 0 3px rgba(124,58,237,0.08); }
+ 
+.fp-otp-row { display:flex;gap:8px;justify-content:center;margin-bottom:12px; }
+.fp-otp {
+  width:44px;height:52px;text-align:center;font-size:1.3rem;font-weight:700;
+  background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:10px;
+  color:var(--text);outline:none;font-family:'Syne',sans-serif;transition:all 0.2s;cursor:text;
+}
+.fp-otp:focus { border-color:rgba(124,58,237,0.5);box-shadow:0 0 0 3px rgba(124,58,237,0.1); }
+ 
+.fp-strength-bar { display:flex;gap:4px;margin-bottom:4px; }
+.fp-seg { flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.08);transition:background 0.3s; }
+ 
+.fp-btn {
+  width:100%;padding:13px;border:none;border-radius:11px;
+  font-family:'Syne',sans-serif;font-size:0.92rem;font-weight:700;
+  cursor:none;transition:all 0.3s;letter-spacing:0.3px;margin-top:4px;
+}
+.fp-btn-purple { background:linear-gradient(135deg,var(--accent2),#6d28d9);color:white; }
+.fp-btn-purple:hover { transform:translateY(-2px);box-shadow:0 10px 28px rgba(124,58,237,0.35); }
+.fp-btn-purple:disabled { opacity:0.5;transform:none; }
+.fp-btn-green { background:linear-gradient(135deg,var(--accent3),#059669);color:#030f08; }
+.fp-btn-green:hover { transform:translateY(-2px);box-shadow:0 10px 28px rgba(16,185,129,0.35); }
+ 
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 0 20px rgba(0,212,255,0.3);
+  }
+
+  .logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    transition: color 0.2s;
+    cursor: none;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-btns {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .btn-ghost {
+    padding: 9px 22px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: none;
+    transition: all 0.2s;
+    letter-spacing: 0.2px;
+  }
+
+  .btn-ghost:hover {
+    border-color: rgba(0,212,255,0.4);
+    color: var(--accent);
+  }
+
+  .btn-primary {
+    padding: 9px 22px;
+    background: linear-gradient(135deg, var(--accent), #0099cc);
+    border: none;
+    color: #080c14;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: none;
+    transition: all 0.3s;
+    letter-spacing: 0.2px;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(0,212,255,0.3);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated background blobs */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.12;
+    animation: blobFloat 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .blob-1 {
+    width: 600px; height: 600px;
+    background: var(--accent);
+    top: -200px; right: -100px;
+    animation-delay: 0s;
+  }
+
+  .blob-2 {
+    width: 400px; height: 400px;
+    background: var(--accent2);
+    bottom: -100px; left: -100px;
+    animation-delay: -3s;
+  }
+
+  .blob-3 {
+    width: 300px; height: 300px;
+    background: var(--accent3);
+    top: 50%; left: 40%;
+    animation-delay: -5s;
+  }
+
+  @keyframes blobFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.05); }
+    66% { transform: translate(-20px, 20px) scale(0.95); }
+  }
+
+  .grid-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    max-width: 640px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s 0.3s cubic-bezier(0.23,1,0.32,1) both;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.5); }
+  }
+
+  h1 {
+    font-family: 'Clash Display', sans-serif;
+    font-size: clamp(3rem, 5.5vw, 4.8rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s 0.5s cubic-bezier(0.23,1,0.32,1) both;
+  }
+
+  h1 .accent { 
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  h1 .line2 {
+    display: block;
+    color: var(--text);
+  }
+
+  .hero-desc {
+    font-size: 1.08rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 40px;
+    font-weight: 300;
+    max-width: 520px;
+    animation: fadeUp 0.8s 0.7s cubic-bezier(0.23,1,0.32,1) both;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.9s cubic-bezier(0.23,1,0.32,1) both;
+  }
+
+  .cta-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 32px;
+    background: linear-gradient(135deg, var(--accent), #0099cc);
+    color: #060a10;
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: none;
+    transition: all 0.3s;
+    letter-spacing: 0.2px;
+    text-decoration: none;
+  }
+
+  .cta-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 36px rgba(0,212,255,0.35);
+  }
+
+  .cta-main svg { transition: transform 0.2s; }
+  .cta-main:hover svg { transform: translateX(4px); }
+
+  .cta-secondary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 32px;
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: none;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+
+  .cta-secondary:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 56px;
+    animation: fadeUp 0.8s 1.1s cubic-bezier(0.23,1,0.32,1) both;
+  }
+
+  .stat { }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -1px;
+  }
+
+  .stat-num span { color: var(--accent); }
+
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  /* HERO VISUAL */
+  .hero-visual {
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45%;
+    max-width: 580px;
+    z-index: 2;
+    animation: fadeInRight 1s 0.6s cubic-bezier(0.23,1,0.32,1) both;
+  }
+
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateY(-50%) translateX(60px); }
+    to { opacity: 1; transform: translateY(-50%) translateX(0); }
+  }
+
+  .phone-mockup {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px var(--border);
+    position: relative;
+  }
+
+  .phone-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .phone-avatar {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .phone-name { font-weight: 600; font-size: 0.9rem; }
+  .phone-status { font-size: 0.75rem; color: var(--accent3); display: flex; align-items: center; gap: 5px; }
+  .status-dot { width: 6px; height: 6px; background: var(--accent3); border-radius: 50%; animation: pulse 2s infinite; }
+
+  .chat-msgs { display: flex; flex-direction: column; gap: 12px; }
+
+  .msg {
+    display: flex;
+    gap: 10px;
+    animation: msgAppear 0.4s cubic-bezier(0.23,1,0.32,1) both;
+  }
+
+  @keyframes msgAppear {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg.user { flex-direction: row-reverse; }
+
+  .msg-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+  }
+
+  .msg-ai .msg-avatar { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+  .msg-user .msg-avatar { background: rgba(255,255,255,0.1); }
+
+  .msg-bubble {
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    max-width: 75%;
+  }
+
+  .msg-ai .msg-bubble {
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-bottom-left-radius: 4px;
+  }
+
+  .msg-user .msg-bubble {
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(124,58,237,0.25);
+    border-bottom-right-radius: 4px;
+  }
+
+  .correction-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(245,158,11,0.12);
+    border: 1px solid rgba(245,158,11,0.25);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    color: var(--gold);
+    margin-top: 8px;
+  }
+
+  .score-bar {
+    margin-top: 16px;
+    padding: 12px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .score-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .score-val { color: var(--accent); font-weight: 600; }
+
+  .bar-track {
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    animation: barGrow 1.5s 1.5s cubic-bezier(0.23,1,0.32,1) both;
+  }
+
+  @keyframes barGrow {
+    from { width: 0; }
+  }
+
+  .bar-accent { background: linear-gradient(90deg, var(--accent), #00e5ff); }
+  .bar-green { background: linear-gradient(90deg, var(--accent3), #34d399); }
+  .bar-purple { background: linear-gradient(90deg, var(--accent2), #a78bfa); }
+
+  /* FEATURES STRIP */
+  .features-strip {
+    padding: 0 60px 100px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    animation: fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) both;
+  }
+
+  .label-line {
+    width: 40px; height: 1px;
+    background: var(--accent);
+  }
+
+  .label-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-family: 'Clash Display', sans-serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    margin-bottom: 60px;
+    max-width: 500px;
+  }
+
+  .section-title .dim { color: var(--muted); }
+
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .module-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 24px;
+    transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+  }
+
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-accent, var(--accent)), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .module-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .module-card:hover::before { opacity: 1; }
+
+  .module-card:nth-child(1) { --card-accent: var(--accent); }
+  .module-card:nth-child(2) { --card-accent: var(--accent2); }
+  .module-card:nth-child(3) { --card-accent: var(--gold); }
+  .module-card:nth-child(4) { --card-accent: var(--accent3); }
+  .module-card:nth-child(5) { --card-accent: var(--pink); }
+  .module-card:nth-child(6) { --card-accent: #ef4444; }
+
+  .module-icon {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 18px;
+  }
+
+  .icon-blue { background: rgba(0,212,255,0.12); }
+  .icon-purple { background: rgba(124,58,237,0.12); }
+  .icon-gold { background: rgba(245,158,11,0.12); }
+  .icon-green { background: rgba(16,185,129,0.12); }
+  .icon-pink { background: rgba(236,72,153,0.12); }
+  .icon-red { background: rgba(239,68,68,0.12); }
+
+  .module-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+
+  .module-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .module-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 16px;
+  }
+
+  .tag {
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    border: 1px solid;
+  }
+
+  .tag-blue { color: var(--accent); border-color: rgba(0,212,255,0.25); background: rgba(0,212,255,0.06); }
+  .tag-purple { color: #a78bfa; border-color: rgba(167,139,250,0.25); background: rgba(124,58,237,0.06); }
+  .tag-gold { color: var(--gold); border-color: rgba(245,158,11,0.25); background: rgba(245,158,11,0.06); }
+  .tag-green { color: #34d399; border-color: rgba(52,211,153,0.25); background: rgba(16,185,129,0.06); }
+  .tag-pink { color: #f472b6; border-color: rgba(244,114,182,0.25); background: rgba(236,72,153,0.06); }
+  .tag-red { color: #f87171; border-color: rgba(248,113,113,0.25); background: rgba(239,68,68,0.06); }
+
+  /* HOW IT WORKS SECTION */
+  .how-it-works {
+    padding: 80px 60px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    z-index: 2;
+  }
+
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+  }
+
+  .how-step {
+    text-align: center;
+    position: relative;
+  }
+
+  .how-step::after {
+    content: '';
+    position: absolute;
+    top: 35px;
+    right: -15px;
+    width: 30px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+
+  .how-step:last-child::after { display: none; }
+
+  .step-num {
+    width: 70px; height: 70px;
+    background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(124,58,237,0.15));
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin: 0 auto 20px;
+  }
+
+  .step-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  .step-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* PREVIEW SECTION */
+  .preview-section {
+    padding: 100px 60px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .preview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 50px;
+  }
+
+  .preview-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s;
+  }
+
+  .preview-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .preview-header {
+    padding: 16px 20px;
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .preview-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .preview-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  .preview-body {
+    padding: 24px;
+    min-height: 280px;
+  }
+
+  .preview-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-left: auto;
+    color: var(--muted);
+  }
+
+  /* Chat preview styles */
+  .chat-preview { display: flex; flex-direction: column; gap: 12px; }
+
+  .chat-msg {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .chat-msg.user { flex-direction: row-reverse; }
+
+  .chat-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .chat-avatar.ai { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+  .chat-avatar.human { background: rgba(255,255,255,0.1); }
+
+  .chat-bubble {
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    max-width: 80%;
+  }
+
+  .chat-msg.ai .chat-bubble {
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.15);
+  }
+
+  .chat-msg.user .chat-bubble {
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(124,58,237,0.25);
+  }
+
+  .typing-indicator {
+    display: flex;
+    gap: 4px;
+    padding: 10px 14px;
+  }
+
+  .typing-dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: typing 1.4s infinite;
+  }
+
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* Speech preview */
+  .speech-preview { }
+
+  .waveform {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    height: 60px;
+    margin-bottom: 20px;
+  }
+
+  .wave-bar {
+    width: 4px;
+    background: linear-gradient(to top, var(--accent), var(--accent2));
+    border-radius: 2px;
+    animation: waveAnim 1s ease-in-out infinite;
+  }
+
+  @keyframes waveAnim {
+    0%, 100% { height: 20px; }
+    50% { height: 50px; }
+  }
+
+  .speech-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .metric-box {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+  }
+
+  .metric-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .metric-value {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  .metric-value.good { color: var(--accent3); }
+  .metric-value.warn { color: var(--gold); }
+  .metric-value.accent { color: var(--accent); }
+
+  /* AUTH SECTION */
+  .auth-section {
+    padding: 100px 60px;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+    justify-content: center;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+  }
+
+  .auth-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 40px;
+    width: 440px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.23,1,0.32,1);
+  }
+
+  .auth-card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 20%; right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .auth-card.login-card::before { background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+  .auth-card.signup-card::before { background: linear-gradient(90deg, transparent, var(--accent2), transparent); }
+
+  .auth-tabs {
+    display: flex;
+    background: rgba(0,0,0,0.3);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 32px;
+    border: 1px solid var(--border);
+  }
+
+  .auth-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.88rem;
+    font-weight: 600;
+    border-radius: 9px;
+    cursor: none;
+    transition: all 0.3s cubic-bezier(0.23,1,0.32,1);
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    border: none;
+    background: none;
+  }
+
+  .auth-tab.active {
+    background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(0,212,255,0.08));
+    color: var(--accent);
+    box-shadow: 0 0 20px rgba(0,212,255,0.1);
+  }
+
+  .auth-form { display: flex; flex-direction: column; gap: 18px; }
+  .auth-form.hidden { display: none; }
+
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+
+  .form-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+  }
+
+  .form-input {
+    padding: 13px 16px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s;
+    cursor: text;
+  }
+
+  .form-input::placeholder { color: rgba(136,146,164,0.5); }
+
+  .form-input:focus {
+    border-color: rgba(0,212,255,0.4);
+    background: rgba(0,212,255,0.03);
+    box-shadow: 0 0 0 3px rgba(0,212,255,0.08);
+  }
+
+  .input-group {
+    position: relative;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 15px;
+    pointer-events: none;
+  }
+
+  .input-group .form-input { padding-left: 42px; }
+
+  .forgot {
+    font-size: 0.78rem;
+    color: var(--accent);
+    text-align: right;
+    cursor: none;
+    text-decoration: none;
+  }
+
+  .form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .check-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    cursor: none;
+  }
+
+  .check-input {
+    width: 15px; height: 15px;
+    accent-color: var(--accent);
+    cursor: none;
+  }
+
+  .submit-btn {
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: none;
+    transition: all 0.3s;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .submit-login {
+    background: linear-gradient(135deg, var(--accent), #0099cc);
+    color: #060a10;
+  }
+
+  .submit-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,212,255,0.3);
+  }
+
+  .submit-signup {
+    background: linear-gradient(135deg, var(--accent2), #6d28d9);
+    color: white;
+  }
+
+  .submit-signup:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(124,58,237,0.3);
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+
+  .google-btn {
+    padding: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: none;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .google-btn:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  .auth-side {
+    max-width: 380px;
+    padding-top: 20px;
+    position: sticky;
+    top: 100px;
+  }
+
+  .auth-side h2 {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    margin-bottom: 16px;
+    line-height: 1.1;
+  }
+
+  .auth-side p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+
+  .feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .feature-check {
+    width: 22px; height: 22px;
+    background: rgba(16,185,129,0.12);
+    border: 1px solid rgba(16,185,129,0.3);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .feature-text { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+  .feature-text strong { color: var(--text); }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  footer p { color: var(--muted); font-size: 0.82rem; }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+
+  .footer-links a {
+    color: var(--muted);
+    font-size: 0.82rem;
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: none;
+  }
+
+  .footer-links a:hover { color: var(--text); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.7s cubic-bezier(0.23,1,0.32,1);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* FLOATING PARTICLES */
+  .particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0.4;
+    animation: particleFloat linear infinite;
+  }
+
+  @keyframes particleFloat {
+    from { transform: translateY(100vh) translateX(0); opacity: 0; }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.4; }
+    to { transform: translateY(-100px) translateX(var(--drift)); opacity: 0; }
+  }
+
+  /* OTP section within signup */
+  .otp-section {
+    display: none;
+  }
+
+  .otp-inputs {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .otp-input {
+    width: 48px; height: 56px;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    outline: none;
+    font-family: 'Syne', sans-serif;
+    transition: all 0.2s;
+    cursor: text;
+  }
+
+  .otp-input:focus {
+    border-color: rgba(124,58,237,0.5);
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+  }
+
+  .resend-text {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .resend-link { color: var(--accent2); cursor: none; }
+
+  /* SUCCESS STATE */
+  .success-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    gap: 16px;
+  }
+
+  .success-icon {
+    width: 64px; height: 64px;
+    background: rgba(16,185,129,0.12);
+    border: 1px solid rgba(16,185,129,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    animation: scaleIn 0.5s cubic-bezier(0.23,1,0.32,1);
+  }
+
+  @keyframes scaleIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+  }
+
+  .success-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .success-msg { font-size: 0.85rem; color: var(--muted); text-align: center; }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .hero-visual { display: none; }
+    .modules-grid { grid-template-columns: repeat(2, 1fr); }
+    .how-grid { grid-template-columns: repeat(2, 1fr); }
+    .how-step::after { display: none; }
+    .preview-grid { grid-template-columns: 1fr; }
+    .auth-section { flex-direction: column; align-items: center; }
+    .auth-side { position: static; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 24px 60px; }
+    .features-strip { padding: 60px 24px; }
+    .modules-grid { grid-template-columns: 1fr; }
+    .how-it-works { padding: 60px 24px; }
+    .how-grid { grid-template-columns: 1fr; }
+    .preview-section { padding: 60px 24px; }
+    .auth-section { padding: 60px 24px; }
+    .auth-card { width: 100%; max-width: 440px; padding: 28px 24px; }
+    footer { flex-direction: column; gap: 20px; padding: 30px 24px; }
+    h1 { letter-spacing: -1px; }
+  }
+</style>
+</head>
+<body>
+  <div id="fp-overlay" style="display:none"
+     onclick="if(event.target===this) closeFP()"
+     class="fp-overlay">
+  <div class="fp-modal">
+    <!-- Close btn -->
+    <button class="fp-close" onclick="closeFP()">✕</button>
+ 
+    <!-- Step pills -->
+    <div class="fp-steps">
+      <div class="fp-step active" id="fps1"><span>1</span> Email</div>
+      <div class="fp-conn" id="fpc1"></div>
+      <div class="fp-step" id="fps2"><span>2</span> OTP</div>
+      <div class="fp-conn" id="fpc2"></div>
+      <div class="fp-step" id="fps3"><span>3</span> New Password</div>
+    </div>
+ 
+    <!-- ── STEP 1 ── -->
+    <div id="fp-step1">
+      <h3 class="fp-title">Forgot your password?</h3>
+      <p class="fp-sub">Enter your email and we'll send a 6-digit OTP.</p>
+      <div class="fp-err" id="fperr1"></div>
+      <div class="fp-field">
+        <span class="fp-icon">📧</span>
+        <input type="email" id="fp-email" class="fp-input" placeholder="you@example.com">
+      </div>
+      <button class="fp-btn fp-btn-purple" id="fp-btn1" onclick="fpSendOTP()">
+        Send OTP →
+      </button>
+    </div>
+ 
+    <!-- ── STEP 2 ── -->
+    <div id="fp-step2" style="display:none">
+      <h3 class="fp-title">Enter OTP</h3>
+      <p class="fp-sub">Code sent to <strong id="fp-email-show" style="color:var(--accent)"></strong></p>
+      <div class="fp-err" id="fperr2"></div>
+      <div class="fp-otp-row">
+        <input type="text" class="fp-otp" maxlength="1" oninput="fpOtpNext(this,0)" onkeydown="fpOtpBack(event,0)">
+        <input type="text" class="fp-otp" maxlength="1" oninput="fpOtpNext(this,1)" onkeydown="fpOtpBack(event,1)">
+        <input type="text" class="fp-otp" maxlength="1" oninput="fpOtpNext(this,2)" onkeydown="fpOtpBack(event,2)">
+        <input type="text" class="fp-otp" maxlength="1" oninput="fpOtpNext(this,3)" onkeydown="fpOtpBack(event,3)">
+        <input type="text" class="fp-otp" maxlength="1" oninput="fpOtpNext(this,4)" onkeydown="fpOtpBack(event,4)">
+        <input type="text" class="fp-otp" maxlength="1" oninput="fpOtpNext(this,5)" onkeydown="fpOtpBack(event,5)">
+      </div>
+      <p style="text-align:center;font-size:0.78rem;color:var(--muted);margin-bottom:16px">
+        Didn't receive it?
+        <span style="color:var(--accent2);cursor:pointer;text-decoration:underline"
+              id="fp-resend" onclick="fpResend()">Resend code</span>
+      </p>
+      <button class="fp-btn fp-btn-purple" onclick="fpVerifyOTP()">Verify OTP →</button>
+      <a href="#" style="display:block;text-align:center;margin-top:12px;font-size:0.78rem;color:var(--muted)"
+         onclick="fpGoStep(1);return false">← Change email</a>
+    </div>
+ 
+    <!-- ── STEP 3 ── -->
+    <div id="fp-step3" style="display:none">
+      <h3 class="fp-title">New Password</h3>
+      <p class="fp-sub">Choose a strong password for your account.</p>
+      <div class="fp-err" id="fperr3"></div>
+      <div class="fp-field" style="margin-bottom:6px">
+        <span class="fp-icon">🔒</span>
+        <input type="password" id="fp-newpass" class="fp-input"
+               placeholder="Min. 6 characters" oninput="fpStrength(this.value)">
+      </div>
+      <div class="fp-strength-bar">
+        <div class="fp-seg" id="fpsg1"></div><div class="fp-seg" id="fpsg2"></div>
+        <div class="fp-seg" id="fpsg3"></div><div class="fp-seg" id="fpsg4"></div>
+      </div>
+      <div id="fp-strength-label" style="font-size:0.7rem;color:var(--muted);margin-bottom:14px"></div>
+      <div class="fp-field">
+        <span class="fp-icon">🔒</span>
+        <input type="password" id="fp-confirm" class="fp-input" placeholder="Confirm password">
+      </div>
+      <button class="fp-btn fp-btn-green" onclick="fpResetPassword()">Reset Password ✓</button>
+    </div>
+ 
+    <!-- ── SUCCESS ── -->
+    <div id="fp-success" style="display:none;flex-direction:column;align-items:center;gap:14px;padding:20px 0">
+      <div style="width:60px;height:60px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px">🎉</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem">Password Reset!</div>
+      <div style="font-size:0.83rem;color:var(--muted);text-align:center">You can now sign in with your new password.</div>
+      <button class="fp-btn fp-btn-purple" onclick="closeFP();switchTab('login')">Go to Sign In →</button>
+    </div>
+  </div>
+</div>
+ 
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-icon">🎙️</div>
+    Verbo<span>Mate</span> AI
+  </div>
+  <ul class="nav-links">
+    <li><a href="#modules">Features</a></li>
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#preview">Preview</a></li>
+  </ul>
+  <div class="nav-btns">
+    <button class="btn-ghost" onclick="switchTab('login'); document.getElementById('auth').scrollIntoView({behavior:'smooth'})">Login</button>
+    <button class="btn-primary" onclick="switchTab('signup'); document.getElementById('auth').scrollIntoView({behavior:'smooth'})">Sign Up Free</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="grid-lines"></div>
+  <div class="particles" id="particles"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="badge-dot"></div>
+      AI-POWERED ENGLISH COMMUNICATION TRAINER
+    </div>
+
+    <h1>
+      <span class="accent">Speak Fluent.</span>
+      <span class="line2">Think Clear.</span>
+      <span class="line2" style="color: var(--muted); font-size:0.75em; font-weight:400;">Write Perfect.</span>
+    </h1>
+
+    <p class="hero-desc">
+      Real-time grammar correction, accent analysis, writing improvement, and confidence coaching — powered by AI. Built specifically for Indian English speakers to master speaking, listening, and writing skills.
+    </p>
+
+    <div class="hero-ctas">
+      <a href="#auth" class="cta-main" onclick="switchTab('signup')">
+        Start Learning Free
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a href="#preview" class="cta-secondary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M6.5 5.5l4 2.5-4 2.5V5.5z" fill="currentColor"/>
+        </svg>
+        See It In Action
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">6<span>+</span></div>
+        <div class="stat-label">AI Modules</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">100<span>+</span></div>
+        <div class="stat-label">Video Lessons</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">98<span>%</span></div>
+        <div class="stat-label">Accuracy</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Mockup -->
+  <div class="hero-visual">
+    <div class="phone-mockup">
+      <div class="phone-header">
+        <div class="phone-avatar">🤖</div>
+        <div>
+          <div class="phone-name">VerboMate AI Tutor</div>
+          <div class="phone-status"><span class="status-dot"></span> Active session</div>
+        </div>
+      </div>
+      <div class="chat-msgs">
+        <div class="msg msg-ai" style="animation-delay:0.2s">
+          <div class="msg-avatar">🤖</div>
+          <div>
+            <div class="msg-bubble">Tell me about yourself in English. I'll correct you in real-time!</div>
+          </div>
+        </div>
+        <div class="msg msg-user" style="animation-delay:0.6s">
+          <div class="msg-avatar">👤</div>
+          <div>
+            <div class="msg-bubble">I am knowing English since 5 years and I want to improving my speaking.</div>
+            <div class="correction-tag">⚠️ 2 grammar errors detected</div>
+          </div>
+        </div>
+        <div class="msg msg-ai" style="animation-delay:1s">
+          <div class="msg-avatar">🤖</div>
+          <div>
+            <div class="msg-bubble">
+              ✅ <strong>Corrected:</strong> "I <em>have known</em> English <em>for</em> 5 years and I want to <em>improve</em> my speaking."<br><br>
+              <span style="color:var(--gold); font-size:0.78rem">💡 "knowing" → present perfect "have known" for duration</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="score-bar">
+        <div class="score-row"><span>Grammar Score</span><span class="score-val">72%</span></div>
+        <div class="bar-track"><div class="bar-fill bar-accent" style="width:72%"></div></div>
+        <div class="score-row"><span>Confidence Level</span><span class="score-val">85%</span></div>
+        <div class="bar-track"><div class="bar-fill bar-green" style="width:85%"></div></div>
+        <div class="score-row"><span>Fluency</span><span class="score-val">68%</span></div>
+        <div class="bar-track"><div class="bar-fill bar-purple" style="width:68%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="features-strip" id="modules">
+  <div class="section-label reveal">
+    <div class="label-line"></div>
+    <span class="label-text">6 Core Modules</span>
+  </div>
+  <h2 class="section-title reveal">Everything you need<br><span class="dim">to master English.</span></h2>
+
+  <div class="modules-grid">
+    <div class="module-card reveal" style="transition-delay:0.1s">
+      <div class="module-icon icon-blue">💬</div>
+      <div class="module-name">AI Chatbot</div>
+      <div class="module-desc">Conversational practice with real-time grammar correction, explainable feedback, and domain-specific interview simulation for tech, medical, and business roles.</div>
+      <div class="module-tags">
+        <span class="tag tag-blue">Interview Mode</span>
+        <span class="tag tag-blue">Grammar AI</span>
+        <span class="tag tag-blue">Real-time</span>
+      </div>
+    </div>
+    <div class="module-card reveal" style="transition-delay:0.2s">
+      <div class="module-icon icon-purple">🎙️</div>
+      <div class="module-name">Speech Practice</div>
+      <div class="module-desc">Speak and get instant analysis — accent correction, filler word detection, pace analysis, and anxiety scoring to build confident speaking skills.</div>
+      <div class="module-tags">
+        <span class="tag tag-purple">Accent AI</span>
+        <span class="tag tag-purple">Filler Detection</span>
+        <span class="tag tag-purple">Pace Analysis</span>
+      </div>
+    </div>
+    <div class="module-card reveal" style="transition-delay:0.3s">
+      <div class="module-icon icon-gold">⏱️</div>
+      <div class="module-name">Jam Session</div>
+      <div class="module-desc">Timed speaking challenges on any topic. Get a full IELTS-style band score report with fluency, coherence, and vocabulary breakdown.</div>
+      <div class="module-tags">
+        <span class="tag tag-gold">Band Score</span>
+        <span class="tag tag-gold">Timed Mode</span>
+        <span class="tag tag-gold">Full Report</span>
+      </div>
+    </div>
+    <div class="module-card reveal" style="transition-delay:0.4s">
+      <div class="module-icon icon-green">📊</div>
+      <div class="module-name">Progress Tracker</div>
+      <div class="module-desc">Track your growth over time with detailed analytics. AI detects repeated mistakes and suggests personalized lessons to fix weak areas.</div>
+      <div class="module-tags">
+        <span class="tag tag-green">Analytics</span>
+        <span class="tag tag-green">Weak Area Detection</span>
+        <span class="tag tag-green">Smart Tips</span>
+      </div>
+    </div>
+    <div class="module-card reveal" style="transition-delay:0.5s">
+      <div class="module-icon icon-pink">✍️</div>
+      <div class="module-name">Writing Lab</div>
+      <div class="module-desc">Practice essays, emails, and reports with AI-powered grammar checking, style suggestions, and vocabulary enhancement for professional writing.</div>
+      <div class="module-tags">
+        <span class="tag tag-pink">Essay Mode</span>
+        <span class="tag tag-pink">Email Writing</span>
+        <span class="tag tag-pink">Style Check</span>
+      </div>
+    </div>
+    <div class="module-card reveal" style="transition-delay:0.6s">
+      <div class="module-icon icon-red">📹</div>
+      <div class="module-name">Video Library</div>
+      <div class="module-desc">Curated video lessons covering grammar rules, pronunciation tips, common mistakes by Indian speakers, and interview preparation guides.</div>
+      <div class="module-tags">
+        <span class="tag tag-red">100+ Videos</span>
+        <span class="tag tag-red">Expert Teachers</span>
+        <span class="tag tag-red">Subtitles</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works" id="how-it-works">
+  <div class="section-label reveal">
+    <div class="label-line"></div>
+    <span class="label-text">How It Works</span>
+  </div>
+  <h2 class="section-title reveal">Simple steps to<br><span class="dim">fluent English.</span></h2>
+
+  <div class="how-grid">
+    <div class="how-step reveal">
+      <div class="step-num">1</div>
+      <div class="step-title">Create Your Profile</div>
+      <div class="step-desc">Sign up and tell us your current English level and goals — interview prep, daily conversation, or academic writing.</div>
+    </div>
+    <div class="how-step reveal" style="transition-delay:0.1s">
+      <div class="step-num">2</div>
+      <div class="step-title">Practice Daily</div>
+      <div class="step-desc">Chat with AI, record your speech, write essays, or watch video lessons. The app adapts to your schedule.</div>
+    </div>
+    <div class="how-step reveal" style="transition-delay:0.2s">
+      <div class="step-num">3</div>
+      <div class="step-title">Get Instant Feedback</div>
+      <div class="step-desc">Every session gives you detailed corrections, explanations, and scores so you know exactly what to improve.</div>
+    </div>
+    <div class="how-step reveal" style="transition-delay:0.3s">
+      <div class="step-num">4</div>
+      <div class="step-title">Track & Master</div>
+      <div class="step-desc">Watch your progress charts grow. AI identifies patterns in your mistakes and recommends targeted lessons.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PREVIEW SECTION -->
+<section class="preview-section" id="preview">
+  <div class="section-label reveal">
+    <div class="label-line"></div>
+    <span class="label-text">See It In Action</span>
+  </div>
+  <h2 class="section-title reveal">What you'll experience<br><span class="dim">inside the app.</span></h2>
+
+  <div class="preview-grid">
+    <!-- Chat Preview -->
+    <div class="preview-card reveal">
+      <div class="preview-header">
+        <div class="preview-dots">
+          <div class="preview-dot" style="background:#ef4444"></div>
+          <div class="preview-dot" style="background:#f59e0b"></div>
+          <div class="preview-dot" style="background:#10b981"></div>
+        </div>
+        <div class="preview-title">AI Chatbot — Interview Mode</div>
+      </div>
+      <div class="preview-body">
+        <div class="chat-preview">
+          <div class="chat-msg ai">
+            <div class="chat-avatar ai">🤖</div>
+            <div class="chat-bubble">Welcome to your mock interview! I'm your AI interviewer today. Let's start with: Tell me about a challenging project you worked on.</div>
+          </div>
+          <div class="chat-msg user">
+            <div class="chat-avatar human">👤</div>
+            <div class="chat-bubble">I was working on a project where we have to integrate payment gateway. It was very challenging because of tight deadline.</div>
+          </div>
+          <div class="chat-msg ai">
+            <div class="chat-avatar ai">🤖</div>
+            <div class="chat-bubble">
+              <span style="color:var(--accent3)">✓ Good answer structure!</span><br><br>
+              <span style="color:var(--gold)">📝 Corrections:</span><br>
+              • "we have to" → "we <em>had to</em>" (past tense)<br>
+              • "tight deadline" → "<em>a</em> tight deadline" (article)
+            </div>
+          </div>
+          <div class="chat-msg ai">
+            <div class="chat-avatar ai">🤖</div>
+            <div class="typing-indicator">
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Speech Preview -->
+    <div class="preview-card reveal" style="transition-delay:0.1s">
+      <div class="preview-header">
+        <div class="preview-dots">
+          <div class="preview-dot" style="background:#ef4444"></div>
+          <div class="preview-dot" style="background:#f59e0b"></div>
+          <div class="preview-dot" style="background:#10b981"></div>
+        </div>
+        <div class="preview-title">Speech Practice — Live Analysis</div>
+      </div>
+      <div class="preview-body speech-preview">
+        <div class="waveform">
+          <div class="wave-bar" style="animation-delay:0s"></div>
+          <div class="wave-bar" style="animation-delay:0.1s"></div>
+          <div class="wave-bar" style="animation-delay:0.2s"></div>
+          <div class="wave-bar" style="animation-delay:0.3s"></div>
+          <div class="wave-bar" style="animation-delay:0.4s"></div>
+          <div class="wave-bar" style="animation-delay:0.5s"></div>
+          <div class="wave-bar" style="animation-delay:0.6s"></div>
+          <div class="wave-bar" style="animation-delay:0.7s"></div>
+          <div class="wave-bar" style="animation-delay:0.8s"></div>
+          <div class="wave-bar" style="animation-delay:0.9s"></div>
+          <div class="wave-bar" style="animation-delay:1s"></div>
+          <div class="wave-bar" style="animation-delay:1.1s"></div>
+          <div class="wave-bar" style="animation-delay:1.2s"></div>
+          <div class="wave-bar" style="animation-delay:1.3s"></div>
+          <div class="wave-bar" style="animation-delay:1.4s"></div>
+        </div>
+        <div class="speech-metrics">
+          <div class="metric-box">
+            <div class="metric-label">Speaking Pace</div>
+            <div class="metric-value good">142 WPM ✓</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Filler Words</div>
+            <div class="metric-value warn">3 detected</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Pronunciation</div>
+            <div class="metric-value accent">87%</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Confidence</div>
+            <div class="metric-value good">High</div>
+          </div>
+        </div>
+        <div style="margin-top:16px; padding:12px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:8px; font-size:0.78rem;">
+          <span style="color:var(--gold)">💡 Tip:</span> <span style="color:var(--muted)">You said "um" 3 times. Try pausing silently instead — it sounds more confident!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Writing Preview -->
+    <div class="preview-card reveal" style="transition-delay:0.2s">
+      <div class="preview-header">
+        <div class="preview-dots">
+          <div class="preview-dot" style="background:#ef4444"></div>
+          <div class="preview-dot" style="background:#f59e0b"></div>
+          <div class="preview-dot" style="background:#10b981"></div>
+        </div>
+        <div class="preview-title">Writing Lab — Email Mode</div>
+      </div>
+      <div class="preview-body">
+        <div style="background:rgba(0,0,0,0.3); border-radius:10px; padding:16px; margin-bottom:16px; font-size:0.82rem; line-height:1.7;">
+          <div style="color:var(--muted); margin-bottom:8px;">Your draft:</div>
+          <div style="color:var(--text);">
+            Dear Sir,<br><br>
+            I am writing this mail <span style="background:rgba(239,68,68,0.2); padding:1px 4px; border-radius:3px; text-decoration:line-through; color:#f87171;">for</span><span style="background:rgba(16,185,129,0.2); padding:1px 4px; border-radius:3px; color:#34d399;"> to</span> inform you that I will be <span style="background:rgba(239,68,68,0.2); padding:1px 4px; border-radius:3px; text-decoration:line-through; color:#f87171;">taking</span><span style="background:rgba(16,185,129,0.2); padding:1px 4px; border-radius:3px; color:#34d399;"> on</span> leave tomorrow due to personal reasons.
+          </div>
+        </div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); padding:8px 12px; border-radius:8px; font-size:0.75rem;">
+            <span style="color:var(--accent3)">✓</span> <span style="color:var(--muted)">2 corrections applied</span>
+          </div>
+          <div style="background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.2); padding:8px 12px; border-radius:8px; font-size:0.75rem;">
+            <span style="color:var(--accent)">📊</span> <span style="color:var(--muted)">Formality: Professional</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video Library Preview -->
+    <div class="preview-card reveal" style="transition-delay:0.3s">
+      <div class="preview-header">
+        <div class="preview-dots">
+          <div class="preview-dot" style="background:#ef4444"></div>
+          <div class="preview-dot" style="background:#f59e0b"></div>
+          <div class="preview-dot" style="background:#10b981"></div>
+        </div>
+        <div class="preview-title">Video Library</div>
+      </div>
+      <div class="preview-body">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; gap:12px; padding:12px; background:rgba(0,0,0,0.3); border-radius:10px; border:1px solid var(--border);">
+            <div style="width:80px; height:50px; background:linear-gradient(135deg, var(--accent), var(--accent2)); border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">▶️</div>
+            <div>
+              <div style="font-weight:600; font-size:0.85rem; margin-bottom:2px;">Common Tense Mistakes by Indian Speakers</div>
+              <div style="font-size:0.72rem; color:var(--muted);">12 min • Beginner</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:12px; padding:12px; background:rgba(0,0,0,0.3); border-radius:10px; border:1px solid var(--border);">
+            <div style="width:80px; height:50px; background:linear-gradient(135deg, var(--gold), #f97316); border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">▶️</div>
+            <div>
+              <div style="font-weight:600; font-size:0.85rem; margin-bottom:2px;">Mastering the "TH" Sound</div>
+              <div style="font-size:0.72rem; color:var(--muted);">8 min • Pronunciation</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:12px; padding:12px; background:rgba(0,0,0,0.3); border-radius:10px; border:1px solid var(--border);">
+            <div style="width:80px; height:50px; background:linear-gradient(135deg, var(--accent3), #34d399); border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">▶️</div>
+            <div>
+              <div style="font-weight:600; font-size:0.85rem; margin-bottom:2px;">Interview Power Phrases</div>
+              <div style="font-size:0.72rem; color:var(--muted);">15 min • Advanced</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTH -->
+<section class="auth-section" id="auth">
+  <div class="auth-side reveal">
+    <h2>Your journey to <span style="color:var(--accent)">fluent</span> English starts here.</h2>
+    <p>Join thousands of learners improving their English communication with AI-powered real-time feedback.</p>
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-check">✓</div>
+        <div class="feature-text"><strong>No credit card required</strong> — Start completely free</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-check">✓</div>
+        <div class="feature-text"><strong>Personalized learning path</strong> based on your mistakes</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-check">✓</div>
+        <div class="feature-text"><strong>Indian English optimized</strong> — Understands your accent</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-check">✓</div>
+        <div class="feature-text"><strong>All 6 modules included</strong> — Speaking, writing, video lessons & more</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-card reveal" style="transition-delay:0.2s">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Create Account</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="auth-form" id="form-login">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-group">
+          <span class="input-icon">📧</span>
+          <input type="email" class="form-input" placeholder="you@example.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-group">
+          <span class="input-icon">🔒</span>
+          <input type="password" class="form-input" placeholder="Enter your password">
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="check-label">
+          <input type="checkbox" class="check-input"> Remember me
+        </label>
+        <a href="#" class="forgot" onclick="openFP();return false">Forgot password?</a>
+        <!-- <a href="#" class="forgot">Forgot password?</a> -->
+      </div>
+      <button class="submit-btn submit-login" onclick="handleLogin()">
+        Sign In to Dashboard →
+      </button>
+      <!-- <div class="divider">
+        <div class="divider-line"></div>
+        <span>or continue with</span>
+        <div class="divider-line"></div>
+      </div> -->
+      <!-- <button class="google-btn">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 7.294C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+        Continue with Google
+      </button> -->
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div class="auth-form hidden" id="form-signup">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <div class="input-group">
+          <span class="input-icon">👤</span>
+          <input type="text" class="form-input" placeholder="Your full name" id="signup-name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-group">
+          <span class="input-icon">📧</span>
+          <input type="email" class="form-input" placeholder="you@example.com" id="signup-email">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mobile Number</label>
+        <div class="input-group">
+          <span class="input-icon">📱</span>
+          <input type="tel" class="form-input" placeholder="+91 00000 00000">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-group">
+          <span class="input-icon">🔒</span>
+          <input type="password" class="form-input" placeholder="Create a strong password">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">English Level</label>
+        <select class="form-input" style="cursor:none; background: rgba(0,0,0,0.3);">
+          <option value="" style="background:#111827">Select your level</option>
+          <option value="beginner" style="background:#111827">Beginner</option>
+          <option value="intermediate" style="background:#111827">Intermediate</option>
+          <option value="advanced" style="background:#111827">Advanced</option>
+        </select>
+      </div>
+      <button class="submit-btn submit-signup" onclick="handleSignup()">
+        Create My Account →
+      </button>
+      <!-- <div class="divider">
+        <div class="divider-line"></div>
+        <span>or continue with</span>
+        <div class="divider-line"></div>
+      </div> -->
+      <!-- <button class="google-btn">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 7.294C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+        Sign up with Google
+      </button> -->
+    </div>
+
+    <!-- OTP SECTION -->
+    <div class="otp-section" id="otp-section">
+      <div class="form-group" style="margin-bottom:24px; text-align:center">
+        <p style="font-size:0.9rem; color:var(--muted); margin-bottom:4px">We sent a 6-digit code to</p>
+        <p style="font-weight:600; color:var(--accent)" id="otp-email-display"></p>
+      </div>
+      <div class="otp-inputs" style="margin-bottom:20px">
+        <input type="text" class="otp-input" maxlength="1" oninput="otpNext(this,0)">
+        <input type="text" class="otp-input" maxlength="1" oninput="otpNext(this,1)">
+        <input type="text" class="otp-input" maxlength="1" oninput="otpNext(this,2)">
+        <input type="text" class="otp-input" maxlength="1" oninput="otpNext(this,3)">
+        <input type="text" class="otp-input" maxlength="1" oninput="otpNext(this,4)">
+        <input type="text" class="otp-input" maxlength="1" oninput="otpNext(this,5)">
+      </div>
+      <button class="submit-btn submit-signup" style="margin-bottom:16px" onclick="verifyOTP()">
+        Verify & Continue →
+      </button>
+      <p class="resend-text">Didn't receive it? <span class="resend-link" onclick="resendOTP()">Resend code</span></p>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-state" id="success-state">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">Welcome to VerboMate!</div>
+      <div class="success-msg">Your account is ready. Redirecting to your dashboard...</div>
+      <div style="width:200px; height:4px; background:rgba(255,255,255,0.1); border-radius:4px; overflow:hidden; margin-top:8px">
+        <div style="height:100%; background:var(--accent3); animation:barGrow 2s ease both; border-radius:4px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 VerboMate AI — Built for Indian English Learners</p>
+  <ul class="footer-links">
+    <li><a href="#">Privacy Policy</a></li>
+    <li><a href="#">Terms of Service</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+  // CUSTOM CURSOR
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 6 + 'px';
+    cursor.style.top = my - 6 + 'px';
+  });
+
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx - 18 + 'px';
+    ring.style.top = ry - 18 + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  document.querySelectorAll('a, button, .module-card, .pill, .tech-card, .preview-card, .how-step').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2)';
+      ring.style.transform = 'scale(1.5)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      ring.style.transform = 'scale(1)';
+    });
+  });
+
+  // PARTICLES
+  const pContainer = document.getElementById('particles');
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = 8 + Math.random() * 12 + 's';
+    p.style.animationDelay = -Math.random() * 20 + 's';
+    p.style.setProperty('--drift', (Math.random() - 0.5) * 100 + 'px');
+    p.style.opacity = Math.random() * 0.4;
+    pContainer.appendChild(p);
+  }
+
+  // SCROLL REVEAL
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // AUTH TABS
+  function switchTab(tab) {
+    const loginTab = document.getElementById('tab-login');
+    const signupTab = document.getElementById('tab-signup');
+    const loginForm = document.getElementById('form-login');
+    const signupForm = document.getElementById('form-signup');
+    const otpSec = document.getElementById('otp-section');
+    const successSt = document.getElementById('success-state');
+
+    otpSec.style.display = 'none';
+    successSt.style.display = 'none';
+
+    if (tab === 'login') {
+      loginTab.classList.add('active');
+      signupTab.classList.remove('active');
+      loginForm.classList.remove('hidden');
+      signupForm.classList.add('hidden');
+    } else {
+      signupTab.classList.add('active');
+      loginTab.classList.remove('active');
+      signupForm.classList.remove('hidden');
+      loginForm.classList.add('hidden');
+    }
+  }
+
+  async function handleSignup() {
+    const name     = document.getElementById('signup-name').value;
+    const email    = document.getElementById('signup-email').value;
+    const password = document.querySelector('#form-signup input[type="password"]').value;
+    if (!name || !email || !password) { alert('Please fill all fields!'); return; }
+    const res  = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password })
+    });
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById('otp-email-display').textContent = email;
+      document.getElementById('form-signup').classList.add('hidden');
+      document.getElementById('otp-section').style.display = 'block';
+      setTimeout(() => document.querySelectorAll('.otp-input')[0].focus(), 100);
+    } else { alert(data.message); }
+  }
+
+  function otpNext(el, idx) {
+    if (el.value && idx < 5) {
+      document.querySelectorAll('.otp-input')[idx + 1].focus();
+    }
+  }
+  async function verifyOTP() {
+    const email = document.getElementById('otp-email-display').textContent;
+    const otp   = [...document.querySelectorAll('.otp-input')].map(i => i.value).join('');
+    if (otp.length < 6) { alert('Enter the complete 6-digit OTP!'); return; }
+    const res  = await fetch('/api/auth/verify-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, otp })
+    });
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById('otp-section').style.display = 'none';
+      document.getElementById('success-state').style.display = 'flex';
+      setTimeout(() => window.location.href = '/dashboard', 2000);
+    } else { alert(data.message); }
+  }
+  async function resendOTP() {
+    const email = document.getElementById('otp-email-display').textContent;
+    await fetch('/api/auth/resend-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const inputs = document.querySelectorAll('.otp-input');
+    inputs.forEach(i => i.value = '');
+    inputs[0].focus();
+    const tag = document.querySelector('.resend-link');
+    tag.textContent = 'Sent!';
+    setTimeout(() => tag.textContent = 'Resend code', 3000);
+  }
+  let fpResetToken = null;
+ 
+  function openFP() {
+    document.getElementById('fp-overlay').style.display = 'flex';
+    fpGoStep(1);
+    setTimeout(() => document.getElementById('fp-email').focus(), 100);
+  }
+  function closeFP() {
+    document.getElementById('fp-overlay').style.display = 'none';
+  }
+  function fpGoStep(n) {
+    [1,2,3].forEach(i => {
+      document.getElementById('fp-step'+i).style.display = (i===n)?'block':'none';
+    });
+    document.getElementById('fp-success').style.display = 'none';
+    for (let i=1;i<=3;i++) {
+      const s = document.getElementById('fps'+i);
+      s.className = 'fp-step' + (i<n?' done':i===n?' active':'');
+      s.querySelector('span').textContent = i<n?'✓':i;
+    }
+    if (document.getElementById('fpc1')) document.getElementById('fpc1').className='fp-conn'+(n>1?' done':'');
+    if (document.getElementById('fpc2')) document.getElementById('fpc2').className='fp-conn'+(n>2?' done':'');
+  }
+  function fpShowErr(id,msg) {
+    const el=document.getElementById(id);
+    el.textContent=msg;el.style.display='block';
+    setTimeout(()=>el.style.display='none',5000);
+  }
+  async function fpSendOTP() {
+    const email = document.getElementById('fp-email').value.trim().toLowerCase();
+    if (!email) { fpShowErr('fperr1','Please enter your email.'); return; }
+    const btn = document.getElementById('fp-btn1');
+    btn.disabled=true; btn.textContent='Sending...';
+    try {
+      await fetch('/api/auth/forgot-password',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email})
+      });
+      document.getElementById('fp-email-show').textContent = email;
+      fpGoStep(2);
+      setTimeout(()=>document.querySelectorAll('.fp-otp')[0].focus(),100);
+    } catch(e){ fpShowErr('fperr1','Network error. Try again.'); }
+    finally{ btn.disabled=false; btn.textContent='Send OTP →'; }
+  }
+  function fpOtpNext(el,idx) {
+    el.value=el.value.replace(/\D/g,'');
+    if(el.value&&idx<5) document.querySelectorAll('.fp-otp')[idx+1].focus();
+  }
+  function fpOtpBack(e,idx) {
+    if(e.key==='Backspace'&&!e.target.value&&idx>0)
+      document.querySelectorAll('.fp-otp')[idx-1].focus();
+  }
+  async function fpVerifyOTP() {
+    const email = document.getElementById('fp-email').value.trim().toLowerCase();
+    const otp   = [...document.querySelectorAll('.fp-otp')].map(i=>i.value).join('');
+    if(otp.length<6){fpShowErr('fperr2','Enter the complete 6-digit OTP.');return;}
+    try {
+      const res  = await fetch('/api/auth/verify-reset-otp',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email,otp})
+      });
+      const data = await res.json();
+      if(data.success){ fpResetToken=data.token; fpGoStep(3); }
+      else {
+        fpShowErr('fperr2', data.message||'Invalid OTP.');
+        document.querySelectorAll('.fp-otp').forEach(i=>{
+          i.style.borderColor='rgba(239,68,68,0.6)';
+          setTimeout(()=>i.style.borderColor='',1500);
+        });
+      }
+    } catch(e){fpShowErr('fperr2','Network error.');}
+  }
+  async function fpResend() {
+    const email = document.getElementById('fp-email').value.trim().toLowerCase();
+    const btn   = document.getElementById('fp-resend');
+    btn.textContent='Sending...';
+    try {
+      await fetch('/api/auth/forgot-password',{method:'POST',
+        headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+      document.querySelectorAll('.fp-otp').forEach(i=>i.value='');
+      document.querySelectorAll('.fp-otp')[0].focus();
+      btn.textContent='✓ Sent!';
+      setTimeout(()=>btn.textContent='Resend code',3000);
+    } catch(e){btn.textContent='Resend code';}
+  }
+  function fpStrength(val) {
+    const colors=['#ef4444','#f59e0b','#3b82f6','#10b981'];
+    const labels=['Weak','Fair','Good','Strong'];
+    let s=0;
+    if(val.length>=6)s++;if(/[A-Z]/.test(val))s++;
+    if(/\d/.test(val))s++;if(/[^A-Za-z0-9]/.test(val))s++;
+    [1,2,3,4].forEach((n,i)=>{
+      document.getElementById('fpsg'+n).style.background=i<s?colors[s-1]:'rgba(255,255,255,0.08)';
+    });
+    const lbl=document.getElementById('fp-strength-label');
+    lbl.textContent=val?(labels[s-1]||''):'';
+    lbl.style.color=s>0?colors[s-1]:'var(--muted)';
+  }
+  async function fpResetPassword() {
+    const email    = document.getElementById('fp-email').value.trim().toLowerCase();
+    const password = document.getElementById('fp-newpass').value;
+    const confirm  = document.getElementById('fp-confirm').value;
+    if(!password||password.length<6){fpShowErr('fperr3','Password must be at least 6 chars.');return;}
+    if(password!==confirm){fpShowErr('fperr3','Passwords do not match.');return;}
+    if(!fpResetToken){fpShowErr('fperr3','Session expired. Please start over.');fpGoStep(1);return;}
+    try {
+      const res  = await fetch('/api/auth/reset-password',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email,token:fpResetToken,password})
+      });
+      const data = await res.json();
+      if(data.success){
+        document.getElementById('fp-step3').style.display='none';
+        document.getElementById('fp-success').style.display='flex';
+      } else { fpShowErr('fperr3',data.message||'Something went wrong.'); }
+    } catch(e){fpShowErr('fperr3','Network error.');}
+  }
+ 
+  
+
+  async function handleLogin() {
+    const email    = document.querySelector('#form-login input[type="email"]').value;
+    const password = document.querySelector('#form-login input[type="password"]').value;
+    if (!email || !password) { alert('Please fill all fields!'); return; }
+    const res  = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (data.success) {
+      window.location.href = '/dashboard';
+    } else { alert(data.message); }
+  }
+  // Stagger reveal of module cards
+  document.querySelectorAll('.module-card').forEach((card, i) => {
+    card.style.transitionDelay = `${i * 0.1}s`;
+  });
+</script>
+</body>
+</html>

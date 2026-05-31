@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammar Mastery — VerboMate</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+:root{
+  --bg:#09090b;--surface:#111115;--card:#18181c;--card-hov:#1e1e24;
+  --border:rgba(255,255,255,0.07);--border-lit:rgba(255,255,255,0.13);
+  --cyan:#22d3ee;--cyan-dim:rgba(34,211,238,0.12);
+  --violet:#a78bfa;--violet-dim:rgba(167,139,250,0.12);
+  --emerald:#34d399;--emerald-dim:rgba(52,211,153,0.1);
+  --amber:#fbbf24;--amber-dim:rgba(251,191,36,0.1);
+  --rose:#fb7185;--rose-dim:rgba(251,113,133,0.1);
+  --sky:#38bdf8;--sky-dim:rgba(56,189,248,0.1);
+  --text-1:#fafafa;--text-2:#a1a1aa;--text-3:#71717a;
+  --sidebar-w:260px;
+  --radius:14px;--radius-sm:8px;--radius-lg:20px;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --font-serif:'Instrument Serif',serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text-1);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#27272a;border-radius:2px}
+
+/* SIDEBAR */
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow-y:auto}
+.sidebar-logo{display:flex;align-items:center;gap:11px;padding:22px 20px 20px;border-bottom:1px solid var(--border)}
+.logo-mark{width:36px;height:36px;background:linear-gradient(135deg,var(--cyan),var(--violet));border-radius:10px;display:grid;place-items:center;font-size:17px;flex-shrink:0}
+.logo-name{font-weight:800;font-size:1rem}
+.logo-name em{font-style:normal;color:var(--cyan)}
+.sidebar-xp{padding:16px 20px;border-bottom:1px solid var(--border)}
+.xp-top{display:flex;justify-content:space-between;font-size:0.72rem;color:var(--text-2);margin-bottom:8px}
+.xp-top strong{color:var(--violet)}
+.xp-bar{height:4px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--violet),var(--cyan));border-radius:99px;transition:width 1.2s}
+.nav-section{padding:12px 12px 0}
+.nav-label{font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-3);padding:6px 8px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius-sm);font-size:0.855rem;font-weight:500;color:var(--text-2);cursor:pointer;transition:all 0.15s;margin-bottom:1px;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,0.04);color:var(--text-1)}
+.nav-item.active{background:var(--emerald-dim);color:var(--emerald);font-weight:600}
+.nav-ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sidebar-user{margin-top:auto;padding:14px 16px;border-top:1px solid var(--border)}
+.user-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer}
+.user-ava{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--rose));display:grid;place-items:center;font-size:14px;font-weight:700;flex-shrink:0;color:#fff}
+.user-info{min-width:0;flex:1}
+.user-name-text{font-size:0.84rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-meta{font-size:0.7rem;color:var(--emerald)}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:90;height:60px;background:rgba(9,9,11,0.9);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:14px}
+.topbar-title{font-size:0.95rem;font-weight:700}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.streak-badge{display:flex;align-items:center;gap:5px;background:var(--amber-dim);border:1px solid rgba(251,191,36,0.2);color:var(--amber);font-size:0.76rem;font-weight:700;padding:5px 12px;border-radius:99px}
+.topbar-ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--rose));display:grid;place-items:center;font-size:13px;font-weight:700;cursor:pointer;color:#fff}
+.content{padding:28px 28px 60px;flex:1}
+
+/* PAGE HEADER */
+.page-header{display:flex;align-items:center;gap:16px;margin-bottom:24px;animation:fadeUp 0.4s ease both;flex-wrap:wrap}
+.page-ico{width:52px;height:52px;background:var(--emerald-dim);border:1px solid rgba(52,211,153,0.25);border-radius:14px;display:grid;place-items:center;font-size:24px;flex-shrink:0}
+.page-title{font-family:var(--font-serif);font-size:1.8rem;font-weight:400;letter-spacing:-0.5px}
+.page-title strong{font-style:italic;color:var(--emerald)}
+.page-sub{font-size:0.84rem;color:var(--text-2);margin-top:3px}
+.back-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius-sm);background:var(--card);border:1px solid var(--border);color:var(--text-2);font-size:0.8rem;cursor:pointer;transition:all 0.15s;text-decoration:none;margin-left:auto}
+.back-btn:hover{border-color:var(--border-lit);color:var(--text-1)}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;animation:fadeUp 0.4s 0.05s ease both}
+.mini-stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;transition:border-color 0.2s}
+.mini-stat:hover{border-color:var(--border-lit)}
+.ms-label{font-size:0.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.ms-val{font-family:var(--font-mono);font-size:1.5rem;font-weight:600;line-height:1}
+.ms-sub{font-size:0.68rem;color:var(--text-3);margin-top:4px}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:20px;animation:fadeUp 0.4s 0.08s ease both}
+.search-input{width:100%;padding:14px 20px 14px 48px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-1);font-family:var(--font);font-size:0.9rem;outline:none;transition:border-color 0.2s}
+.search-input::placeholder{color:var(--text-3)}
+.search-input:focus{border-color:var(--emerald)}
+.search-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+.search-count{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:0.72rem;color:var(--text-3);font-family:var(--font-mono);background:var(--surface);padding:2px 8px;border-radius:99px}
+
+/* TABS */
+.tabs-wrap{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px;margin-bottom:22px;animation:fadeUp 0.4s 0.1s ease both;overflow-x:auto;width:fit-content;max-width:100%}
+.tab{padding:8px 16px;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;color:var(--text-2);white-space:nowrap;flex-shrink:0}
+.tab:hover:not(.active){color:var(--text-1)}
+.tab.active{background:var(--emerald-dim);color:var(--emerald);border:1px solid rgba(52,211,153,0.2)}
+.tab.ielts.active{background:var(--violet-dim);color:var(--violet);border-color:rgba(167,139,250,0.25)}
+.tab.toefl.active{background:var(--amber-dim);color:var(--amber);border-color:rgba(251,191,36,0.25)}
+.tab.atab.active{background:var(--cyan-dim);color:var(--cyan);border-color:rgba(34,211,238,0.25)}
+.tab.ptab.active{background:var(--rose-dim);color:var(--rose);border-color:rgba(251,113,133,0.25)}
+
+/* PANELS */
+.panel{display:none;animation:fadeUp 0.3s ease both}
+.panel.active{display:block}
+
+/* CATEGORY */
+.cat-section{margin-bottom:28px}
+.cat-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.cat-label{font-size:0.92rem;font-weight:800;display:flex;align-items:center;gap:8px}
+.cat-label::before{content:'';width:4px;height:16px;border-radius:2px;display:inline-block}
+.cat-em .cat-label::before{background:var(--emerald)}
+.cat-cy .cat-label::before{background:var(--cyan)}
+.cat-vi .cat-label::before{background:var(--violet)}
+.cat-ro .cat-label::before{background:var(--rose)}
+.cat-am .cat-label::before{background:var(--amber)}
+.cat-sk .cat-label::before{background:var(--sky)}
+.cat-count{font-size:0.68rem;font-family:var(--font-mono);padding:3px 10px;border-radius:99px;margin-left:auto}
+.cat-em .cat-count{background:var(--emerald-dim);color:var(--emerald)}
+.cat-cy .cat-count{background:var(--cyan-dim);color:var(--cyan)}
+.cat-vi .cat-count{background:var(--violet-dim);color:var(--violet)}
+.cat-ro .cat-count{background:var(--rose-dim);color:var(--rose)}
+.cat-am .cat-count{background:var(--amber-dim);color:var(--amber)}
+.cat-sk .cat-count{background:var(--sky-dim);color:var(--sky)}
+
+/* TOPIC GRID */
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.topic-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all 0.22s;position:relative;overflow:hidden}
+.topic-card:hover{transform:translateY(-2px);border-color:var(--border-lit);box-shadow:0 12px 32px rgba(0,0,0,0.4)}
+.topic-card.done::after{content:'✓';position:absolute;top:10px;right:10px;width:20px;height:20px;background:var(--emerald-dim);color:var(--emerald);border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:800}
+.tc-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.tc-ico{font-size:20px;flex-shrink:0}
+.tc-title{font-size:0.84rem;font-weight:700;line-height:1.3}
+.diff-badge{display:inline-flex;align-items:center;font-size:0.58rem;font-weight:700;padding:2px 7px;border-radius:99px;margin-top:4px}
+.diff-easy{background:var(--emerald-dim);color:var(--emerald)}
+.diff-medium{background:var(--amber-dim);color:var(--amber)}
+.diff-hard{background:var(--rose-dim);color:var(--rose)}
+.diff-ielts{background:var(--violet-dim);color:var(--violet)}
+.diff-toefl{background:var(--amber-dim);color:var(--amber)}
+.tc-desc{font-size:0.72rem;color:var(--text-3);line-height:1.45;margin:8px 0 10px}
+.tc-bar{height:2px;background:rgba(255,255,255,0.05);border-radius:99px;overflow:hidden}
+.tc-fill{height:100%;background:var(--emerald);border-radius:99px;transition:width 0.8s}
+.tc-meta{display:flex;justify-content:space-between;font-size:0.62rem;color:var(--text-3);margin-top:5px}
+.no-results{text-align:center;padding:60px;color:var(--text-3);font-size:0.88rem;line-height:1.8}
+
+/* LESSON VIEWER */
+#lesson-viewer{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;display:none;animation:fadeUp 0.3s ease}
+.lv-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.lv-back{width:32px;height:32px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.04);border:1px solid var(--border);display:grid;place-items:center;cursor:pointer;font-size:14px;transition:all 0.15s;flex-shrink:0;margin-top:2px}
+.lv-back:hover{background:var(--card-hov);border-color:var(--border-lit)}
+.lv-meta{flex:1;min-width:0}
+.lv-breadcrumb{font-size:0.68rem;color:var(--text-3);margin-bottom:4px}
+.lv-title{font-size:1.15rem;font-weight:800}
+.lv-nav{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap}
+.lv-nav-btn{padding:7px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card-hov);color:var(--text-2);font-size:0.76rem;font-weight:600;cursor:pointer;transition:all 0.15s}
+.lv-nav-btn:hover{border-color:var(--border-lit);color:var(--text-1)}
+.lv-nav-btn.primary{background:var(--emerald-dim);color:var(--emerald);border-color:rgba(52,211,153,0.25)}
+
+/* LESSON BODY */
+.lesson-body{font-size:0.87rem;line-height:1.85;color:var(--text-2)}
+.lesson-body h3{font-size:0.97rem;font-weight:800;color:var(--text-1);margin:22px 0 10px}
+.lesson-body p{margin-bottom:12px}
+.rule-box{background:rgba(52,211,153,0.05);border:1px solid rgba(52,211,153,0.18);border-radius:var(--radius-sm);padding:14px 16px;margin:14px 0;color:var(--text-1)}
+.rule-box .rt{font-size:0.68rem;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.rule-box.violet{background:rgba(167,139,250,0.05);border-color:rgba(167,139,250,0.18)}
+.rule-box.violet .rt{color:var(--violet)}
+.rule-box.amber{background:rgba(251,191,36,0.05);border-color:rgba(251,191,36,0.18)}
+.rule-box.amber .rt{color:var(--amber)}
+.rule-box.rose{background:rgba(251,113,133,0.05);border-color:rgba(251,113,133,0.18)}
+.rule-box.rose .rt{color:var(--rose)}
+.ex-box{background:var(--surface);border-left:3px solid var(--cyan);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:10px 14px;margin:8px 0;font-family:var(--font-mono);font-size:0.8rem}
+.ex-box .w{color:var(--rose);text-decoration:line-through}
+.ex-box .r{color:var(--emerald)}
+.struct-box{background:var(--surface);border:1px solid var(--border-lit);border-radius:var(--radius-sm);padding:12px 16px;margin:10px 0;font-family:var(--font-mono);font-size:0.82rem;color:var(--cyan)}
+.gtable{width:100%;border-collapse:collapse;font-size:0.79rem;margin:14px 0}
+.gtable th{background:rgba(255,255,255,0.04);padding:9px 13px;text-align:left;font-weight:700;color:var(--text-1);border-bottom:1px solid var(--border)}
+.gtable td{padding:8px 13px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:top}
+.gtable tr:last-child td{border-bottom:none}
+.gtable .em{color:var(--emerald);font-family:var(--font-mono)}
+.table-wrap{overflow-x:auto;margin:10px 0}
+.lesson-complete-btn{margin-top:28px;width:100%;padding:13px;border:none;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--emerald),#059669);color:#fff;font-family:var(--font);font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.2s}
+.lesson-complete-btn:hover{opacity:0.9;transform:translateY(-1px)}
+
+/* EXAM BANNERS */
+.exam-banner{border-radius:var(--radius-lg);padding:22px 26px;margin-bottom:24px;display:flex;align-items:flex-start;gap:18px;position:relative;overflow:hidden;flex-wrap:wrap}
+.exam-banner.ielts{background:linear-gradient(135deg,rgba(167,139,250,0.1),rgba(99,102,241,0.06));border:1px solid rgba(167,139,250,0.2)}
+.exam-banner.toefl{background:linear-gradient(135deg,rgba(251,191,36,0.1),rgba(245,158,11,0.05));border:1px solid rgba(251,191,36,0.2)}
+.eb-ico{font-size:2.5rem;flex-shrink:0;margin-top:2px}
+.eb-body{flex:1}
+.eb-title{font-size:1.1rem;font-weight:800;margin-bottom:5px}
+.eb-desc{font-size:0.8rem;color:var(--text-2);line-height:1.6;margin-bottom:10px}
+.eb-tags{display:flex;gap:6px;flex-wrap:wrap}
+.eb-tag{font-size:0.66rem;font-weight:700;padding:3px 10px;border-radius:99px}
+
+/* ASSESSMENT */
+#start-screen{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px;text-align:center;animation:fadeUp 0.4s ease}
+.ss-title{font-family:var(--font-serif);font-size:1.6rem;margin:12px 0 8px}
+.ss-desc{font-size:0.84rem;color:var(--text-2);line-height:1.6;max-width:460px;margin:0 auto 28px}
+.ss-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:600px;margin:0 auto 24px}
+.ss-opt{padding:16px;border-radius:var(--radius);border:1px solid var(--border);background:rgba(255,255,255,0.02);cursor:pointer;transition:all 0.2s;text-align:left}
+.ss-opt:hover{border-color:var(--border-lit);transform:translateY(-2px)}
+.ss-opt.sel{border-color:rgba(52,211,153,0.35);background:var(--emerald-dim)}
+.ss-opt.sel-ielts{border-color:rgba(167,139,250,0.35);background:var(--violet-dim)}
+.ss-opt.sel-toefl{border-color:rgba(251,191,36,0.35);background:var(--amber-dim)}
+.ss-opt-ico{font-size:1.4rem;margin-bottom:6px}
+.ss-opt-title{font-size:0.84rem;font-weight:700;margin-bottom:2px}
+.ss-opt-desc{font-size:0.68rem;color:var(--text-2)}
+.ss-btn{padding:13px 36px;border:none;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--emerald),#059669);color:#fff;font-family:var(--font);font-size:0.92rem;font-weight:700;cursor:pointer;transition:all 0.2s}
+.ss-btn:hover{opacity:0.9;transform:translateY(-1px)}
+
+/* QUIZ */
+#quiz-area{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;display:none}
+.qprog{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.qprog-txt{font-size:0.75rem;color:var(--text-3)}
+.qprog-bar{flex:1;height:4px;background:rgba(255,255,255,0.05);border-radius:99px;overflow:hidden}
+.qprog-fill{height:100%;background:var(--emerald);border-radius:99px;transition:width 0.5s}
+.qbadge{font-size:0.62rem;font-weight:700;padding:3px 10px;border-radius:99px}
+.qcat{font-size:0.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.qtxt{font-size:1rem;font-weight:600;line-height:1.65;margin-bottom:22px;color:var(--text-1)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.opt{padding:13px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:rgba(255,255,255,0.02);color:var(--text-1);font-family:var(--font);font-size:0.84rem;cursor:pointer;transition:all 0.2s;text-align:left;line-height:1.4}
+.opt:hover:not(:disabled){border-color:var(--border-lit);background:rgba(255,255,255,0.04)}
+.opt.sel{border-color:var(--cyan);background:var(--cyan-dim);color:var(--cyan)}
+.opt.correct{border-color:var(--emerald)!important;background:var(--emerald-dim)!important;color:var(--emerald)!important}
+.opt.wrong{border-color:var(--rose)!important;background:var(--rose-dim)!important;color:var(--rose)!important}
+.opt:disabled{cursor:default}
+.qbtn{width:100%;padding:13px;border:none;border-radius:var(--radius-sm);font-family:var(--font);font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.2s;display:none}
+.qbtn.v{display:block}
+.qbtn.submit{background:linear-gradient(135deg,var(--emerald),#059669);color:#fff}
+.qbtn.next{background:var(--card-hov);border:1px solid var(--border);color:var(--text-1);margin-top:10px}
+.qbtn.next:hover{border-color:var(--border-lit)}
+.explain{background:var(--surface);border:1px solid var(--border-lit);border-radius:var(--radius);padding:20px;margin-top:14px;display:none;animation:fadeUp 0.3s ease}
+.explain.open{display:block}
+.exp-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.exp-icon{font-size:1.3rem}
+.exp-verdict{font-size:0.9rem;font-weight:700}
+.exp-rule{font-size:0.82rem;color:var(--text-2);line-height:1.7}
+.exp-rule strong{color:var(--text-1)}
+.exp-examples{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.exp-ex-title{font-size:0.68rem;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.exp-ex-item{font-size:0.78rem;color:var(--text-2);padding:5px 10px;background:rgba(255,255,255,0.02);border-radius:6px;margin-bottom:4px;border-left:2px solid var(--emerald)}
+
+/* RESULT */
+#quiz-result{display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:36px;text-align:center;animation:fadeUp 0.4s ease}
+.qr-score{font-family:var(--font-mono);font-size:3rem;font-weight:600;margin:16px 0 4px}
+.qr-label{font-size:0.84rem;color:var(--text-2);margin-bottom:20px}
+.qr-mistakes{text-align:left;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.mi{background:var(--surface);border:1px solid rgba(251,113,133,0.15);border-radius:var(--radius-sm);padding:16px;margin-bottom:10px}
+.mi-q{font-size:0.82rem;font-weight:600;margin-bottom:6px}
+.mi-yours{font-size:0.76rem;color:var(--rose);margin-bottom:3px}
+.mi-correct{font-size:0.76rem;color:var(--emerald);margin-bottom:8px}
+.mi-explain{font-size:0.75rem;color:var(--text-2);line-height:1.6;padding-top:8px;border-top:1px solid var(--border)}
+.result-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px}
+.rbtn{padding:12px 26px;border-radius:var(--radius-sm);font-family:var(--font);font-size:0.88rem;font-weight:700;cursor:pointer;transition:all 0.2s;border:none}
+.rbtn:hover{opacity:0.9;transform:translateY(-1px)}
+.rbtn.primary{background:linear-gradient(135deg,var(--emerald),#059669);color:#fff}
+.rbtn.secondary{background:var(--card-hov);border:1px solid var(--border);color:var(--text-1)}
+
+/* PROGRESS */
+.prog-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+.prog-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px}
+.pc-title{font-size:0.85rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.pc-title::before{content:'';width:3px;height:14px;background:var(--emerald);border-radius:2px}
+.hist-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:rgba(255,255,255,0.02);border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:8px}
+.hist-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.hist-info{flex:1;min-width:0}
+.hist-name{font-size:0.8rem;font-weight:600}
+.hist-meta{font-size:0.68rem;color:var(--text-3);margin-top:2px}
+.hist-score{font-family:var(--font-mono);font-size:0.85rem;font-weight:600}
+.tpi{margin-bottom:12px}
+.tpi-top{display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-2);margin-bottom:5px}
+.tpi-bar{height:4px;background:rgba(255,255,255,0.05);border-radius:99px;overflow:hidden}
+.tpi-fill{height:100%;background:var(--emerald);border-radius:99px;transition:width 1s}
+.no-data{text-align:center;padding:28px;color:var(--text-3);font-size:0.82rem}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--border-lit);border-radius:var(--radius);padding:14px 18px;font-size:0.84rem;z-index:999;display:flex;align-items:center;gap:10px;box-shadow:0 16px 48px rgba(0,0,0,0.5);transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(.22,1,.36,1)}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* RESPONSIVE */
+@media(max-width:1100px){.opts{grid-template-columns:1fr}.prog-grid{grid-template-columns:1fr}.stats-row{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){:root{--sidebar-w:0px}.sidebar{display:none}.main{margin-left:0}.content{padding:20px}}
+@media(max-width:600px){.ss-grid{grid-template-columns:1fr 1fr}.topic-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">💬</div>
+    <div class="logo-name">Verbo<em>Mate</em></div>
+  </div>
+  <div class="sidebar-xp">
+    <div class="xp-top"><span id="sb-level">Grammar Explorer</span><strong id="sb-xp">0 XP</strong></div>
+    <div class="xp-bar"><div class="xp-fill" id="sb-xp-fill" style="width:0%"></div></div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Main</div>
+    <a class="nav-item" href="/dashboard"><span class="nav-ico">🏠</span> Dashboard</a>
+    <!-- <a class="nav-item" href="#"><span class="nav-ico">📊</span> My Progress</a>
+    <a class="nav-item" href="#"><span class="nav-ico">🏆</span> Leaderboard</a> -->
+  </div>
+  <div class="nav-section" style="margin-top:8px">
+    <div class="nav-label">Practice</div>
+    <!-- <a class="nav-item" href="/vocabulary"><span class="nav-ico">📖</span> Vocabulary</a>
+    <a class="nav-item" href="/speaking"><span class="nav-ico">🎙️</span> Speaking</a> -->
+    <a class="nav-item active" href="/grammar"><span class="nav-ico">📝</span> Grammar</a>
+    <!-- <a class="nav-item" href="#"><span class="nav-ico">🎧</span> Listening</a>
+    <a class="nav-item" href="#"><span class="nav-ico">✍️</span> Writing</a>
+    <a class="nav-item" href="#"><span class="nav-ico">💼</span> Interview Prep</a> -->
+  </div>
+  <div class="nav-section" style="margin-top:8px">
+    <!-- <div class="nav-label">Account</div>
+    <a class="nav-item" href="#"><span class="nav-ico">⚙️</span> Settings</a> -->
+    <div class="nav-item" onclick="handleLogout()"><span class="nav-ico">🚪</span> Sign Out</div>
+  </div>
+  <div class="sidebar-user">
+    <div class="user-row">
+      <div class="user-ava" id="sb-ava">?</div>
+      <div class="user-info">
+        <div class="user-name-text" id="sb-name">Loading…</div>
+        <div class="user-meta">⚡ Grammar Explorer</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<div class="main">
+  <header class="topbar">
+    <span class="topbar-title">📝 Grammar Mastery</span>
+    <div class="topbar-right">
+      <div class="streak-badge" id="streak-badge">🔥 0-day streak</div>
+      <div class="topbar-ava" id="top-ava">?</div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="page-ico">📝</div>
+      <div>
+        <div class="page-title">Grammar <strong>Mastery</strong></div>
+        <div class="page-sub" id="pg-sub">All grammar topics — searchable, structured, unlimited</div>
+      </div>
+      <a class="back-btn" href="/dashboard">← Dashboard</a>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="mini-stat"><div class="ms-label">Questions Done</div><div class="ms-val" style="color:var(--emerald)" id="stat-q">0</div><div class="ms-sub">All time</div></div>
+      <div class="mini-stat"><div class="ms-label">Accuracy</div><div class="ms-val" style="color:var(--cyan)" id="stat-a">—</div><div class="ms-sub">Lifetime</div></div>
+      <div class="mini-stat"><div class="ms-label">Sessions</div><div class="ms-val" style="color:var(--violet)" id="stat-s">0</div><div class="ms-sub">Completed</div></div>
+      <div class="mini-stat"><div class="ms-label">Best Score</div><div class="ms-val" style="color:var(--amber)" id="stat-b">—</div><div class="ms-sub">Single session</div></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-wrap">
+      <div class="tab active" onclick="switchTab('lessons')">📚 All Grammar Topics</div>
+      <div class="tab ielts" onclick="switchTab('ielts')">🎓 IELTS Prep</div>
+      <div class="tab toefl" onclick="switchTab('toefl')">📋 TOEFL Prep</div>
+      <div class="tab atab" onclick="switchTab('assess')">🎯 Assessment</div>
+      <div class="tab ptab" onclick="switchTab('progress')">📊 My Progress</div>
+    </div>
+
+    <!-- ══════ ALL GRAMMAR TOPICS ══════ -->
+    <div class="panel active" id="panel-lessons">
+      <div class="search-wrap" id="sw">
+        <span class="search-ico">🔍</span>
+        <input class="search-input" id="search-inp" type="text"
+          placeholder="Search: articles, tenses, passive voice, gerunds, IELTS, conjunctions, subjunctive…"
+          oninput="filterTopics(this.value)">
+        <span class="search-count" id="sc"></span>
+      </div>
+      <div id="topic-list"></div>
+      <div id="lesson-viewer"></div>
+    </div>
+
+    <!-- ══════ IELTS ══════ -->
+    <div class="panel" id="panel-ielts">
+      <div class="exam-banner ielts">
+        <div class="eb-ico">🎓</div>
+        <div class="eb-body">
+          <div class="eb-title" style="color:var(--violet)">IELTS Grammar Preparation</div>
+          <div class="eb-desc">Complete grammar coverage for IELTS Academic & General Training. Includes Writing Task 1 & 2 structures, Speaking Band booster patterns, Reading grammar awareness, and high-band sentence variety.</div>
+          <div class="eb-tags">
+            <span class="eb-tag" style="background:var(--violet-dim);color:var(--violet)">Band 5.5 → 9.0</span>
+            <span class="eb-tag" style="background:var(--violet-dim);color:var(--violet)">Writing Task 1 & 2</span>
+            <span class="eb-tag" style="background:var(--violet-dim);color:var(--violet)">Speaking Parts 1–3</span>
+            <span class="eb-tag" style="background:var(--violet-dim);color:var(--violet)">Complex Structures</span>
+            <span class="eb-tag" style="background:var(--violet-dim);color:var(--violet)">Hedging Language</span>
+          </div>
+        </div>
+      </div>
+      <div id="ielts-list"></div>
+    </div>
+
+    <!-- ══════ TOEFL ══════ -->
+    <div class="panel" id="panel-toefl">
+      <div class="exam-banner toefl">
+        <div class="eb-ico">📋</div>
+        <div class="eb-body">
+          <div class="eb-title" style="color:var(--amber)">TOEFL Grammar Preparation</div>
+          <div class="eb-desc">Grammar structures tested across all TOEFL iBT sections — Integrated Writing, Academic Discussion, Independent Speaking, and Reading comprehension. Focus on academic formal English.</div>
+          <div class="eb-tags">
+            <span class="eb-tag" style="background:var(--amber-dim);color:var(--amber)">TOEFL iBT 80 → 120</span>
+            <span class="eb-tag" style="background:var(--amber-dim);color:var(--amber)">Integrated Writing</span>
+            <span class="eb-tag" style="background:var(--amber-dim);color:var(--amber)">Academic Discussion</span>
+            <span class="eb-tag" style="background:var(--amber-dim);color:var(--amber)">Noun Clauses</span>
+            <span class="eb-tag" style="background:var(--amber-dim);color:var(--amber)">Reporting Verbs</span>
+          </div>
+        </div>
+      </div>
+      <div id="toefl-list"></div>
+    </div>
+
+    <!-- ══════ ASSESSMENT ══════ -->
+    <div class="panel" id="panel-assess">
+      <div id="start-screen">
+        <div style="font-size:3rem">🎯</div>
+        <div class="ss-title">Grammar Assessment</div>
+        <div class="ss-desc">Pick your mode. Every session is unique — questions never repeat until all are used. Each mistake is explained with rules and real examples.</div>
+        <div class="ss-grid">
+          <div class="ss-opt sel" onclick="selDiff('easy',this)"><div class="ss-opt-ico">🌱</div><div class="ss-opt-title">Easy</div><div class="ss-opt-desc">Basic tenses, articles, prepositions</div></div>
+          <div class="ss-opt" onclick="selDiff('medium',this)"><div class="ss-opt-ico">⚡</div><div class="ss-opt-title">Medium</div><div class="ss-opt-desc">Perfect tenses, passive, conditionals</div></div>
+          <div class="ss-opt" onclick="selDiff('hard',this)"><div class="ss-opt-ico">🔥</div><div class="ss-opt-title">Hard</div><div class="ss-opt-desc">Subjunctive, inversion, mixed conditionals</div></div>
+          <div class="ss-opt" onclick="selDiff('ielts',this)"><div class="ss-opt-ico">🎓</div><div class="ss-opt-title">IELTS Mode</div><div class="ss-opt-desc">Band 6–9 grammar structures</div></div>
+          <div class="ss-opt" onclick="selDiff('toefl',this)"><div class="ss-opt-ico">📋</div><div class="ss-opt-title">TOEFL Mode</div><div class="ss-opt-desc">Academic English grammar</div></div>
+          <div class="ss-opt" onclick="selDiff('adaptive',this)"><div class="ss-opt-ico">🤖</div><div class="ss-opt-title">Adaptive AI</div><div class="ss-opt-desc">Auto-adjusts to your level</div></div>
+        </div>
+        <button class="ss-btn" onclick="startQuiz()">Start Assessment →</button>
+      </div>
+      <div id="quiz-area"></div>
+      <div id="quiz-result"></div>
+    </div>
+
+    <!-- ══════ PROGRESS ══════ -->
+    <div class="panel" id="panel-progress">
+      <div class="prog-grid">
+        <div class="prog-card"><div class="pc-title">Session History</div><div id="hist-list"><div class="no-data">No sessions yet.</div></div></div>
+        <div class="prog-card"><div class="pc-title">Category Mastery</div><div id="cat-mastery"></div></div>
+      </div>
+      <div class="prog-card"><div class="pc-title">Mistakes to Review</div><div id="mis-list"><div class="no-data">No mistakes yet — great work!</div></div></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="t-ico">✅</span><span id="t-msg">Done</span></div>
+
+<script>
+/* ═══════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════ */
+let currentUser=null;
+let gp=loadGP();
+let selDiffVal='easy';
+let quiz={};
+let selOpt=null;
+let answered=false;
+let usedIds=new Set(gp.usedIds||[]);
+let activeTopic=null;
+let activeLesson=0;
+
+function loadGP(){try{return JSON.parse(localStorage.getItem('vm_grammar')||'{}')}catch{return{}}}
+function saveGP(){gp.usedIds=[...usedIds];localStorage.setItem('vm_grammar',JSON.stringify(gp));}
+
+/* ═══════════════════════════════════════════
+   ALL 60+ GRAMMAR TOPICS ACROSS 8 CATEGORIES
+═══════════════════════════════════════════ */
+const CATS=[
+{id:'foundations',cls:'cat-em',label:'🏗️ Foundations of English Grammar',topics:[
+  {id:'nouns',ico:'🔤',title:'Nouns — All Types',diff:'easy',desc:'Common, proper, abstract, collective, compound, countable & uncountable nouns.',lessons:[
+    {title:'Types of Nouns',body:`<h3>What is a Noun?</h3><p>A noun names a person, place, thing, idea, or quality. It is the most fundamental part of speech.</p>
+<div class="rule-box"><div class="rt">6 Types of Nouns</div>
+<strong>1. Common:</strong> dog, city, book, teacher<br>
+<strong>2. Proper:</strong> London, Ravi, Google, Monday (always capitalised)<br>
+<strong>3. Abstract:</strong> love, freedom, happiness, knowledge<br>
+<strong>4. Collective:</strong> team, flock, army, committee, crowd<br>
+<strong>5. Compound:</strong> toothbrush, notebook, swimming pool<br>
+<strong>6. Material/Concrete:</strong> water, gold, wood, plastic</div>
+<h3>Countable vs Uncountable</h3><p>This distinction controls which articles and quantifiers you can use.</p>
+<div class="struct-box">Countable → can be singular or plural: one apple / three apples<br>Uncountable → no plural form: water, advice, information, furniture</div>
+<div class="ex-box"><span class="r">✓ one apple / three apples / many apples</span><br><span class="r">✓ some water / much water / a little water</span><br><span class="w">✗ three waters / many furnitures / an advice</span></div>
+<div class="rule-box amber"><div class="rt">⚠️ Tricky Uncountable Nouns — very common mistakes!</div>
+advice, information, luggage, baggage, furniture, equipment, news, progress, research, knowledge, traffic, weather, permission, evidence, work, homework, money</div>
+<h3>Making Uncountable Nouns Countable</h3>
+<div class="ex-box"><span class="r">✓ a piece of advice | a piece of information | an item of news</span><br><span class="r">✓ a bit of luck | a stroke of luck | two pieces of luggage</span></div>`},
+    {title:'Noun Plurals — Rules & Exceptions',body:`<h3>Regular Plurals</h3>
+<div class="rule-box"><div class="rt">Rules</div>
+Most nouns: add -s → books, cars, trees<br>
+-s, -ss, -sh, -ch, -x, -z endings: add -es → buses, classes, dishes, watches<br>
+Consonant + -y: change y to i + es → city→cities, baby→babies<br>
+Vowel + -y: add -s → boy→boys, key→keys<br>
+Most -f/-fe: change to -ves → leaf→leaves, wife→wives<br>
+-o endings: varies → photos, pianos BUT tomatoes, potatoes</div>
+<h3>Irregular Plurals</h3>
+<div class="table-wrap"><table class="gtable"><tr><th>Singular</th><th>Plural</th><th>Singular</th><th>Plural</th></tr>
+<tr><td>man</td><td class="em">men</td><td>child</td><td class="em">children</td></tr>
+<tr><td>woman</td><td class="em">women</td><td>tooth</td><td class="em">teeth</td></tr>
+<tr><td>person</td><td class="em">people</td><td>foot</td><td class="em">feet</td></tr>
+<tr><td>mouse</td><td class="em">mice</td><td>goose</td><td class="em">geese</td></tr>
+<tr><td>ox</td><td class="em">oxen</td><td>criterion</td><td class="em">criteria</td></tr>
+</table></div>`}
+  ]},
+  {id:'pronouns',ico:'👤',title:'Pronouns — All Types',diff:'easy',desc:'Personal, possessive, reflexive, relative, interrogative, demonstrative, indefinite pronouns.',lessons:[
+    {title:'Complete Pronoun Guide',body:`<h3>Personal Pronouns</h3>
+<div class="table-wrap"><table class="gtable"><tr><th>Person</th><th>Subject</th><th>Object</th><th>Poss. Adj.</th><th>Poss. Pro.</th><th>Reflexive</th></tr>
+<tr><td>1st Sing.</td><td class="em">I</td><td class="em">me</td><td class="em">my</td><td class="em">mine</td><td class="em">myself</td></tr>
+<tr><td>2nd</td><td class="em">you</td><td class="em">you</td><td class="em">your</td><td class="em">yours</td><td class="em">yourself/ves</td></tr>
+<tr><td>3rd Sing. M</td><td class="em">he</td><td class="em">him</td><td class="em">his</td><td class="em">his</td><td class="em">himself</td></tr>
+<tr><td>3rd Sing. F</td><td class="em">she</td><td class="em">her</td><td class="em">her</td><td class="em">hers</td><td class="em">herself</td></tr>
+<tr><td>3rd Sing. N</td><td class="em">it</td><td class="em">it</td><td class="em">its</td><td class="em">its</td><td class="em">itself</td></tr>
+<tr><td>1st Plur.</td><td class="em">we</td><td class="em">us</td><td class="em">our</td><td class="em">ours</td><td class="em">ourselves</td></tr>
+<tr><td>3rd Plur.</td><td class="em">they</td><td class="em">them</td><td class="em">their</td><td class="em">theirs</td><td class="em">themselves</td></tr>
+</table></div>
+<h3>Relative Pronouns</h3>
+<div class="rule-box"><div class="rt">who / which / that / whose / whom</div>
+who → people (subject): The man who called is my uncle.<br>
+whom → people (object, formal): The man whom I met was kind.<br>
+which → things: The book which she read was amazing.<br>
+that → people or things (defining clauses): The girl that won the prize is here.<br>
+whose → possession: The student whose essay won is absent.</div>
+<h3>Indefinite Pronouns</h3>
+<div class="rule-box amber"><div class="rt">Singular → take singular verb</div>
+somebody, someone, something, anybody, anyone, anything, nobody, no one, nothing, everybody, everyone, everything</div>
+<div class="ex-box"><span class="r">✓ Everyone is ready. | Nobody knows. | Something is wrong.</span><br><span class="w">✗ Everyone are ready. | Nobody know.</span></div>`}
+  ]},
+  {id:'articles',ico:'📌',title:'Articles (A / An / The / Zero)',diff:'easy',desc:'Definite, indefinite, and zero article — every rule and tricky exception explained.',lessons:[
+    {title:'A vs An — The Sound Rule',body:`<h3>The Rule is About SOUND, Not Spelling</h3>
+<p>Use <strong>a</strong> before consonant sounds. Use <strong>an</strong> before vowel sounds (a, e, i, o, u).</p>
+<div class="rule-box amber"><div class="rt">⚠️ Tricky cases — sound matters more than spelling!</div>
+<strong>an</strong> hour (silent H — sounds like "our")<br>
+<strong>an</strong> honest man (silent H — sounds like "on-est")<br>
+<strong>an</strong> heir (silent H — sounds like "air")<br>
+<strong>an</strong> MBA (starts with vowel sound "em")<br>
+<strong>a</strong> university (sounds like "yoo" — consonant Y sound)<br>
+<strong>a</strong> European country (sounds like "yoo-ropean")<br>
+<strong>a</strong> one-way street (sounds like "won" — consonant W sound)<br>
+<strong>a</strong> useful tool (sounds like "yoos-ful")</div>
+<div class="ex-box"><span class="r">✓ an apple, an egg, an umbrella, an ocean, an idea</span><br><span class="r">✓ a cat, a book, a house, a dog, a table</span></div>`},
+    {title:'THE — When and When Not',body:`<h3>Use THE when…</h3>
+<div class="rule-box"><div class="rt">8 Rules for THE</div>
+1. Something already mentioned: I saw a dog. <strong>The</strong> dog was barking.<br>
+2. Unique things: <strong>the</strong> sun, <strong>the</strong> moon, <strong>the</strong> earth, <strong>the</strong> sky, <strong>the</strong> universe<br>
+3. Superlatives: <strong>the</strong> best, <strong>the</strong> tallest, <strong>the</strong> most beautiful<br>
+4. Ordinal numbers: <strong>the</strong> first, <strong>the</strong> second, <strong>the</strong> last<br>
+5. Musical instruments: play <strong>the</strong> piano, <strong>the</strong> guitar, <strong>the</strong> violin<br>
+6. Rivers, oceans, seas: <strong>the</strong> Nile, <strong>the</strong> Pacific, <strong>the</strong> Thames<br>
+7. Countries with plural/republic in name: <strong>the</strong> USA, <strong>the</strong> UK, <strong>the</strong> Philippines<br>
+8. Decades: in <strong>the</strong> 1990s, during <strong>the</strong> eighties</div>
+<h3>Zero Article (No Article)</h3>
+<div class="rule-box amber"><div class="rt">Do NOT use any article when…</div>
+General plural nouns: <strong>Dogs</strong> are loyal. (NOT "The dogs")<br>
+Uncountable nouns in general: <strong>Water</strong> is essential.<br>
+Languages: She speaks <strong>French</strong>.<br>
+Academic subjects: She studies <strong>mathematics</strong>.<br>
+Meals: have <strong>breakfast</strong>, after <strong>lunch</strong>, at <strong>dinner</strong><br>
+Transport: by <strong>bus</strong>, by <strong>train</strong>, on <strong>foot</strong><br>
+Most countries/cities: in <strong>India</strong>, in <strong>London</strong></div>
+<div class="ex-box"><span class="w">✗ The life is beautiful. | The love is blind.</span><br><span class="r">✓ Life is beautiful. | Love is blind.</span></div>`}
+  ]},
+  {id:'adjectives',ico:'🎨',title:'Adjectives',diff:'easy',desc:'Types, order of multiple adjectives, comparatives, superlatives, and compound adjectives.',lessons:[
+    {title:'Adjectives — Complete Guide',body:`<h3>Order of Multiple Adjectives</h3>
+<p>When more than one adjective precedes a noun, there is a strict natural order:</p>
+<div class="struct-box">Opinion → Size → Age → Shape → Colour → Origin → Material → Purpose + NOUN</div>
+<div class="ex-box"><span class="r">✓ a lovely little old rectangular green French silver whittling knife</span><br><span class="r">✓ a beautiful big new red Italian leather bag</span><br><span class="r">✓ three small round blue buttons</span></div>
+<h3>Comparatives & Superlatives</h3>
+<div class="table-wrap"><table class="gtable"><tr><th>Adjective</th><th>Comparative</th><th>Superlative</th></tr>
+<tr><td>tall (1 syllable)</td><td class="em">taller (than)</td><td class="em">the tallest</td></tr>
+<tr><td>nice (1 syl, ends -e)</td><td class="em">nicer (than)</td><td class="em">the nicest</td></tr>
+<tr><td>big (1 syl, ends CVC)</td><td class="em">bigger (than)</td><td class="em">the biggest</td></tr>
+<tr><td>happy (2 syl, -y)</td><td class="em">happier (than)</td><td class="em">the happiest</td></tr>
+<tr><td>beautiful (3+ syl)</td><td class="em">more beautiful</td><td class="em">the most beautiful</td></tr>
+<tr><td>good</td><td class="em">better</td><td class="em">the best</td></tr>
+<tr><td>bad</td><td class="em">worse</td><td class="em">the worst</td></tr>
+<tr><td>far</td><td class="em">farther/further</td><td class="em">the farthest/furthest</td></tr>
+<tr><td>little (amount)</td><td class="em">less</td><td class="em">the least</td></tr>
+<tr><td>much/many</td><td class="em">more</td><td class="em">the most</td></tr>
+</table></div>
+<div class="rule-box violet"><div class="rt">As… as Comparisons</div>
+She is <strong>as tall as</strong> her brother. | It is <strong>not as expensive as</strong> I thought.<br>
+The weather is <strong>twice as hot as</strong> last year.</div>`}
+  ]},
+  {id:'adverbs',ico:'⚡',title:'Adverbs',diff:'easy',desc:'Types of adverbs, position rules, adverb vs adjective confusion, and intensifiers.',lessons:[
+    {title:'Adverbs — Full Guide',body:`<h3>Types of Adverbs</h3>
+<div class="rule-box"><div class="rt">7 Types with Examples</div>
+<strong>1. Manner:</strong> quickly, carefully, well, badly, slowly, loudly<br>
+<strong>2. Time:</strong> now, yesterday, soon, already, yet, still, recently, lately<br>
+<strong>3. Place:</strong> here, there, everywhere, abroad, nearby, indoors<br>
+<strong>4. Frequency:</strong> always, usually, often, sometimes, rarely, seldom, never<br>
+<strong>5. Degree:</strong> very, quite, rather, extremely, fairly, too, enough, slightly<br>
+<strong>6. Sentence:</strong> Fortunately, Obviously, Apparently, Surprisingly, Clearly<br>
+<strong>7. Focusing:</strong> only, even, also, just, mainly, especially, particularly</div>
+<h3>Position Rules</h3>
+<div class="ex-box"><span class="r">✓ Frequency adverbs → before main verb, after "be":</span><br><span class="r">  She <strong>always</strong> arrives early. | He is <strong>never</strong> late.</span><br><span class="r">✓ Manner adverbs → after verb or object:</span><br><span class="r">  He spoke <strong>quietly</strong>. | She plays tennis <strong>brilliantly</strong>.</span><br><span class="r">✓ Degree adverbs → before adjective/adverb:</span><br><span class="r">  She is <strong>quite</strong> tired. | He runs <strong>extremely</strong> fast.</span></div>
+<h3>Adjective vs Adverb — Common Errors</h3>
+<div class="ex-box"><span class="w">✗ She sings beautiful. | He looks badly.</span><br><span class="r">✓ She sings beautifully. (modifies verb → adverb)</span><br><span class="r">✓ He looks bad. (after linking verb → adjective)</span><br><span class="r">✓ He feels good/well. (good = healthy feeling; well = adverb or health)</span></div>`}
+  ]},
+  {id:'prepositions',ico:'📍',title:'Prepositions',diff:'easy',desc:'Time, place, direction, phrasal prepositions, and collocations with prepositions.',lessons:[
+    {title:'AT / ON / IN — Time & Place',body:`<h3>Time Prepositions</h3>
+<div class="table-wrap"><table class="gtable"><tr><th>AT (precise point)</th><th>ON (day/date)</th><th>IN (longer period)</th></tr>
+<tr><td class="em">at 5 o'clock</td><td class="em">on Monday</td><td class="em">in March</td></tr>
+<tr><td class="em">at noon/midnight</td><td class="em">on 15th March</td><td class="em">in 2020</td></tr>
+<tr><td class="em">at night</td><td class="em">on Christmas Day</td><td class="em">in the morning/evening</td></tr>
+<tr><td class="em">at the weekend</td><td class="em">on my birthday</td><td class="em">in summer/winter</td></tr>
+<tr><td class="em">at present</td><td class="em">on weekdays</td><td class="em">in the 21st century</td></tr>
+</table></div>
+<h3>Place Prepositions</h3>
+<div class="rule-box"><div class="rt">AT / ON / IN for Place</div>
+<strong>AT</strong> = specific point/location: at school, at home, at the bus stop, at the corner<br>
+<strong>ON</strong> = surface: on the table, on the wall, on floor 3, on page 5<br>
+<strong>IN</strong> = enclosed space/area: in the room, in London, in the car, in a box</div>
+<div class="rule-box amber"><div class="rt">No preposition needed</div>
+go home, come home, stay home (NOT "go to home")<br>
+arrive home, return home, be at home</div>`},
+    {title:'Common Preposition Collocations',body:`<h3>Verb + Preposition Collocations</h3>
+<div class="rule-box"><div class="rt">Most Common</div>
+agree WITH (a person) / agree ON (a plan) / agree TO (a proposal)<br>
+apologise TO someone FOR something<br>
+depend ON | rely ON | insist ON<br>
+believe IN | result IN | succeed IN<br>
+result FROM | suffer FROM | differ FROM<br>
+look forward TO | object TO | contribute TO</div>
+<h3>Adjective + Preposition</h3>
+<div class="rule-box violet"><div class="rt">Fixed Adjective Collocations</div>
+good AT / bad AT | interested IN | involved IN<br>
+afraid OF / aware OF / proud OF / tired OF / capable OF<br>
+similar TO / married TO / related TO / addicted TO<br>
+responsible FOR / famous FOR / ready FOR | satisfied WITH</div>
+<div class="ex-box"><span class="r">✓ She is good at mathematics.</span><br><span class="r">✓ He is addicted to social media.</span><br><span class="r">✓ They are responsible for the project.</span></div>`}
+  ]},
+  {id:'conjunctions',ico:'🔗',title:'Conjunctions',diff:'easy',desc:'Coordinating, subordinating, and correlative conjunctions — connecting ideas correctly.',lessons:[
+    {title:'All Types of Conjunctions',body:`<h3>Coordinating Conjunctions — FANBOYS</h3>
+<div class="struct-box">For, And, Nor, But, Or, Yet, So</div>
+<div class="rule-box"><div class="rt">Usage</div>
+<strong>and</strong> → addition: She sings and dances.<br>
+<strong>but</strong> → contrast: He tried but failed.<br>
+<strong>or</strong> → alternative: Tea or coffee?<br>
+<strong>so</strong> → result: It was raining, so I stayed home.<br>
+<strong>yet</strong> → contrast (more formal than but): It's simple, yet elegant.<br>
+<strong>for</strong> → reason (formal/literary): He stopped, for he was tired.<br>
+<strong>nor</strong> → negative alternative: She neither called nor texted.</div>
+<h3>Subordinating Conjunctions</h3>
+<div class="rule-box amber"><div class="rt">Common Subordinators by Category</div>
+<strong>Time:</strong> when, while, after, before, until, as soon as, since, once<br>
+<strong>Reason:</strong> because, since, as, now that<br>
+<strong>Contrast:</strong> although, though, even though, whereas, while<br>
+<strong>Condition:</strong> if, unless, provided that, as long as, in case<br>
+<strong>Purpose:</strong> so that, in order that<br>
+<strong>Result:</strong> so…that, such…that</div>
+<h3>Correlative Conjunctions (Pairs)</h3>
+<div class="ex-box"><span class="r">both…and: Both she and her sister speak French.</span><br><span class="r">either…or: Either call me or send a message.</span><br><span class="r">neither…nor: Neither the food nor the service was good.</span><br><span class="r">not only…but also: She is not only clever but also hardworking.</span><br><span class="r">whether…or: I can't decide whether to stay or leave.</span></div>`}
+  ]},
+]},
+{id:'tenses',cls:'cat-cy',label:'⏰ Tenses — All 12 Forms',topics:[
+  {id:'simple-tenses',ico:'🕐',title:'Simple Tenses (Present / Past / Future)',diff:'easy',desc:'Structure, uses, time expressions, and common errors for all three simple tenses.',lessons:[
+    {title:'Simple Present',body:`<h3>Structure</h3>
+<div class="struct-box">Subject + V1 (base form) | he/she/it → add -s or -es</div>
+<div class="rule-box"><div class="rt">5 Uses of Simple Present</div>
+1. <strong>Habits/routines:</strong> She reads every morning.<br>
+2. <strong>Facts & general truths:</strong> Water boils at 100°C.<br>
+3. <strong>Permanent states:</strong> He works in a hospital.<br>
+4. <strong>Scheduled future events:</strong> The train leaves at 9am tomorrow.<br>
+5. <strong>Commentary/narration:</strong> He passes, he shoots, he scores!</div>
+<div class="rule-box amber"><div class="rt">Time expressions</div>always, usually, often, sometimes, rarely, never, every day/week, on Mondays, once a week</div>
+<div class="ex-box"><span class="w">✗ She don't like coffee. | He don't want to go.</span><br><span class="r">✓ She doesn't like coffee. | He doesn't want to go.</span></div>`},
+    {title:'Simple Past',body:`<h3>Structure</h3>
+<div class="struct-box">Subject + V2 (past form) | regular: base + -ed | irregular: see list</div>
+<div class="rule-box"><div class="rt">3 Uses</div>
+1. <strong>Completed action at specific time:</strong> She visited London last year.<br>
+2. <strong>Sequence of past events:</strong> He got up, showered, and left.<br>
+3. <strong>Past habits (used to):</strong> We used to play here as children.</div>
+<div class="rule-box amber"><div class="rt">Time expressions</div>yesterday, last week/month/year, ago, in 2020, in the morning (past), when I was young</div>
+<div class="rule-box rose"><div class="rt">⚠️ Do NOT use with present perfect time words!</div><span style="color:var(--rose)">✗ I have seen her yesterday.</span><br><span style="color:var(--emerald)">✓ I saw her yesterday.</span></div>`},
+    {title:'Simple Future',body:`<h3>will vs going to vs Present Continuous</h3>
+<div class="rule-box"><div class="rt">will</div>
+Spontaneous decisions (at the moment of speaking): I'll call you later.<br>
+Promises: I will always be there for you.<br>
+Predictions (without evidence): I think it will rain tomorrow.<br>
+Offers & requests: I'll carry that for you.</div>
+<div class="rule-box violet"><div class="rt">going to</div>
+Plans already made: I'm going to visit Paris next month.<br>
+Predictions with present evidence: Look at those clouds — it's going to rain!</div>
+<div class="rule-box amber"><div class="rt">Present Continuous for Future</div>
+Fixed arrangements with time/place: I'm meeting the client tomorrow at 3pm.</div>
+<div class="ex-box"><span class="r">✓ A: The phone is ringing! B: I'll get it. (spontaneous → will)</span><br><span class="r">✓ A: Any plans for summer? B: I'm going to study abroad. (plan → going to)</span></div>`}
+  ]},
+  {id:'continuous-tenses',ico:'🔄',title:'Continuous Tenses',diff:'easy',desc:'Present, past, and future continuous — when actions are in progress.',lessons:[
+    {title:'Continuous Tenses — All Three',body:`<h3>Present Continuous</h3>
+<div class="struct-box">am/is/are + V-ing</div>
+<div class="rule-box"><div class="rt">Uses</div>
+Action happening RIGHT NOW: Look! She is dancing.<br>
+Temporary situation: I'm staying with my cousin this week.<br>
+Future arrangement: I'm having dinner with her tomorrow.<br>
+Annoying/repeated habit (+always): He is always interrupting!<br>
+Changing/developing trend: Prices are rising.</div>
+<div class="rule-box rose"><div class="rt">⚠️ Stative Verbs — NEVER use in continuous form!</div>
+know, believe, understand, mean, think (opinion), suppose<br>
+love, hate, like, want, need, prefer, wish, desire<br>
+own, have (possess), belong, contain, consist, include<br>
+see (perceive), hear, smell, taste, seem, appear, look (seem)</div>
+<div class="ex-box"><span class="w">✗ I am knowing the answer. | She is wanting to leave.</span><br><span class="r">✓ I know the answer. | She wants to leave.</span></div>
+<h3>Past Continuous</h3>
+<div class="struct-box">was/were + V-ing</div>
+<div class="ex-box"><span class="r">✓ I was reading when she called. (interrupted action)</span><br><span class="r">✓ While he was cooking, she was setting the table. (parallel)</span><br><span class="r">✓ At 8pm yesterday, they were having dinner. (at a specific past time)</span></div>
+<h3>Future Continuous</h3>
+<div class="struct-box">will be + V-ing</div>
+<div class="ex-box"><span class="r">✓ This time tomorrow, I will be sitting on the beach.</span><br><span class="r">✓ Don't call at noon — I'll be presenting to the board.</span></div>`}
+  ]},
+  {id:'perfect-tenses',ico:'✅',title:'Perfect Tenses',diff:'medium',desc:'Present perfect, past perfect, future perfect — and all perfect continuous forms.',lessons:[
+    {title:'Present Perfect vs Simple Past',body:`<h3>Present Perfect</h3>
+<div class="struct-box">have/has + V3 (past participle)</div>
+<div class="rule-box"><div class="rt">4 Key Uses</div>
+1. <strong>Life experience</strong> (ever/never): I have visited Paris.<br>
+2. <strong>Recent action with present result</strong>: She has broken her arm. (still broken now)<br>
+3. <strong>Unfinished time period</strong>: I have lived here for 3 years. (still living here)<br>
+4. <strong>Recent news</strong> (just/already/yet): Scientists have just discovered a new planet.</div>
+<div class="rule-box rose"><div class="rt">Present Perfect vs Simple Past — THE KEY DIFFERENCE</div>
+Use <strong>Present Perfect</strong> when no specific time is given, or the time is unfinished.<br>
+Use <strong>Simple Past</strong> when a specific past time is mentioned.<br><br>
+<span style="color:var(--rose)">✗ I have seen her yesterday.</span> (yesterday = specific time → use Simple Past)<br>
+<span style="color:var(--emerald)">✓ I saw her yesterday.</span><br>
+<span style="color:var(--emerald)">✓ I have seen her recently.</span> (recently = unspecified → Present Perfect)</div>
+<div class="rule-box amber"><div class="rt">Signal words for Present Perfect</div>
+ever, never, already, yet, just, recently, lately, so far, up to now, since, for, this week/month/year</div>`},
+    {title:'Past Perfect & Future Perfect',body:`<h3>Past Perfect — "The Past of the Past"</h3>
+<div class="struct-box">had + V3</div>
+<p>Used for an action completed BEFORE another past event or time.</p>
+<div class="ex-box"><span class="r">✓ By the time she arrived, he had already left.</span><br><span class="r">✓ She had never flown before she took that trip.</span><br><span class="r">✓ When I arrived at the party, they had eaten all the food.</span></div>
+<div class="rule-box amber"><div class="rt">Signal words</div>by the time, when, after, before, already, by + time, as soon as (in past narrative)</div>
+<h3>Future Perfect</h3>
+<div class="struct-box">will have + V3</div>
+<div class="ex-box"><span class="r">✓ By next year, she will have finished her degree.</span><br><span class="r">✓ By the time you read this, I will have left the country.</span><br><span class="r">✓ They will have been married for 25 years in June.</span></div>
+<h3>Perfect Continuous Forms</h3>
+<div class="table-wrap"><table class="gtable"><tr><th>Tense</th><th>Structure</th><th>Key Use</th></tr>
+<tr><td>Pres. Perf. Cont.</td><td class="em">have/has been + V-ing</td><td>Duration of ongoing activity up to now</td></tr>
+<tr><td>Past Perf. Cont.</td><td class="em">had been + V-ing</td><td>Duration before a past event</td></tr>
+<tr><td>Future Perf. Cont.</td><td class="em">will have been + V-ing</td><td>Duration up to a future point</td></tr>
+</table></div>
+<div class="ex-box"><span class="r">✓ She has been waiting for 2 hours. (still waiting — duration)</span><br><span class="r">✓ He had been working for 10 hours when he finally stopped.</span></div>`}
+  ]},
+]},
+{id:'sentence',cls:'cat-vi',label:'🏛️ Sentence Structure',topics:[
+  {id:'sva',ico:'🔗',title:'Subject-Verb Agreement',diff:'easy',desc:'All rules — collective nouns, either/neither, inverted sentences, compound subjects.',lessons:[
+    {title:'SVA — Complete Rules',body:`<h3>Core Rule</h3>
+<div class="struct-box">Singular subject + singular verb | Plural subject + plural verb</div>
+<div class="ex-box"><span class="r">✓ The dog runs. | The dogs run.</span></div>
+<h3>Collective Nouns</h3>
+<div class="rule-box"><div class="rt">Team, family, class, committee, government, jury, audience</div>
+American English: singular (The team is winning.)<br>
+British English: can be singular or plural (The team are/is winning.)</div>
+<h3>Tricky Cases</h3>
+<div class="rule-box amber"><div class="rt">Always Singular</div>
+either of / neither of / each of / one of + plural noun → singular verb<br>
+"Neither of the students <strong>knows</strong> the answer."<br>
+"Each of the books <strong>is</strong> interesting."<br>
+"One of my friends <strong>has</strong> a car."</div>
+<div class="rule-box violet"><div class="rt">Always Plural</div>
+The police, the clergy, the public, people, cattle, staff, personnel<br>
+"The police <strong>are</strong> investigating." | "The staff <strong>are</strong> on strike."</div>
+<div class="rule-box rose"><div class="rt">Always Singular (even though ends in -s)</div>
+news, mathematics, physics, economics, politics, athletics, the United States<br>
+"The news <strong>is</strong> shocking." | "Mathematics <strong>is</strong> difficult."</div>
+<div class="rule-box"><div class="rt">There is/are</div>
+Verb agrees with noun that FOLLOWS it:<br>
+"There <strong>is</strong> a book." | "There <strong>are</strong> three books."</div>`}
+  ]},
+  {id:'conditionals',ico:'🔀',title:'Conditionals — All 4 Types',diff:'medium',desc:'Zero, first, second, third, and mixed conditionals with structure and meaning.',lessons:[
+    {title:'All 4 Conditionals + Mixed',body:`<h3>Zero Conditional — General Truths & Facts</h3>
+<div class="struct-box">If + Present Simple, Present Simple</div>
+<div class="ex-box"><span class="r">✓ If you heat water to 100°C, it boils.</span><br><span class="r">✓ If it rains, the ground gets wet.</span></div>
+<h3>First Conditional — Real Future Possibility</h3>
+<div class="struct-box">If + Present Simple, will/can/may/might + V1</div>
+<div class="rule-box rose"><div class="rt">⚠️ NEVER use "will" in the if-clause!</div><span style="color:var(--rose)">✗ If it will rain, I will stay home.</span><br><span style="color:var(--emerald)">✓ If it rains, I will stay home.</span></div>
+<div class="ex-box"><span class="r">✓ If you study hard, you will pass the exam.</span><br><span class="r">✓ If she arrives early, we can start without waiting.</span></div>
+<h3>Second Conditional — Unreal Present/Future</h3>
+<div class="struct-box">If + Past Simple, would/could/might + V1</div>
+<div class="rule-box amber"><div class="rt">⚠️ Use "were" not "was" (subjunctive) for all subjects in formal grammar</div>
+"If I <strong>were</strong> you…" | "If she <strong>were</strong> here…" | "If he <strong>were</strong> rich…"</div>
+<div class="ex-box"><span class="r">✓ If I were rich, I would travel the world. (I'm not rich)</span><br><span class="r">✓ If she were taller, she could join the team. (she isn't tall enough)</span></div>
+<h3>Third Conditional — Unreal Past</h3>
+<div class="struct-box">If + Past Perfect, would/could/might + have + V3</div>
+<div class="ex-box"><span class="r">✓ If she had studied, she would have passed. (she didn't study → failed)</span><br><span class="r">✓ If they had left earlier, they wouldn't have missed the flight.</span></div>
+<h3>Mixed Conditional</h3>
+<div class="struct-box">If + Past Perfect (past cause), would + V1 (present result)</div>
+<div class="ex-box"><span class="r">✓ If I had taken the job, I would be rich now.</span><br><span class="r">✓ If she had studied medicine, she would be a doctor today.</span></div>`}
+  ]},
+  {id:'passive',ico:'🔄',title:'Passive Voice',diff:'medium',desc:'Forming passives in all tenses, impersonal passives, and causative have/get.',lessons:[
+    {title:'Passive Voice — All Tenses',body:`<h3>Structure</h3>
+<div class="struct-box">Subject + BE (conjugated) + V3 [+ by + agent]</div>
+<div class="table-wrap"><table class="gtable"><tr><th>Tense</th><th>Active</th><th>Passive</th></tr>
+<tr><td>Simple Present</td><td>She writes reports.</td><td class="em">Reports are written.</td></tr>
+<tr><td>Simple Past</td><td>They built this bridge.</td><td class="em">This bridge was built.</td></tr>
+<tr><td>Present Continuous</td><td>They are cleaning the room.</td><td class="em">The room is being cleaned.</td></tr>
+<tr><td>Past Continuous</td><td>They were repairing the road.</td><td class="em">The road was being repaired.</td></tr>
+<tr><td>Present Perfect</td><td>Someone has stolen my car.</td><td class="em">My car has been stolen.</td></tr>
+<tr><td>Past Perfect</td><td>They had completed the project.</td><td class="em">The project had been completed.</td></tr>
+<tr><td>Future Simple</td><td>They will announce results.</td><td class="em">Results will be announced.</td></tr>
+<tr><td>Modal</td><td>You must submit the form.</td><td class="em">The form must be submitted.</td></tr>
+</table></div>
+<h3>When to Use Passive</h3>
+<div class="rule-box violet"><div class="rt">4 Reasons</div>
+1. Agent unknown: The window was broken.<br>
+2. Agent unimportant: English is spoken worldwide.<br>
+3. Emphasise object: The Mona Lisa was painted by da Vinci.<br>
+4. Formal/academic writing: It was observed that…</div>`}
+  ]},
+  {id:'reported',ico:'💬',title:'Reported Speech',diff:'medium',desc:'Tense shifts, pronoun changes, time/place references, and reporting questions/commands.',lessons:[
+    {title:'Reported Speech — Complete Guide',body:`<h3>Tense Backshift</h3>
+<div class="table-wrap"><table class="gtable"><tr><th>Direct Speech</th><th>Reported Speech</th></tr>
+<tr><td>Present Simple: "I work"</td><td class="em">Past Simple: said he worked</td></tr>
+<tr><td>Present Continuous: "I am working"</td><td class="em">Past Continuous: said he was working</td></tr>
+<tr><td>Present Perfect: "I have worked"</td><td class="em">Past Perfect: said he had worked</td></tr>
+<tr><td>Past Simple: "I worked"</td><td class="em">Past Perfect: said he had worked</td></tr>
+<tr><td>will: "I will go"</td><td class="em">would: said he would go</td></tr>
+<tr><td>can: "I can help"</td><td class="em">could: said he could help</td></tr>
+<tr><td>may: "I may come"</td><td class="em">might: said he might come</td></tr>
+<tr><td>must: "I must leave"</td><td class="em">had to / must: said he had to leave</td></tr>
+</table></div>
+<h3>Time & Place Shifts</h3>
+<div class="rule-box"><div class="rt">Reference Changes</div>
+now → then | today → that day | yesterday → the day before / the previous day<br>
+tomorrow → the next day / the following day | next week → the following week<br>
+here → there | this → that | these → those | ago → before/earlier</div>
+<h3>Reporting Questions</h3>
+<div class="rule-box amber"><div class="rt">Statement word order — NO auxiliary inversion</div>
+Direct: "Where do you live?"<br>
+Reported: She asked where I lived. (NOT "where did I live")<br><br>
+Direct: "Are you ready?"<br>
+Reported: He asked if/whether I was ready.</div>
+<h3>Reporting Commands & Requests</h3>
+<div class="ex-box"><span class="r">Direct: "Close the door!" → Reported: She told him to close the door.</span><br><span class="r">Direct: "Don't touch that!" → Reported: She told him not to touch that.</span><br><span class="r">Direct: "Could you help me?" → Reported: She asked him to help her.</span></div>`}
+  ]},
+  {id:'clauses',ico:'🔀',title:'Clauses',diff:'medium',desc:'Main, subordinate, relative (defining vs non-defining), adverbial, and noun clauses.',lessons:[
+    {title:'Types of Clauses',body:`<h3>Main vs Subordinate Clauses</h3>
+<div class="rule-box"><div class="rt">Main Clause</div>
+Expresses a complete thought. Can stand alone. Has a subject and main verb.<br>
+"She went home." | "He is tired."</div>
+<div class="rule-box amber"><div class="rt">Subordinate Clause</div>
+Depends on the main clause. Cannot stand alone.<br>
+"because she was tired" | "although it was late" | "when the meeting ended"</div>
+<h3>Relative Clauses</h3>
+<div class="table-wrap"><table class="gtable"><tr><th>Type</th><th>Example</th><th>Key Point</th></tr>
+<tr><td><strong>Defining</strong></td><td class="em">The girl who called is my sister.</td><td>No commas — identifies WHICH one</td></tr>
+<tr><td><strong>Non-defining</strong></td><td class="em">My sister, who lives in Delhi, called.</td><td>Commas — adds extra info, can be removed</td></tr>
+</table></div>
+<div class="rule-box rose"><div class="rt">⚠️ Common relative clause errors</div>
+<span style="color:var(--rose)">✗ The dog which I have it is friendly.</span> (no extra pronoun!)<br>
+<span style="color:var(--emerald)">✓ The dog which I have is friendly.</span><br>
+<span style="color:var(--rose)">✗ This is the man who he helped me.</span><br>
+<span style="color:var(--emerald)">✓ This is the man who helped me.</span></div>
+<h3>Adverbial Clauses</h3>
+<div class="rule-box violet"><div class="rt">Conjunctions by Category</div>
+Time: when, while, after, before, until, as soon as, once, by the time<br>
+Reason: because, since, as, now that, seeing that<br>
+Contrast: although, even though, whereas, while, however<br>
+Condition: if, unless, provided that, as long as, given that<br>
+Purpose: so that, in order that, for fear that</div>`}
+  ]},
+  {id:'questions',ico:'❓',title:'Questions & Negatives',diff:'easy',desc:'All question types, auxiliary verbs, tag questions, negative structures.',lessons:[
+    {title:'Questions & Negatives',body:`<h3>Yes/No Questions</h3>
+<div class="struct-box">Auxiliary/Modal + Subject + Main Verb?</div>
+<div class="ex-box"><span class="r">✓ Do you like tea? | Can she swim? | Has he arrived?</span><br><span class="r">✓ Is she coming? | Were they happy? | Will it rain?</span></div>
+<h3>Wh- Questions</h3>
+<div class="struct-box">Wh-word + Auxiliary + Subject + Verb?</div>
+<div class="rule-box rose"><div class="rt">⚠️ Subject questions — NO auxiliary when wh-word IS the subject</div>
+Who called? (NOT "Who did call?") — WHO is the subject<br>
+What happened? (NOT "What did happen?") — WHAT is the subject</div>
+<div class="ex-box"><span class="r">✓ Where does she work? | Who did you meet? | What did he say?</span><br><span class="r">✓ Who wrote this? | What caused the problem?</span></div>
+<h3>Indirect Questions</h3>
+<div class="rule-box"><div class="rt">Polite form — use statement word order</div>
+"Could you tell me <strong>where she works</strong>?" (NOT "where does she work")<br>
+"Do you know <strong>what time it is</strong>?" (NOT "what time is it")</div>
+<h3>Tag Questions</h3>
+<div class="rule-box amber"><div class="rt">Rule: Positive → Negative tag | Negative → Positive tag</div>
+She is coming, <strong>isn't she</strong>? | They haven't left, <strong>have they</strong>?<br>
+He can swim, <strong>can't he</strong>? | You won't tell, <strong>will you</strong>?<br>
+Special: I am right, <strong>aren't I</strong>? | Let's go, <strong>shall we</strong>?</div>`}
+  ]},
+]},
+{id:'advanced',cls:'cat-ro',label:'🔥 Advanced Grammar',topics:[
+  {id:'subjunctive',ico:'🧩',title:'Subjunctive Mood',diff:'hard',desc:'Mandative subjunctive, were-subjunctive, and fixed formal expressions.',lessons:[
+    {title:'Subjunctive Mood',body:`<h3>What is the Subjunctive?</h3>
+<p>The subjunctive expresses hypothetical, wished, or demanded situations. It uses the BASE form (infinitive without "to") for ALL subjects — no -s, no -ed, no auxiliary.</p>
+<h3>Mandative Subjunctive (After suggest/insist/recommend/demand/require/request)</h3>
+<div class="struct-box">Verb + that + Subject + BASE FORM</div>
+<div class="ex-box"><span class="r">✓ I suggest that she <strong>take</strong> a break. (NOT "takes")</span><br><span class="r">✓ The doctor recommended that he <strong>stop</strong> smoking. (NOT "stops")</span><br><span class="r">✓ It is essential that every member <strong>be</strong> present. (NOT "is")</span><br><span class="r">✓ The board demanded that he <strong>resign</strong> immediately.</span></div>
+<h3>Were-Subjunctive (Hypothetical)</h3>
+<div class="ex-box"><span class="r">✓ If I <strong>were</strong> you, I would apologise.</span><br><span class="r">✓ I wish I <strong>were</strong> taller.</span><br><span class="r">✓ It's time we <strong>were</strong> leaving.</span><br><span class="r">✓ Suppose she <strong>were</strong> to refuse — what then?</span></div>
+<h3>Fixed Formulaic Subjunctives</h3>
+<div class="rule-box violet"><div class="rt">Common in Formal/Literary English</div>
+God save the Queen! | Long live the King! | Be that as it may.<br>
+Suffice it to say. | So be it. | Come what may. | Heaven forbid!</div>`}
+  ]},
+  {id:'inversion',ico:'↕️',title:'Inversion',diff:'hard',desc:'Negative adverbial inversion, conditional inversion, and emphatic inversion structures.',lessons:[
+    {title:'Inversion — Complete Guide',body:`<h3>What is Inversion?</h3>
+<p>Inversion means placing the auxiliary verb BEFORE the subject. Used after negative/restrictive adverbials for emphasis, and in formal conditional sentences.</p>
+<h3>Negative Adverbial Inversion</h3>
+<div class="rule-box"><div class="rt">Trigger Words → Auxiliary + Subject + Verb</div>
+Never, Rarely, Seldom, Barely, Hardly, Scarcely, Little, Not only, Not until, Only then, Only when, Under no circumstances, On no account, At no time, In no way</div>
+<div class="ex-box"><span class="r">✓ <strong>Never have I</strong> seen such beauty.</span><br><span class="r">✓ <strong>Rarely does she</strong> make mistakes.</span><br><span class="r">✓ <strong>Not only did he</strong> arrive late, but he also forgot his notes.</span><br><span class="r">✓ <strong>Under no circumstances should you</strong> open that door.</span><br><span class="r">✓ <strong>Hardly had she</strong> left when the rain started.</span><br><span class="r">✓ <strong>No sooner had he</strong> sat down than the phone rang.</span></div>
+<h3>Conditional Inversion (Formal)</h3>
+<div class="ex-box"><span class="r">Had I known → If I had known</span><br><span class="r">Were I in your position → If I were in your position</span><br><span class="r">Should you need help → If you should need help (call me)</span></div>
+<h3>Positive Inversion (After Place/Direction Adverbials)</h3>
+<div class="ex-box"><span class="r">✓ Here comes the bus! | There goes our last chance.</span><br><span class="r">✓ Into the room walked a tall stranger.</span></div>`}
+  ]},
+  {id:'gerund-inf',ico:'🔤',title:'Gerund vs Infinitive',diff:'hard',desc:'Verbs followed by gerund only, infinitive only, or both — with key meaning differences.',lessons:[
+    {title:'Gerund & Infinitive — Complete Guide',body:`<h3>Verbs Always Followed by Gerund (-ing)</h3>
+<div class="rule-box"><div class="rt">Common Gerund-Only Verbs</div>
+enjoy, avoid, finish, mind, consider, admit, deny, suggest, recommend, risk, involve, practise, delay, postpone, resist, can't help, can't stand, be worth, miss</div>
+<div class="ex-box"><span class="r">✓ She enjoys swimming. | He avoided answering. | I finished writing.</span></div>
+<h3>Verbs Always Followed by Infinitive (to + V1)</h3>
+<div class="rule-box amber"><div class="rt">Common Infinitive-Only Verbs</div>
+want, wish, hope, plan, decide, agree, refuse, manage, fail, seem, appear, expect, need, offer, promise, intend, pretend, afford, deserve, tend</div>
+<div class="ex-box"><span class="r">✓ She decided to leave. | He promised to call. | I hope to see you.</span></div>
+<h3>Verbs with BOTH — Different Meanings</h3>
+<div class="table-wrap"><table class="gtable"><tr><th>Verb</th><th>+ Gerund</th><th>+ Infinitive</th></tr>
+<tr><td><strong>remember</strong></td><td class="em">I remember meeting her. (past memory)</td><td class="em">Remember to call. (future task)</td></tr>
+<tr><td><strong>forget</strong></td><td class="em">I'll never forget seeing that. (memory)</td><td class="em">I forgot to call. (failed to do)</td></tr>
+<tr><td><strong>stop</strong></td><td class="em">He stopped smoking. (quit)</td><td class="em">She stopped to rest. (paused in order to)</td></tr>
+<tr><td><strong>try</strong></td><td class="em">Try adding salt. (experiment)</td><td class="em">Try to be on time. (attempt)</td></tr>
+<tr><td><strong>regret</strong></td><td class="em">I regret saying that. (past action)</td><td class="em">I regret to inform you. (formal announce)</td></tr>
+<tr><td><strong>mean</strong></td><td class="em">This means working hard. (involves)</td><td class="em">I mean to finish it. (intend)</td></tr>
+</table></div>`}
+  ]},
+  {id:'participle',ico:'✂️',title:'Participle Clauses',diff:'hard',desc:'Present, past, and perfect participle clauses for concise, academic writing.',lessons:[
+    {title:'Participle Clauses',body:`<h3>Present Participle Clauses (-ing)</h3>
+<p>Shows an active action — simultaneous with or just before the main clause. The IMPLIED subject must match the main clause subject.</p>
+<div class="ex-box"><span class="r">✓ Walking into the room, she noticed the change. (she was walking)</span><br><span class="r">✓ Feeling tired, he went to bed early.</span><br><span class="r">✓ Not knowing what to do, she called her mother.</span></div>
+<div class="rule-box rose"><div class="rt">⚠️ Dangling Participle — VERY Common Error in Writing!</div>
+<span style="color:var(--rose)">✗ Walking down the street, the rain started.</span> (rain doesn't walk!)<br>
+<span style="color:var(--emerald)">✓ Walking down the street, I felt the rain begin.</span></div>
+<h3>Past Participle Clauses (V3 — passive meaning)</h3>
+<div class="ex-box"><span class="r">✓ Built in 1884, the bridge is still in use.</span><br><span class="r">✓ Written by Orwell, the novel remains highly relevant.</span><br><span class="r">✓ Exhausted by the journey, they fell asleep immediately.</span></div>
+<h3>Perfect Participle Clauses (Having + V3 — completed before)</h3>
+<div class="ex-box"><span class="r">✓ Having finished the report, he went home.</span><br><span class="r">✓ Having lived in France for 10 years, she speaks perfect French.</span><br><span class="r">✓ Having been warned about the risks, he proceeded anyway.</span></div>`}
+  ]},
+  {id:'cleft',ico:'✂️',title:'Cleft Sentences',diff:'hard',desc:'IT-clefts and WH-clefts for emphasising any part of a sentence.',lessons:[
+    {title:'Cleft Sentences',body:`<h3>IT-Clefts — Emphasising Any Element</h3>
+<div class="struct-box">It + be + [FOCUS ELEMENT] + relative clause</div>
+<div class="ex-box"><span class="r">✓ <strong>It was John</strong> who broke the window. (who = person)</span><br><span class="r">✓ <strong>It was last Tuesday</strong> that she arrived. (that = time)</span><br><span class="r">✓ <strong>It is education</strong> that lies at the heart of progress. (that = thing)</span><br><span class="r">✓ <strong>It was in Paris</strong> that they first met. (where = place)</span></div>
+<div class="rule-box"><div class="rt">Relative Pronoun in IT-Clefts</div>
+Person → who or that | Thing → that or which | Time → when or that | Place → where or that</div>
+<h3>WH-Clefts (Pseudo-Clefts)</h3>
+<div class="struct-box">What + clause + be + [FOCUS ELEMENT]</div>
+<div class="ex-box"><span class="r">✓ <strong>What I need</strong> is a good rest.</span><br><span class="r">✓ <strong>What surprised everyone</strong> was his calm reaction.</span><br><span class="r">✓ <strong>What she wants</strong> is more recognition.</span><br><span class="r">✓ <strong>What bothers me most</strong> is the lack of communication.</span></div>`}
+  ]},
+  {id:'ellipsis',ico:'…',title:'Ellipsis & Substitution',diff:'hard',desc:'Avoiding repetition in English with do/do so, one/ones, so/not, and ellipsis.',lessons:[
+    {title:'Ellipsis & Substitution',body:`<h3>Ellipsis — Omitting Repeated Words</h3>
+<div class="ex-box"><span class="r">✓ She can play piano and he can [play piano] too.</span><br><span class="r">✓ I didn't expect to win, but I did [win].</span><br><span class="r">✓ He hasn't called yet, but I think he will [call].</span></div>
+<h3>DO / DO SO</h3>
+<div class="ex-box"><span class="r">✓ He said he'd fix the car, and he did (so). (= did fix the car)</span></div>
+<h3>ONE/ONES — Substituting Nouns</h3>
+<div class="ex-box"><span class="r">✓ I need a pen. Do you have one?</span><br><span class="r">✓ I like the red ones better than the blue ones.</span></div>
+<h3>SO / NOT — After Believe, Think, Hope, Expect</h3>
+<div class="ex-box"><span class="r">Will it rain? — I think so. / I hope not.</span><br><span class="r">Is she coming? — I believe so. / I'm afraid not.</span><br><span class="r">Has he passed? — It appears so. / I don't think so.</span></div>`}
+  ]},
+  {id:'mixed-conditional',ico:'🌀',title:'Mixed Conditionals',diff:'hard',desc:'Blending 2nd and 3rd conditionals to express past causes with present results.',lessons:[
+    {title:'Mixed Conditionals',body:`<h3>Type A: Past Condition → Present Result</h3>
+<div class="struct-box">If + Past Perfect (if-clause), would + V1 (main clause)</div>
+<p>The if-clause talks about an unreal past action; the main clause talks about its unreal present consequence.</p>
+<div class="ex-box"><span class="r">✓ If I had studied harder, I would have a better job now.</span><br><span class="r">✓ If she had taken the medication, she wouldn't be feeling sick now.</span><br><span class="r">✓ If he had invested in Bitcoin, he would be a millionaire today.</span></div>
+<h3>Type B: Present Unreal State → Past Result</h3>
+<div class="struct-box">If + Past Simple (if-clause), would have + V3 (main clause)</div>
+<p>The if-clause expresses an unreal present/general state; the main clause talks about a different past result.</p>
+<div class="ex-box"><span class="r">✓ If I were braver, I would have jumped from that cliff.</span><br><span class="r">✓ If she were more organised, she would have submitted the work on time.</span></div>`}
+  ]},
+]},
+{id:'word-formation',cls:'cat-am',label:'🔨 Word Formation & Vocabulary Grammar',topics:[
+  {id:'prefixes',ico:'🔧',title:'Prefixes & Suffixes',diff:'medium',desc:'Build vocabulary by understanding how prefixes and suffixes change word meaning and class.',lessons:[
+    {title:'Prefixes & Suffixes Guide',body:`<h3>Common Prefixes</h3>
+<div class="table-wrap"><table class="gtable"><tr><th>Prefix</th><th>Meaning</th><th>Examples</th></tr>
+<tr><td class="em">un-</td><td>not</td><td>unhappy, unclear, unlikely, unusual</td></tr>
+<tr><td class="em">dis-</td><td>not/opposite</td><td>disagree, dishonest, disappear, discourage</td></tr>
+<tr><td class="em">re-</td><td>again</td><td>rewrite, rebuild, reconsider, recycle</td></tr>
+<tr><td class="em">over-</td><td>too much</td><td>overwork, overeat, overestimate, overwhelm</td></tr>
+<tr><td class="em">under-</td><td>too little</td><td>underestimate, underpay, underperform</td></tr>
+<tr><td class="em">pre-</td><td>before</td><td>preview, prepare, predict, premature</td></tr>
+<tr><td class="em">mis-</td><td>wrongly</td><td>misunderstand, misuse, mislead, misinterpret</td></tr>
+<tr><td class="em">inter-</td><td>between</td><td>international, internet, interact, intervene</td></tr>
+<tr><td class="em">post-</td><td>after</td><td>postpone, postgraduate, post-war</td></tr>
+<tr><td class="em">anti-</td><td>against</td><td>antibiotic, antisocial, anti-war</td></tr>
+</table></div>
+<h3>Key Suffixes by Word Class</h3>
+<div class="table-wrap"><table class="gtable"><tr><th>Suffix</th><th>Creates</th><th>Examples</th></tr>
+<tr><td class="em">-tion/-sion</td><td>noun</td><td>education, discussion, permission</td></tr>
+<tr><td class="em">-ness</td><td>noun</td><td>happiness, kindness, darkness</td></tr>
+<tr><td class="em">-ity/-ty</td><td>noun</td><td>creativity, reality, ability, safety</td></tr>
+<tr><td class="em">-ment</td><td>noun</td><td>development, achievement, improvement</td></tr>
+<tr><td class="em">-ous/-ious</td><td>adjective</td><td>famous, dangerous, ambitious, precious</td></tr>
+<tr><td class="em">-ful/-less</td><td>adjective</td><td>hopeful/hopeless, useful/useless</td></tr>
+<tr><td class="em">-ify/-ise/-ize</td><td>verb</td><td>simplify, modernise, prioritize</td></tr>
+<tr><td class="em">-ly</td><td>adverb</td><td>quickly, carefully, apparently</td></tr>
+</table></div>`}
+  ]},
+  {id:'collocations',ico:'🤝',title:'Collocations',diff:'medium',desc:'Strong collocations — make/do/have/take, adjective+noun, adverb+adjective patterns.',lessons:[
+    {title:'Essential Collocations',body:`<h3>MAKE vs DO — The Most Confused Pair</h3>
+<div class="rule-box"><div class="rt">MAKE (create / produce)</div>
+make a mistake, make a decision, make an effort, make progress, make a suggestion, make money, make a noise, make a phone call, make an appointment, make an excuse, make friends, make a difference</div>
+<div class="rule-box amber"><div class="rt">DO (activity / work)</div>
+do homework, do research, do exercise, do the dishes, do business, do harm, do damage, do someone a favour, do your best, do the shopping, do a course</div>
+<div class="rule-box violet"><div class="rt">HAVE / TAKE / GET / GIVE</div>
+have: a shower, a break, lunch, a conversation, an argument, fun, a good time<br>
+take: a photo, a seat, an exam, a risk, a break, responsibility, notes<br>
+get: permission, better, in touch, rid of, confused, married, lost<br>
+give: advice, a speech, a hand, permission, a presentation, a hug</div>
+<h3>Adjective + Noun Collocations</h3>
+<div class="ex-box"><span class="r">heavy: traffic, rain, workload, smoker, drinker, user</span><br><span class="r">strong: coffee, accent, feeling, argument, evidence, demand</span><br><span class="r">high: temperature, speed, quality, risk, standard, expectations</span><br><span class="r">deep: sleep, breath, understanding, trouble, concern, roots</span></div>`}
+  ]},
+  {id:'phrasal-verbs',ico:'💫',title:'Phrasal Verbs',diff:'medium',desc:'200+ essential phrasal verbs by topic — business, daily life, relationships, study.',lessons:[
+    {title:'Essential Phrasal Verbs',body:`<h3>Separable vs Inseparable</h3>
+<div class="rule-box"><div class="rt">Separable — particle can move after noun, MUST move after pronoun</div>
+turn off the light | turn the light off | turn <strong>it</strong> off (✓) | turn off it (✗)</div>
+<div class="rule-box amber"><div class="rt">Inseparable — particle stays with verb always</div>
+look after the children (✓) | look the children after (✗)</div>
+<h3>By Category</h3>
+<div class="rule-box"><div class="rt">Daily Life</div>
+wake up, get up, put on (clothes), take off (clothes), go out, come back, carry on, give up, run out of, look forward to, turn up (arrive), call off (cancel)</div>
+<div class="rule-box violet"><div class="rt">Work & Study</div>
+hand in (submit), take on (hire/accept), put off (postpone), bring up (mention), go over (review), set up (establish), break down (fail), figure out (understand), come up with (invent), follow up, carry out (perform)</div>
+<div class="rule-box amber"><div class="rt">Relationships</div>
+get along/on (have a good relationship), fall out (argue), make up (reconcile), grow apart, look up to (admire), let down (disappoint), put up with (tolerate), stand by (support), fall for (fall in love)</div>`}
+  ]},
+]},
+{id:'punctuation',cls:'cat-sk',label:'✍️ Punctuation & Style',topics:[
+  {id:'punct',ico:'🔡',title:'Punctuation',diff:'easy',desc:'Commas, semicolons, colons, apostrophes, hyphens, dashes, and quotation marks.',lessons:[
+    {title:'Complete Punctuation Guide',body:`<h3>Comma — 6 Key Uses</h3>
+<div class="rule-box"><div class="rt">When to Use a Comma</div>
+1. Lists: apples, oranges, and bananas<br>
+2. Before coordinating conjunctions (FANBOYS) joining clauses: I was tired, but I continued.<br>
+3. After introductory words/phrases: However, she refused. | After the meeting, we left.<br>
+4. Non-defining relative clauses: My sister, who lives in Mumbai, called.<br>
+5. Direct address: Thank you, John. | Come here, Sarah.<br>
+6. Adjectives of equal rank: a long, difficult exam</div>
+<h3>Semicolon & Colon</h3>
+<div class="ex-box"><span class="r">Semicolon (;): joins 2 closely related main clauses:</span><br><span class="r">She was tired; she went to bed early.</span><br><span class="r">Also before however, therefore, moreover, furthermore:</span><br><span class="r">Sales dropped; however, profits remained stable.</span><br><br><span class="r">Colon (:): introduces a list, explanation, or quote:</span><br><span class="r">She bought three things: milk, bread, and eggs.</span><br><span class="r">There is one rule: never give up.</span></div>
+<h3>Apostrophe</h3>
+<div class="rule-box rose"><div class="rt">⚠️ Most Common Apostrophe Error</div>
+ITS vs IT'S:<br>
+<strong>it's</strong> = it is / it has: It's raining. | It's been a long day.<br>
+<strong>its</strong> = possessive pronoun (no apostrophe): The cat licked its paw.<br><br>
+<span style="color:var(--rose)">✗ The company changed it's policy.</span><br>
+<span style="color:var(--emerald)">✓ The company changed its policy.</span></div>`}
+  ]},
+  {id:'cohesion',ico:'🔗',title:'Cohesive Devices & Linking Words',diff:'medium',desc:'Linking words, discourse markers, reference devices — essential for IELTS & TOEFL writing.',lessons:[
+    {title:'Cohesive Devices',body:`<h3>Why Cohesion Matters</h3>
+<p>In IELTS and TOEFL, cohesion and coherence are 25% of your Writing score. Cohesive devices connect your ideas logically and make your writing flow naturally.</p>
+<div class="table-wrap"><table class="gtable"><tr><th>Function</th><th>Formal Linking Words</th></tr>
+<tr><td><strong>Addition</strong></td><td class="em">furthermore, moreover, in addition, additionally, besides, not only… but also</td></tr>
+<tr><td><strong>Contrast</strong></td><td class="em">however, nevertheless, nonetheless, on the other hand, whereas, while, yet, despite, in spite of, notwithstanding</td></tr>
+<tr><td><strong>Cause/Reason</strong></td><td class="em">because, since, as, owing to, due to, on account of</td></tr>
+<tr><td><strong>Result/Effect</strong></td><td class="em">therefore, consequently, as a result, thus, hence, accordingly, because of this</td></tr>
+<tr><td><strong>Sequence</strong></td><td class="em">firstly, secondly, subsequently, following this, thereafter, finally, in conclusion</td></tr>
+<tr><td><strong>Exemplification</strong></td><td class="em">for instance, for example, such as, namely, to illustrate, as illustrated by</td></tr>
+<tr><td><strong>Concession</strong></td><td class="em">admittedly, granted that, while it is true that, even though</td></tr>
+<tr><td><strong>Emphasis</strong></td><td class="em">indeed, in fact, certainly, above all, particularly, especially, notably</td></tr>
+</table></div>
+<div class="rule-box rose"><div class="rt">⚠️ Overuse is penalised in IELTS & TOEFL!</div>
+Do NOT start every sentence with a linking word. Mix linking words with other connection techniques: reference (this/these/such), lexical chains (synonyms), and sentence structure variety.</div>`}
+  ]},
+]},
+{id:'ielts',cls:'cat-vi',label:'🎓 IELTS Grammar',topics:[
+  {id:'ielts-complex',ico:'🎓',title:'Complex Sentence Structures (Band 7-9)',diff:'ielts',desc:'Variety of complex structures for IELTS Grammatical Range & Accuracy — the 25% criterion.',lessons:[
+    {title:'Band 7-9 Sentence Structures',body:`<h3>Why Sentence Variety = Higher Band</h3>
+<div class="table-wrap"><table class="gtable"><tr><th>Band</th><th>Grammar Description</th></tr>
+<tr><td class="em">5</td><td>Mostly simple sentences, many errors</td></tr>
+<tr><td class="em">6</td><td>Some complex sentences, errors noticeable but meaning clear</td></tr>
+<tr><td class="em">7</td><td>Variety of complex structures, majority error-free</td></tr>
+<tr><td class="em">8</td><td>Wide variety, only occasional rare errors</td></tr>
+<tr><td class="em">9</td><td>Full flexibility and accuracy at all times</td></tr>
+</table></div>
+<h3>High-Band Structures to Use</h3>
+<div class="rule-box violet"><div class="rt">Structures That Boost Band Score</div>
+1. Noun clauses: "It is widely acknowledged that…"<br>
+2. Participle clauses: "Having risen sharply, the rate now poses a threat."<br>
+3. Relative clauses: "The solution which governments must consider…"<br>
+4. Cleft sentences: "It is education that lies at the heart of…"<br>
+5. Inversion: "Not only does X cause Y, but it also leads to Z."<br>
+6. Conditional variety: "Were governments to take action…"<br>
+7. Passive voice: "It can be argued that…" / "It has been suggested that…"</div>
+<div class="ex-box"><span class="r">Band 6: Many people think that technology is changing education.</span><br><span class="r">Band 8: It is widely acknowledged that technological advancement is fundamentally transforming educational paradigms worldwide, presenting both unprecedented opportunities and significant challenges.</span></div>`}
+  ]},
+  {id:'ielts-hedging',ico:'🎯',title:'Hedging Language for IELTS',diff:'ielts',desc:'Academic hedging expressions for Writing Task 2 — avoid over-claiming and show nuance.',lessons:[
+    {title:'Hedging for IELTS Writing',body:`<h3>What is Hedging?</h3>
+<p>Hedging means softening claims to show you understand complexity and avoid over-generalisation. Band 7+ requires it.</p>
+<div class="rule-box violet"><div class="rt">Essential Hedging Structures</div>
+It would appear that… | It could be argued that… | It might be suggested that…<br>
+There is a tendency for… | This may be attributed to…<br>
+It is generally accepted that… | Research suggests that…<br>
+In many cases… | This might lead to… | There seems to be…<br>
+It is often claimed that… | Evidence tends to suggest that…</div>
+<h3>Modal Verbs for Hedging</h3>
+<div class="rule-box"><div class="rt">Certainty Scale (strong → weak)</div>
+<strong>will/must</strong> → certain: This will cause problems.<br>
+<strong>should/ought to</strong> → probable: This should improve outcomes.<br>
+<strong>would</strong> → conditional: This would require investment.<br>
+<strong>may/can</strong> → possible: This may lead to benefits.<br>
+<strong>might/could</strong> → less certain: This might suggest that…</div>
+<div class="ex-box"><span class="r">✓ Technology could be said to have transformed the way people communicate.</span><br><span class="r">✓ There is growing evidence to suggest that dietary habits may influence mental health.</span></div>`}
+  ]},
+  {id:'ielts-task1',ico:'📈',title:'Grammar for Writing Task 1',diff:'ielts',desc:'Describing graphs, charts, and maps — trend vocabulary, tense use, and comparison language.',lessons:[
+    {title:'IELTS Writing Task 1 Grammar',body:`<h3>Trend Vocabulary</h3>
+<div class="rule-box violet"><div class="rt">Verbs (+ adverbs) — Verb + Adverb Structure</div>
+RISE: increased, rose, grew, climbed, soared, shot up, surged, jumped<br>
+FALL: decreased, declined, dropped, fell, plummeted, dipped, slumped<br>
+STABLE: remained stable, stayed constant, levelled off, plateaued, fluctuated slightly<br><br>
+ADVERBS: dramatically, sharply, significantly, considerably, substantially, moderately, slightly, gradually, steadily</div>
+<div class="struct-box">Verb + Adverb: "Sales increased dramatically."<br>There was a + Adjective + Noun: "There was a dramatic increase in sales."</div>
+<h3>Tense Use in Task 1</h3>
+<div class="rule-box"><div class="rt">Tense Rules</div>
+Past data → Simple Past: "Sales rose sharply in 2010."<br>
+Up to present → Present Perfect: "Temperatures have risen by 1.5°C since 1990."<br>
+Future projections → will / is projected/expected to: "The population is projected to reach 10 billion."</div>
+<h3>Comparison Structures</h3>
+<div class="ex-box"><span class="r">✓ X was significantly higher than Y.</span><br><span class="r">✓ X was nearly double/triple that of Y.</span><br><span class="r">✓ While X increased, Y remained stable.</span><br><span class="r">✓ In contrast to X, Y showed a downward trend.</span><br><span class="r">✓ Both X and Y followed a similar pattern of growth.</span></div>`}
+  ]},
+  {id:'ielts-speaking',ico:'🗣️',title:'Grammar for IELTS Speaking',diff:'ielts',desc:'Complex structures for Parts 1, 2, and 3 — tense accuracy, discourse markers, speculation.',lessons:[
+    {title:'IELTS Speaking Grammar',body:`<h3>Part 1 — Personal Questions (Band 7+ patterns)</h3>
+<div class="ex-box"><span class="r">"I've been working as an engineer for about 3 years now." (Present Perfect Continuous)</span><br><span class="r">"I tend to prefer reading non-fiction, although I occasionally pick up a novel." (tend to + although)</span><br><span class="r">"It really depends on… | I suppose it depends on…" (hedging)</span></div>
+<h3>Part 2 — Long Turn (Cue Card) Structures</h3>
+<div class="ex-box"><span class="r">"I'd like to tell you about a time when I had the opportunity to…" (past simple)</span><br><span class="r">"Looking back, I think this experience has really shaped the way I approach…" (present perfect for relevance)</span><br><span class="r">"What struck me most was…" | "What I found particularly interesting was…" (wh-cleft)</span></div>
+<h3>Part 3 — Discussion (Band 8+ discourse)</h3>
+<div class="rule-box violet"><div class="rt">High-Band Openers</div>
+"From my perspective…" | "It seems to me that…" | "I'd argue that…"<br>
+"While I accept that…, I'd contend that…" (conceding then arguing)<br>
+"It could be argued that… although there is also a case for…"<br>
+"I would imagine that… / It's quite possible that… / I would speculate that…" (speculation)</div>`}
+  ]},
+]},
+{id:'toefl',cls:'cat-am',label:'📋 TOEFL Grammar',topics:[
+  {id:'toefl-writing',ico:'📝',title:'Integrated & Academic Writing',diff:'toefl',desc:'Grammar for TOEFL Integrated Writing and Academic Discussion — attribution and contrast structures.',lessons:[
+    {title:'TOEFL Writing Grammar',body:`<h3>Integrated Writing — Attribution Structures</h3>
+<div class="rule-box amber"><div class="rt">Reporting Verbs for Lecture Attribution</div>
+The professor argues/claims/asserts/suggests/points out/contends/maintains/emphasises that…<br>
+According to the professor…<br>
+The lecturer challenges/refutes/undermines/casts doubt on the reading's claim that…<br>
+The professor provides the example of X to illustrate/demonstrate/support…</div>
+<div class="ex-box"><span class="r">✓ "While the reading passage asserts that X is beneficial, the professor effectively challenges this by pointing out that…"</span><br><span class="r">✓ "The lecture undermines the reading's argument by providing the counterexample of…"</span><br><span class="r">✓ "In contrast to the reading's claim that X, the professor argues that Y."</span></div>
+<h3>Academic Discussion Task</h3>
+<div class="rule-box"><div class="rt">High-Score Structures</div>
+1. State position clearly: "I would contend that [position] because [reason]."<br>
+2. Build on classmate: "Building on [name]'s observation that X, I would further argue…"<br>
+3. Concede and counter: "While [name] raises a valid point about X, this perspective overlooks…"<br>
+4. Support with reason: "This is because… Furthermore, evidence suggests…"</div>`}
+  ]},
+  {id:'toefl-noun-clauses',ico:'🔤',title:'Noun Clauses & Academic Structures',diff:'toefl',desc:'That-clauses, whether/if-clauses, wh-clauses — the building blocks of TOEFL academic writing.',lessons:[
+    {title:'Noun Clauses for TOEFL',body:`<h3>That-Clauses</h3>
+<div class="struct-box">Verb/Adjective/Noun + that + Subject + Verb</div>
+<div class="ex-box"><span class="r">✓ Research has shown that exercise improves cognitive function.</span><br><span class="r">✓ It is argued that technology is transforming education.</span><br><span class="r">✓ The fact that climate change is accelerating is widely accepted.</span></div>
+<h3>Whether/If Clauses</h3>
+<div class="ex-box"><span class="r">✓ Scientists are investigating whether life exists on other planets.</span><br><span class="r">✓ The question of whether AI will replace jobs remains debated.</span><br><span class="r">✓ Researchers have examined whether this approach is cost-effective.</span></div>
+<h3>Wh-Clauses</h3>
+<div class="ex-box"><span class="r">✓ What remains unclear is the long-term impact of this policy.</span><br><span class="r">✓ How the brain processes language is still not fully understood.</span><br><span class="r">✓ Where the funds will come from is the central question.</span></div>
+<div class="rule-box amber"><div class="rt">TOEFL Reading: Pronoun Referents</div>
+TOEFL Reading frequently tests what "it", "this", "they", "such", "these" refer to. Practice identifying antecedents — the nouns that pronouns or demonstratives refer back to.</div>`}
+  ]},
+  {id:'toefl-speaking',ico:'🎤',title:'Grammar for TOEFL Speaking',diff:'toefl',desc:'Language for all 4 TOEFL Speaking tasks — clarity, attribution, and academic tone.',lessons:[
+    {title:'TOEFL Speaking Grammar',body:`<h3>Task 1 — Independent Speaking</h3>
+<div class="rule-box amber"><div class="rt">High-Score Structure</div>
+1. State position (present simple / conditional): "I strongly believe that X is the better option."<br>
+2. Reason 1 (present simple + example in past): "First, [reason]. For example, when I [past example]…"<br>
+3. Reason 2 (present simple): "Additionally, [reason]…"<br>
+4. Brief conclusion: "For these reasons, I would argue that…"</div>
+<div class="ex-box"><span class="r">✓ "I strongly believe that living in a city provides greater opportunities. First, cities offer a wider variety of career paths. For instance, when I moved to a city, I was able to find a job that matched my skills perfectly…"</span></div>
+<h3>Tasks 3 & 4 — Integrated Speaking</h3>
+<div class="ex-box"><span class="r">✓ "According to the reading/passage, [X]. However, the professor challenges this by explaining that [Y]."</span><br><span class="r">✓ "The lecture provides the specific example of [X], which illustrates the concept of [Y] mentioned in the reading."</span><br><span class="r">✓ "The professor uses [X] as evidence to support/contradict the reading's claim that [Y]."</span></div>`}
+  ]},
+]},
+];
+
+/* ═══════════════════════════════════════════
+   QUESTION BANK (Easy + Medium + Hard + IELTS + TOEFL)
+═══════════════════════════════════════════ */
+const QB={
+easy:[
+  {id:'e1',cat:'Articles',q:'___ apple a day keeps the doctor away.',opts:['A','An','The','—'],ans:1,explain:'"Apple" begins with a vowel sound, so use "an". The rule is about SOUND, not spelling.',examples:['an apple, an egg, an umbrella, an idea','an hour (silent H = vowel sound)','Compare: a cat, a book (consonant sounds)']},
+  {id:'e2',cat:'Articles',q:'She is ___ honest person.',opts:['a','an','the','no article'],ans:1,explain:'"Honest" has a silent H — it sounds like "on-est". The vowel sound means you use "an".',examples:['an hour, an honest man, an heir','Compare: a house, a horse (H is pronounced)']},
+  {id:'e3',cat:'Articles',q:'___ sun rises in the east.',opts:['A','An','The','—'],ans:2,explain:'Use "the" for unique things. There is only one sun, so it takes "the".',examples:['the moon, the earth, the sky','the president of a country, the Pope']},
+  {id:'e4',cat:'Articles',q:'Can you play ___ guitar?',opts:['a','an','the','—'],ans:2,explain:'We use "the" with musical instruments: play the piano, the guitar, the violin.',examples:['She plays the violin.','He is learning the drums.','Can you play the flute?']},
+  {id:'e5',cat:'SVA',q:'The team ___ won the championship.',opts:['have','has','are','were'],ans:1,explain:'Collective nouns like "team" take singular verbs in American English.',examples:['The class has decided.','The government has passed the law.','The committee is meeting now.']},
+  {id:'e6',cat:'Tenses',q:'She ___ to school every day.',opts:['go','goes','is going','went'],ans:1,explain:'Habits use Simple Present. With he/she/it, add -s or -es to the verb.',examples:['He reads every morning.','The bus arrives at 8am.','She practices yoga daily.']},
+  {id:'e7',cat:'Tenses',q:'Look! It ___ outside right now.',opts:['rains','rained','is raining','will rain'],ans:2,explain:'"Look!" shows something happening RIGHT NOW → Present Continuous (is/am/are + V-ing).',examples:['Look! She is dancing!','They are eating lunch now.','He is talking on the phone.']},
+  {id:'e8',cat:'Prepositions',q:'I was born ___ 1999.',opts:['at','on','in','by'],ans:2,explain:'"In" is used with years, months, seasons, and centuries.',examples:['in 1999, in January, in summer','in the 21st century, in the morning']},
+  {id:'e9',cat:'Prepositions',q:'The meeting is ___ Monday.',opts:['at','on','in','by'],ans:1,explain:'"On" is used with specific days of the week and dates.',examples:['on Tuesday, on 15 August, on Christmas Day','on the weekend, on my birthday']},
+  {id:'e10',cat:'Tenses',q:'Water ___ at 100 degrees Celsius.',opts:['boils','is boiling','boiled','will boil'],ans:0,explain:'Scientific facts and general truths always use Simple Present.',examples:['The earth orbits the sun.','Ice melts at 0°C.','Light travels faster than sound.']},
+  {id:'e11',cat:'SVA',q:'Neither of the students ___ the answer.',opts:['know','knows','are knowing','have known'],ans:1,explain:'"Neither of" always takes a singular verb. Same rule for "either of", "each of", "one of".',examples:['Either of them is welcome.','Each of the children has a book.','One of my friends has a car.']},
+  {id:'e12',cat:'SVA',q:'There ___ many reasons for this problem.',opts:['is','are','was','has been'],ans:1,explain:'In "there + be" structures, the verb agrees with the noun that follows: "reasons" is plural → "are".',examples:['There is a car outside. (singular)','There are three options. (plural)','There was a problem yesterday.']},
+  {id:'e13',cat:'Prepositions',q:'I\'ll meet you ___ the airport.',opts:['in','at','on','by'],ans:1,explain:'"At" is used for specific points/locations: at the airport, at the station, at school.',examples:['at the bus stop, at home, at work','Compare: in the city (large area)']},
+  {id:'e14',cat:'Tenses',q:'He ___ his homework before dinner yesterday.',opts:['finishes','is finishing','finished','will finish'],ans:2,explain:'"Yesterday" is a specific past time → use Simple Past (V2).',examples:['She called me last night.','They visited Paris in 2019.','I woke up at 7am.']},
+  {id:'e15',cat:'SVA',q:'The news ___ very shocking.',opts:['are','were','is','have been'],ans:2,explain:'"News" always takes a singular verb, even though it ends in -s.',examples:['The news is on at 9pm.','Mathematics is my favourite subject.','Economics is complex.']},
+  {id:'e16',cat:'Pronouns',q:'The book belongs to Sarah. It is ___.',opts:['her','hers','she\'s','herself'],ans:1,explain:'"Hers" is a possessive pronoun — it stands alone without a noun after it.',examples:['That pen is mine. / The red one is hers.','Is this yours or his?']},
+  {id:'e17',cat:'Adverbs',q:'She speaks English ___.',opts:['fluent','fluently','more fluent','most fluent'],ans:1,explain:'Adverbs (not adjectives) modify verbs. "Speaks" is a verb → use "fluently".',examples:['He drives carefully.','She sings beautifully.','They work efficiently.']},
+  {id:'e18',cat:'Conjunctions',q:'She was tired, ___ she continued working.',opts:['so','but','because','or'],ans:1,explain:'"But" expresses contrast. She was tired (negative) but continued (positive) — a contrast.',examples:['I was hungry, but I didn\'t eat.','He is rich, but he is unhappy.']},
+  {id:'e19',cat:'Articles',q:'He wants to become ___ engineer.',opts:['a','an','the','—'],ans:1,explain:'"Engineer" starts with a vowel sound ("en") → use "an". Don\'t just look at the letter, check the sound.',examples:['an engineer, an actor, an artist','a teacher, a doctor, a nurse']},
+  {id:'e20',cat:'Tenses',q:'___ you ever ___ sushi?',opts:['Did, ate','Have, eaten','Are, eating','Do, eat'],ans:1,explain:'Questions about life experiences use Present Perfect: "Have you ever + V3?"',examples:['Have you ever visited London?','Has she ever eaten Indian food?','Have they ever seen the ocean?']},
+],
+medium:[
+  {id:'m1',cat:'Perfect Tenses',q:'By the time she arrived, he ___ already left.',opts:['has','had','was','will have'],ans:1,explain:'Past Perfect (had + V3) for an action completed BEFORE another past event. "By the time she arrived" signals this.',examples:['By the time I got there, they had left.','She had already eaten when he arrived.','When he called, I had just finished cooking.']},
+  {id:'m2',cat:'Passive Voice',q:'The letter ___ written yesterday.',opts:['was','is','has been','will be'],ans:0,explain:'Passive voice in past: Subject + was/were + V3. "Yesterday" = past time → "was written".',examples:['The book was published in 2001.','The bridge was built in 1990.','The match was cancelled due to rain.']},
+  {id:'m3',cat:'Conditionals',q:'If I ___ rich, I would travel the world.',opts:['am','was','were','would be'],ans:2,explain:'Second Conditional uses "were" for ALL subjects (subjunctive mood) in formal grammar.',examples:['If she were here, she would know.','If he were taller, he could join the team.','If I were you, I would apologise.']},
+  {id:'m4',cat:'Perfect Tenses',q:'She ___ in London for five years now.',opts:['lives','lived','has lived','had lived'],ans:2,explain:'Present Perfect (have/has + V3) with "for" when the action started in the past and still continues now.',examples:['He has worked here since 2018.','I have known her for ten years.','They have been married for 25 years.']},
+  {id:'m5',cat:'Passive Voice',q:'The results will be ___ next week.',opts:['announce','announced','announcing','have announced'],ans:1,explain:'Future passive: will + be + V3. The past participle (V3) always follows "be" in passive constructions.',examples:['The winner will be selected by a panel.','New rules will be implemented next month.','The report will be published tomorrow.']},
+  {id:'m6',cat:'Conditionals',q:'If it ___ tomorrow, we will cancel the picnic.',opts:['rained','rains','will rain','would rain'],ans:1,explain:'First Conditional: If + Present Simple, will + V1. NEVER use "will" in the if-clause.',examples:['If you study hard, you will pass.','If she calls, I will answer immediately.','If they agree, we can start today.']},
+  {id:'m7',cat:'Tenses',q:'I ___ the report when you called.',opts:['wrote','was writing','have written','had written'],ans:1,explain:'Past Continuous (was/were + V-ing) = action in progress when another action interrupted it.',examples:['She was sleeping when the alarm rang.','They were watching TV when the power went out.','I was making dinner when he arrived.']},
+  {id:'m8',cat:'Reported Speech',q:'"I will come tomorrow," she said. She said she ___ the following day.',opts:['will come','would come','comes','came'],ans:1,explain:'Reported speech tense shift: "will" → "would". "Tomorrow" → "the following day".',examples:['He said he was hungry. (was = "am")','She said she would help. (would = "will")','They said they had seen it. (had = "have")']},
+  {id:'m9',cat:'Gerund/Inf',q:'I enjoy ___ to music while studying.',opts:['listen','to listen','listening','listened'],ans:2,explain:'"Enjoy" always takes a gerund (-ing form). It never takes an infinitive.',examples:['I enjoy swimming.','She enjoys reading.','He enjoys cooking for others.']},
+  {id:'m10',cat:'Prepositions',q:'She is very good ___ mathematics.',opts:['in','at','on','for'],ans:1,explain:'"Good at" is a fixed collocation in English. Use "at" for skill/ability.',examples:['He is excellent at cooking.','She is talented at drawing.','I\'m not very good at singing.']},
+  {id:'m11',cat:'Conditionals',q:'If she ___ harder, she would have passed.',opts:['studied','had studied','studies','would study'],ans:1,explain:'Third Conditional: If + Past Perfect, would have + V3. For unreal PAST situations and imagined results.',examples:['If he had left earlier, he wouldn\'t have missed the train.','If I had known, I would have told you.','If they had practiced more, they would have won.']},
+  {id:'m12',cat:'Perfect Tenses',q:'By next year, she ___ her degree.',opts:['will finish','finishes','will have finished','has finished'],ans:2,explain:'Future Perfect (will have + V3) = action completed before a specific future point. "By next year" triggers this.',examples:['By 2025, we will have launched our product.','By the time you arrive, I will have cooked dinner.','She will have finished the project by Friday.']},
+  {id:'m13',cat:'Passive Voice',q:'English ___ as a global language.',opts:['speaks','is spoken','has spoken','was speaking'],ans:1,explain:'Use passive when agent is unimportant or obvious. "Who speaks it" matters less than the fact itself.',examples:['French is taught in many schools.','Coffee is grown in Brazil.','The letter was signed by the CEO.']},
+  {id:'m14',cat:'SVA',q:'The police ___ looking for the suspect.',opts:['is','was','are','has been'],ans:2,explain:'"Police" is always plural in English — no singular form. Always use plural verbs.',examples:['The police are investigating.','The police were called immediately.','Compare: a police officer IS on duty.']},
+  {id:'m15',cat:'Prepositions',q:'He has been working here ___ 2015.',opts:['for','since','from','in'],ans:1,explain:'"Since" = specific point in time (2015, last Monday). "For" = duration (for 5 years, for a long time).',examples:['since Monday vs for three days','since 2010 vs for ten years','She has been ill since Tuesday.']},
+  {id:'m16',cat:'Gerund/Inf',q:'She stopped ___ when she reached the corner.',opts:['to rest','resting','rest','having rested'],ans:0,explain:'"Stop + infinitive" = paused in order to do something. "Stop + gerund" = quit doing something permanently.',examples:['She stopped to rest. (paused in order to rest)','He stopped smoking. (quit forever)','I stopped to buy coffee on my way.']},
+  {id:'m17',cat:'Clauses',q:'My sister, ___ lives in Mumbai, is a doctor.',opts:['who','which','that','whom'],ans:0,explain:'Non-defining relative clause: "who" for people. Commas show it is non-defining (extra info, not identifying).',examples:['My brother, who is 25, works in IT.','The Eiffel Tower, which was built in 1889, is in Paris.']},
+  {id:'m18',cat:'Reported Speech',q:'"Don\'t touch that!" she told him. She told him ___ touch that.',opts:['don\'t','not to','to not','wouldn\'t'],ans:1,explain:'Reported commands: tell/ask + someone + (not) to + V1. Negative commands use "not to + verb".',examples:['She told him to sit down. (Sit down!)','He asked her not to leave. (Don\'t leave!)','The teacher told us to open our books.']},
+],
+hard:[
+  {id:'h1',cat:'Subjunctive',q:'The teacher insisted that he ___ the exam again.',opts:['takes','took','take','will take'],ans:2,explain:'Subjunctive after insist/suggest/recommend/demand/require + "that" uses the BASE form (no -s, no -ed) for ALL subjects.',examples:['I suggest that she take a break.','The doctor recommended he stop smoking.','It is essential that everyone be present.']},
+  {id:'h2',cat:'Inversion',q:'"___ had she left when the fire started." Which word fits?',opts:['Hardly','Barely','No sooner','Scarcely'],ans:2,explain:'"No sooner … than" is a fixed pair. It triggers inversion and means two events happened almost simultaneously.',examples:['No sooner had he sat down than the phone rang.','No sooner had she arrived than trouble began.','No sooner had the game started than it began to rain.']},
+  {id:'h3',cat:'Mixed Cond.',q:'If she ___ the directions, she wouldn\'t be lost now.',opts:['followed','had followed','would follow','follows'],ans:1,explain:'Mixed Conditional: Past Perfect (past mistake) + would + V1 (present consequence).',examples:['If he had studied medicine, he would be a doctor now.','If I had saved money, I wouldn\'t be struggling today.','If she had taken the job, she would be happy now.']},
+  {id:'h4',cat:'Cleft Sent.',q:'"___ bothers me is the constant noise."',opts:['That','What','Which','It'],ans:1,explain:'"What" introduces a nominal relative clause as subject. "What bothers me IS the noise" — "what" = "the thing that".',examples:['What I need is a good rest.','What surprised everyone was his calm reaction.','What she wants is more recognition.']},
+  {id:'h5',cat:'Participle',q:'"___ in 1884, the building is now a heritage site."',opts:['Building','Built','Having built','To build'],ans:1,explain:'Past participle clause with passive meaning: "Built in 1884" = the building was built in 1884.',examples:['Founded in 1920, the university has a rich history.','Written by Shakespeare, the play is still performed today.','Covered in snow, the mountains looked magnificent.']},
+  {id:'h6',cat:'Reported Speech',q:'"I will come tomorrow," she said. Reported: She said she ___ the following day.',opts:['will come','would come','comes','came'],ans:1,explain:'Tense shift in reported speech: "will" → "would". Also: "tomorrow" → "the following day".',examples:['He said he was tired. (was = "am")','She said she would help. (would = "will")','They said they had seen it. (had = "have")']},
+  {id:'h7',cat:'Gerund/Inf',q:'I remember ___ her at the conference last year.',opts:['to meet','meeting','to have met','having to meet'],ans:1,explain:'"Remember + gerund" = past memory. "Remember + infinitive" = future task you must do.',examples:['I remember locking the door. (past memory)','Remember to lock the door! (future task)','I forgot meeting him vs I forgot to meet him.']},
+  {id:'h8',cat:'Subjunctive',q:'It is vital that every member ___ present at the vote.',opts:['is','are','be','will be'],ans:2,explain:'With "it is vital/essential/important/necessary/crucial that…", use the subjunctive: base form "be".',examples:['It is crucial that he be informed immediately.','It is necessary that they be present.','The law requires that every citizen pay taxes.']},
+  {id:'h9',cat:'Inversion',q:'"___ I known about the meeting, I would have attended." Fill the blank.',opts:['If','Had','Were','Should'],ans:1,explain:'Formal conditional inversion: "Had I known" = "If I had known". Common in formal writing and literature.',examples:['Were I in your position, I would resign. (= If I were…)','Should you need help, call me. (= If you should need…)','Had she arrived earlier, she would have met him.']},
+  {id:'h10',cat:'Cleft Sent.',q:'"It was John ___ broke the window."',opts:['who','which','that','whom'],ans:0,explain:'In IT-clefts with a PERSON as focus, use "who" or "that". "Which" is for things; "whom" is object case.',examples:['It was Mary who solved the puzzle.','It was this book that changed my life. (thing → that)','It was in Paris that they first met. (place → that/where)']},
+  {id:'h11',cat:'Ellipsis',q:'"I didn\'t expect to win, but I ___."',opts:['did','do','have','was'],ans:0,explain:'Ellipsis: "did" = "did win". Match the auxiliary of the original verb to avoid repetition.',examples:['She said she wouldn\'t come, but she did.','He thought he\'d fail, but he didn\'t.','I expected her to call, and she did.']},
+  {id:'h12',cat:'Mixed Cond.',q:'"If I ___ you, I would take the offer." Fill correctly.',opts:['am','was','were','had been'],ans:2,explain:'"If I were you" uses the subjunctive "were" for all subjects. This is a fixed Second Conditional expression.',examples:['If I were you, I would apologise immediately.','If she were in your position, she would act differently.','If he were taller, he could reach that shelf.']},
+],
+ielts:[
+  {id:'i1',cat:'IELTS Writing',q:'Choose the most academic sentence for IELTS Writing Task 2.',opts:['Many people think technology is bad.','It is widely acknowledged that technological advancement presents significant challenges for society.','Lots of people say tech is bad for us.','Technology, which is bad, is used by many people.'],ans:1,explain:'IELTS Band 7+ requires impersonal formal structures: "It is widely acknowledged that…" is sophisticated and academic.',examples:['It is generally accepted that…','Research indicates that…','There is growing evidence to suggest that…']},
+  {id:'i2',cat:'IELTS Grammar Range',q:'Which sentence demonstrates the highest grammatical range for IELTS Band 7+?',opts:['People use cars. Cars cause pollution.','People use cars and cars cause pollution.','The widespread use of private vehicles contributes significantly to urban air pollution.','Cars cause a lot of pollution according to people.'],ans:2,explain:'Band 7+ requires complex noun phrases, formal vocabulary, and varied structures. Option C shows all of these.',examples:['The increasing reliance on fossil fuels poses a serious threat to the environment.','Despite the economic benefits, the environmental consequences cannot be overlooked.']},
+  {id:'i3',cat:'IELTS Task 1',q:'Which phrase correctly describes a sharp upward trend in IELTS Writing Task 1?',opts:['went more up','increased dramatically','became bigger and bigger','got much higher'],ans:1,explain:'Use formal verb + adverb: "increased dramatically", "rose sharply", "grew substantially". Avoid informal phrases.',examples:['The figure increased dramatically between 2010 and 2020.','There was a dramatic increase in the number of users.','Sales rose steadily over the five-year period.']},
+  {id:'i4',cat:'IELTS Hedging',q:'Which sentence uses appropriate hedging for IELTS Writing Task 2?',opts:['Technology definitely destroys creativity.','Some technology is sometimes bad.','It could be argued that excessive use of technology may hinder creative thinking.','Technology is good and bad for people.'],ans:2,explain:'"It could be argued that…" + "may" — two layers of hedging. Shows nuance and avoids dangerous over-claiming.',examples:['Research suggests that…','There appears to be a tendency for…','This might be attributed to the fact that…']},
+  {id:'i5',cat:'IELTS Cohesion',q:'Which linking phrase is most appropriate for introducing a contrasting point in IELTS Writing?',opts:['But','Also, there is another thing.','Nevertheless, it would be remiss to overlook the counterargument that…','And then there is also a different view.'],ans:2,explain:'"Nevertheless" + complex structure = high cohesion. IELTS rewards sophisticated connectors used accurately.',examples:['However, this perspective fails to account for…','Notwithstanding the benefits outlined above, one must consider…','While this view has merit, it overlooks the fundamental issue of…']},
+],
+toefl:[
+  {id:'t1',cat:'TOEFL Writing',q:'Which sentence best attributes an idea from a lecture in TOEFL Integrated Writing?',opts:['The professor said X is true.','According to the professor, the claim that X is beneficial is effectively refuted by the evidence of Y.','The lecture says X is the answer.','The professor thinks about X and says things.'],ans:1,explain:'TOEFL Integrated Writing needs precise attribution with reporting verbs and contrast structures.',examples:['The professor argues that…','The lecture challenges the reading\'s assertion by pointing out…','According to the lecturer, the evidence clearly shows…']},
+  {id:'t2',cat:'TOEFL Noun Clauses',q:'Choose the most academic sentence with a noun clause for TOEFL.',opts:['Scientists wonder about life on Mars.','Scientists are investigating whether conditions on Mars could support microbial life.','Scientists think Mars has life maybe.','Mars might have life, scientists say so.'],ans:1,explain:'"Whether + clause" as object of investigating — academic noun clause. Complex noun phrase shows grammatical range.',examples:['Researchers have examined whether this approach is effective.','The question of whether economic growth benefits all remains debated.']},
+  {id:'t3',cat:'TOEFL Discussion',q:'Which response best builds on a classmate\'s point in TOEFL Academic Discussion?',opts:['I agree with Maria.','Yes, that is a true point.','Building on Maria\'s observation that urban development increases traffic, I would further contend that adequate public transport must be developed simultaneously.','Maria is right about the traffic situation in cities.'],ans:2,explain:'TOEFL Discussion rewards: explicitly referencing classmate + using "building on" + adding substantive new point.',examples:['Extending Carlos\'s argument, I would suggest that…','While I concur with the point regarding X, the analysis should also consider Y…']},
+],
+adaptive:[]
+};
+
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
+async function initUser(){
+  try{
+    const res=await fetch('/api/auth/me',{credentials:'include'});
+    if(!res.ok){window.location.href='/login';return;}
+    const d=await res.json();
+    if(!d.success){window.location.href='/login';return;}
+    currentUser=d.user;
+    const ini=d.user.name?d.user.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2):'?';
+    document.getElementById('sb-name').textContent=d.user.name||'User';
+    document.getElementById('sb-ava').textContent=ini;
+    document.getElementById('top-ava').textContent=ini;
+    document.getElementById('sb-xp').textContent=(gp.totalXp||0)+' XP';
+    const xpPct=Math.min(((gp.totalXp||0)/5000)*100,100);
+    setTimeout(()=>document.getElementById('sb-xp-fill').style.width=xpPct+'%',300);
+    document.getElementById('streak-badge').textContent=`🔥 ${gp.streak||0}-day streak`;
+    renderStats();
+    renderLessons();
+    renderIELTSTab();
+    renderTOEFLTab();
+    renderProgressTab();
+    const totalTopics=CATS.reduce((a,c)=>a+c.topics.length,0);
+    const totalLessons=CATS.reduce((a,c)=>a+c.topics.reduce((b,t)=>b+t.lessons.length,0),0);
+    document.getElementById('pg-sub').textContent=`${totalTopics} topics · ${totalLessons}+ lessons · searchable by keyword`;
+  }catch(e){window.location.href='/login';}
+}
+
+/* ═══════════════════════════════════════════
+   SAVE PROGRESS TO SERVER (Real DB)
+═══════════════════════════════════════════ */
+async function saveProgressToServer(score, total, pct, diff) {
+  try {
+    const xpEarned = score * 20;
+    const diffLabel = {
+      easy: 'Easy', medium: 'Medium', hard: 'Hard',
+      ielts: 'IELTS Mode', toefl: 'TOEFL Mode', adaptive: 'Adaptive'
+    };
+
+    await fetch('/api/progress/update', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        module_key:         'grammar',
+        practice_minutes:   Math.ceil(total * 0.5),   // ~30 sec per question
+        accuracy:           pct,
+        xp_earned:          xpEarned,
+        activity_title:     `Grammar — ${diffLabel[diff] || diff} Assessment`,
+        activity_meta:      `Score: ${pct}% · ${score}/${total} correct`,
+        module_progress_pct: Math.min(
+          Math.round(((gp.sessions||[]).length / 10) * 100), 100
+        ),
+      })
+    });
+  } catch(e) {
+    console.warn('Progress save failed:', e);
+  }
+}
+/* ═══════════════════════════════════════════
+   RENDER ALL LESSONS
+═══════════════════════════════════════════ */
+const ALL_TOPICS=CATS.flatMap(c=>c.topics);
+
+function renderLessons(filter=''){
+  const f=filter.toLowerCase().trim();
+  let count=0;
+  let html='';
+  const done=gp.done||{};
+  const acc=gp.topicAcc||{};
+  CATS.forEach(cat=>{
+    const matched=cat.topics.filter(t=>!f||(
+      t.title.toLowerCase().includes(f)||
+      t.desc.toLowerCase().includes(f)||
+      cat.label.toLowerCase().includes(f)||
+      t.diff.toLowerCase().includes(f)||
+      t.lessons.some(l=>l.title.toLowerCase().includes(f))
+    ));
+    if(!matched.length)return;
+    count+=matched.length;
+    html+=`<div class="cat-section ${cat.cls}">
+      <div class="cat-header">
+        <div class="cat-label">${cat.label}</div>
+        <span class="cat-count">${matched.length} topic${matched.length>1?'s':''}</span>
+      </div>
+      <div class="topic-grid">${matched.map(t=>`
+        <div class="topic-card ${done[t.id]?'done':''}" onclick="openTopic('${t.id}')">
+          <div class="tc-top"><div class="tc-ico">${t.ico}</div><div><div class="tc-title">${t.title}</div><span class="diff-badge diff-${t.diff}">${t.diff.toUpperCase()}</span></div></div>
+          <div class="tc-desc">${t.desc}</div>
+          <div class="tc-bar"><div class="tc-fill" style="width:0%" data-w="${acc[t.id]||0}"></div></div>
+          <div class="tc-meta"><span>${t.lessons.length} lesson${t.lessons.length>1?'s':''}</span><span>${acc[t.id]||0}% mastery</span></div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  });
+  if(!count)html=`<div class="no-results">🔍 No results for "<strong>${filter}</strong>"<br>Try: articles, tenses, passive voice, gerunds, subjunctive, IELTS, TOEFL, conditionals…</div>`;
+  document.getElementById('topic-list').innerHTML=html;
+  document.getElementById('sc').textContent=filter?`${count} result${count!==1?'s':''}` :'';
+  setTimeout(()=>document.querySelectorAll('#topic-list .tc-fill').forEach(b=>b.style.width=b.dataset.w+'%'),100);
+}
+
+function renderIELTSTab(){
+  const ieltsSpecific=CATS.find(c=>c.id==='ielts')?.topics||[];
+  const general=ALL_TOPICS.filter(t=>['conditionals','passive','reported','clauses','subjunctive','inversion','cohesion','ielts-complex','ielts-hedging','ielts-task1','ielts-speaking','gerund-inf','participle','cleft','cohesion'].includes(t.id));
+  const acc=gp.topicAcc||{};
+  const done=gp.done||{};
+  const cardsFn=(arr)=>arr.map(t=>`<div class="topic-card ${done[t.id]?'done':''}" onclick="openTopic('${t.id}')"><div class="tc-top"><div class="tc-ico">${t.ico}</div><div><div class="tc-title">${t.title}</div><span class="diff-badge diff-${t.diff}">${t.diff.toUpperCase()}</span></div></div><div class="tc-desc">${t.desc}</div><div class="tc-bar"><div class="tc-fill" style="width:0%" data-w="${acc[t.id]||0}"></div></div><div class="tc-meta"><span>${t.lessons.length} lesson${t.lessons.length>1?'s':''}</span><span>${acc[t.id]||0}% mastery</span></div></div>`).join('');
+  document.getElementById('ielts-list').innerHTML=
+    `<div class="cat-section cat-vi"><div class="cat-header"><div class="cat-label">🎓 IELTS-Specific Modules</div><span class="cat-count">${ieltsSpecific.length} topics</span></div><div class="topic-grid">${cardsFn(ieltsSpecific)}</div></div>`+
+    `<div class="cat-section cat-vi" style="margin-top:8px"><div class="cat-header"><div class="cat-label">📚 Essential Grammar for IELTS</div><span class="cat-count">${general.length} topics</span></div><div class="topic-grid">${cardsFn(general)}</div></div>`;
+  setTimeout(()=>document.querySelectorAll('#ielts-list .tc-fill').forEach(b=>b.style.width=b.dataset.w+'%'),100);
+}
+
+function renderTOEFLTab(){
+  const toeflSpecific=CATS.find(c=>c.id==='toefl')?.topics||[];
+  const general=ALL_TOPICS.filter(t=>['simple-tenses','perfect-tenses','reported','clauses','cohesion','toefl-writing','toefl-noun-clauses','toefl-speaking','passive','gerund-inf'].includes(t.id));
+  const acc=gp.topicAcc||{};
+  const done=gp.done||{};
+  const cardsFn=(arr)=>arr.map(t=>`<div class="topic-card ${done[t.id]?'done':''}" onclick="openTopic('${t.id}')"><div class="tc-top"><div class="tc-ico">${t.ico}</div><div><div class="tc-title">${t.title}</div><span class="diff-badge diff-${t.diff}">${t.diff.toUpperCase()}</span></div></div><div class="tc-desc">${t.desc}</div><div class="tc-bar"><div class="tc-fill" style="width:0%" data-w="${acc[t.id]||0}"></div></div><div class="tc-meta"><span>${t.lessons.length} lesson${t.lessons.length>1?'s':''}</span><span>${acc[t.id]||0}% mastery</span></div></div>`).join('');
+  document.getElementById('toefl-list').innerHTML=
+    `<div class="cat-section cat-am"><div class="cat-header"><div class="cat-label">📋 TOEFL-Specific Modules</div><span class="cat-count">${toeflSpecific.length} topics</span></div><div class="topic-grid">${cardsFn(toeflSpecific)}</div></div>`+
+    `<div class="cat-section cat-am" style="margin-top:8px"><div class="cat-header"><div class="cat-label">📚 Essential Grammar for TOEFL</div><span class="cat-count">${general.length} topics</span></div><div class="topic-grid">${cardsFn(general)}</div></div>`;
+  setTimeout(()=>document.querySelectorAll('#toefl-list .tc-fill').forEach(b=>b.style.width=b.dataset.w+'%'),100);
+}
+
+function filterTopics(val){renderLessons(val);}
+
+/* ═══════════════════════════════════════════
+   TOPIC / LESSON VIEWER
+═══════════════════════════════════════════ */
+function openTopic(id){
+  const topic=ALL_TOPICS.find(t=>t.id===id);
+  if(!topic)return;
+  activeTopic=topic;
+  activeLesson=0;
+  showLesson();
+  document.getElementById('topic-list').style.display='none';
+  document.getElementById('sw').style.display='none';
+  document.getElementById('lesson-viewer').style.display='block';
+  document.getElementById('lesson-viewer').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function showLesson(){
+  const {lessons,id,ico,title}=activeTopic;
+  const l=lessons[activeLesson];
+  const isLast=activeLesson===lessons.length-1;
+  document.getElementById('lesson-viewer').innerHTML=`
+    <div class="lv-header">
+      <div class="lv-back" onclick="closeTopic()">←</div>
+      <div class="lv-meta">
+        <div class="lv-breadcrumb">${ico} ${title} &nbsp;·&nbsp; Lesson ${activeLesson+1} of ${lessons.length}</div>
+        <div class="lv-title">${l.title}</div>
+      </div>
+      <div class="lv-nav">
+        ${activeLesson>0?`<button class="lv-nav-btn" onclick="goLesson(${activeLesson-1})">← Prev</button>`:''}
+        ${!isLast?`<button class="lv-nav-btn primary" onclick="goLesson(${activeLesson+1})">Next Lesson →</button>`
+          :`<button class="lv-nav-btn primary" onclick="completeTopic('${id}')">✅ Complete</button>`}
+      </div>
+    </div>
+    <div class="lesson-body">${l.body}</div>
+    ${isLast?`<button class="lesson-complete-btn" onclick="completeTopic('${id}')">✅ Mark Complete & Go to Assessment →</button>`:''}
+  `;
+}
+
+function goLesson(idx){
+  activeLesson=idx;
+  showLesson();
+  document.getElementById('lesson-viewer').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function closeTopic(){
+  document.getElementById('topic-list').style.display='block';
+  document.getElementById('sw').style.display='block';
+  document.getElementById('lesson-viewer').style.display='none';
+  activeTopic=null;
+}
+
+function completeTopic(id){
+  if(!gp.done)gp.done={};
+  if(!gp.topicAcc)gp.topicAcc={};
+  gp.done[id]=true;
+  if(!gp.topicAcc[id])gp.topicAcc[id]=35;
+  saveGP();
+  showToast('🎉','Lesson complete! Now test your knowledge.');
+  closeTopic();
+  renderLessons();
+  switchTab('assess');
+}
+
+/* ═══════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════ */
+function switchTab(t){
+  const tabs=['lessons','ielts','toefl','assess','progress'];
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',tabs[i]===t));
+  ['lessons','ielts','toefl','assess','progress'].forEach(p=>{
+    document.getElementById('panel-'+p)?.classList.toggle('active',p===t);
+  });
+  if(t==='progress')renderProgressTab();
+}
+
+/* ═══════════════════════════════════════════
+   ASSESSMENT
+═══════════════════════════════════════════ */
+function selDiff(d,el){
+  selDiffVal=d;
+  document.querySelectorAll('.ss-opt').forEach(o=>o.className='ss-opt');
+  const cls=d==='ielts'?'ss-opt sel-ielts':d==='toefl'?'ss-opt sel-toefl':'ss-opt sel';
+  el.className=cls;
+}
+
+function startQuiz(){
+  let pool;
+  if(selDiffVal==='adaptive'){
+    const a=(gp.totalCorrect||0)/Math.max(gp.totalAnswered||1,1);
+    pool=a<0.5?[...QB.easy]:a<0.75?[...QB.easy,...QB.medium]:[...QB.medium,...QB.hard];
+  } else pool=[...(QB[selDiffVal]||QB.medium)];
+  const fresh=pool.filter(q=>!usedIds.has(q.id));
+  const available=fresh.length>=5?fresh:pool;
+  if(fresh.length<5){const ids=new Set(pool.map(q=>q.id));usedIds=new Set([...usedIds].filter(id=>!ids.has(id)));saveGP();}
+  const selected=shuffle(available).slice(0,Math.min(10,available.length));
+  quiz={questions:selected,current:0,answers:[],score:0,diff:selDiffVal};
+  selOpt=null;answered=false;
+  document.getElementById('start-screen').style.display='none';
+  document.getElementById('quiz-result').style.display='none';
+  document.getElementById('quiz-area').style.display='block';
+  renderQ();
+}
+
+function renderQ(){
+  const {questions,current}=quiz;
+  if(current>=questions.length){showResult();return;}
+  const q=questions[current];
+  const pct=(current/questions.length)*100;
+  const dC={easy:'var(--emerald)',medium:'var(--amber)',hard:'var(--rose)',ielts:'var(--violet)',toefl:'var(--amber)',adaptive:'var(--cyan)'};
+  const dB={easy:'var(--emerald-dim)',medium:'var(--amber-dim)',hard:'var(--rose-dim)',ielts:'var(--violet-dim)',toefl:'var(--amber-dim)',adaptive:'var(--cyan-dim)'};
+  const d=quiz.diff;
+  document.getElementById('quiz-area').innerHTML=`
+    <div class="qprog">
+      <span class="qprog-txt">Q ${current+1} / ${questions.length}</span>
+      <div class="qprog-bar"><div class="qprog-fill" style="width:${pct}%"></div></div>
+      <span class="qbadge" style="background:${dB[d]};color:${dC[d]};padding:3px 10px;border-radius:99px">${d.toUpperCase()}</span>
+    </div>
+    <div class="qcat">${q.cat}</div>
+    <div class="qtxt">${q.q}</div>
+    <div class="opts" id="opts">${q.opts.map((o,i)=>`<button class="opt" onclick="pickOpt(this,${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}</div>
+    <button class="qbtn submit v" id="qbtn-submit" onclick="checkAnswer()">Check Answer</button>
+    <button class="qbtn next" id="qbtn-next" onclick="nextQ()">Next Question →</button>
+    <div class="explain" id="explain"></div>
+  `;
+  selOpt=null;answered=false;
+}
+
+function pickOpt(el,i){
+  if(answered)return;
+  document.querySelectorAll('.opt').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  selOpt=i;
+}
+
+function checkAnswer(){
+  if(selOpt===null){showToast('⚠️','Please select an answer!');return;}
+  if(answered)return;
+  answered=true;
+  const q=quiz.questions[quiz.current];
+  const ok=selOpt===q.ans;
+  if(ok)quiz.score++;
+  usedIds.add(q.id);
+  quiz.answers.push({q,chosen:selOpt,correct:ok});
+  document.querySelectorAll('.opt').forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.ans)b.classList.add('correct');
+    else if(i===selOpt&&!ok)b.classList.add('wrong');
+  });
+  document.getElementById('explain').className='explain open';
+  document.getElementById('explain').innerHTML=`
+    <div class="exp-top"><div class="exp-icon">${ok?'✅':'❌'}</div><div class="exp-verdict" style="color:${ok?'var(--emerald)':'var(--rose)'}">${ok?'Correct! Well done!':'Incorrect — Here\'s the full explanation:'}</div></div>
+    <div class="exp-rule"><strong>📖 Rule & Explanation:</strong><br>${q.explain}</div>
+    <div class="exp-examples"><div class="exp-ex-title">📌 More Examples to Remember</div>${q.examples.map(e=>`<div class="exp-ex-item">${e}</div>`).join('')}</div>
+  `;
+  document.getElementById('qbtn-submit').className='qbtn submit';
+  document.getElementById('qbtn-next').className='qbtn next v';
+}
+
+function nextQ(){quiz.current++;renderQ();}
+
+function showResult(){
+  document.getElementById('quiz-area').style.display='none';
+  const el=document.getElementById('quiz-result');
+  el.style.display='block';
+  const {score,questions,answers,diff}=quiz;
+  const pct=Math.round((score/questions.length)*100);
+  const dL={easy:'🌱 Easy',medium:'⚡ Medium',hard:'🔥 Hard',ielts:'🎓 IELTS',toefl:'📋 TOEFL',adaptive:'🤖 Adaptive'};
+  if(!gp.sessions)gp.sessions=[];
+  gp.sessions.unshift({date:new Date().toLocaleDateString('en-IN'),diff,score:pct,correct:score,total:questions.length,ts:Date.now()});
+  if(gp.sessions.length>25)gp.sessions.pop();
+  gp.totalAnswered=(gp.totalAnswered||0)+questions.length;
+  gp.totalCorrect=(gp.totalCorrect||0)+score;
+  gp.totalXp=(gp.totalXp||0)+(score*20);
+  if(!gp.bestScore||pct>gp.bestScore)gp.bestScore=pct;
+  const mistakes=answers.filter(a=>!a.correct);
+  if(!gp.mistakes)gp.mistakes=[];
+  mistakes.forEach(m=>gp.mistakes.unshift({q:m.q.q,chosen:m.q.opts[m.chosen],correct:m.q.opts[m.q.ans],explain:m.q.explain,cat:m.q.cat,ts:Date.now()}));
+  if(gp.mistakes.length>50)gp.mistakes=gp.mistakes.slice(0,50);
+  saveGP();
+  saveProgressToServer(score, questions.length, pct, diff); // ← ADD THIS LINE
+  renderStats();
+  const sc=pct>=80?'var(--emerald)':pct>=60?'var(--amber)':'var(--rose)';
+  const msg=pct>=80?'Excellent work! 🏆':pct>=60?'Good effort — keep going! 💪':'Keep practising — you\'ve got this! 🌱';
+  el.innerHTML=`
+    <div style="font-size:2.5rem;margin-bottom:12px">${pct>=80?'🏆':pct>=60?'⭐':'💪'}</div>
+    <div style="font-family:var(--font-serif);font-size:1.4rem;margin-bottom:4px">Session Complete!</div>
+    <div class="qr-score" style="color:${sc}">${pct}%</div>
+    <div class="qr-label">${score}/${questions.length} correct · ${dL[diff]||diff}</div>
+    <div style="font-size:0.84rem;color:var(--text-2);margin-bottom:18px">${msg}</div>
+    <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+      <span style="background:var(--emerald-dim);color:var(--emerald);padding:6px 14px;border-radius:99px;font-size:0.76rem;font-weight:700">+${score*20} XP earned</span>
+      <span style="background:var(--cyan-dim);color:var(--cyan);padding:6px 14px;border-radius:99px;font-size:0.76rem;font-weight:700">${questions.length} Questions</span>
+      <span style="background:var(--violet-dim);color:var(--violet);padding:6px 14px;border-radius:99px;font-size:0.76rem;font-weight:700">${dL[diff]||diff}</span>
+    </div>
+    ${mistakes.length?`
+    <div class="qr-mistakes">
+      <div style="font-size:0.85rem;font-weight:700;margin-bottom:12px">❌ Mistakes to Review (${mistakes.length}) — Study these carefully!</div>
+      ${mistakes.map(m=>`<div class="mi"><div class="mi-q">Q: ${m.q.q}</div><div class="mi-yours">✗ Your answer: ${m.q.opts[m.chosen]}</div><div class="mi-correct">✓ Correct answer: ${m.q.opts[m.q.ans]}</div><div class="mi-explain">📖 ${m.q.explain}<br><br>📌 Example: ${m.q.examples[0]}</div></div>`).join('')}
+    </div>`:`<div style="color:var(--emerald);font-size:0.88rem;padding:16px;background:var(--emerald-dim);border-radius:var(--radius-sm);margin-top:16px">🎉 Perfect score! No mistakes — outstanding!</div>`}
+    <div class="result-btns">
+      <button class="rbtn primary" onclick="resetQuiz()">Try Again</button>
+      <button class="rbtn secondary" onclick="switchTab('progress')">View Progress</button>
+      <button class="rbtn secondary" onclick="switchTab('lessons')">Study More</button>
+    </div>
+  `;
+}
+
+function resetQuiz(){
+  document.getElementById('quiz-result').style.display='none';
+  document.getElementById('quiz-area').style.display='none';
+  document.getElementById('start-screen').style.display='block';
+}
+
+/* ═══════════════════════════════════════════
+   PROGRESS TAB
+═══════════════════════════════════════════ */
+function renderStats(){
+  const q=gp.totalAnswered||0,c=gp.totalCorrect||0;
+  document.getElementById('stat-q').textContent=q;
+  document.getElementById('stat-a').textContent=q>0?Math.round((c/q)*100)+'%':'—';
+  document.getElementById('stat-s').textContent=(gp.sessions||[]).length;
+  document.getElementById('stat-b').textContent=gp.bestScore?gp.bestScore+'%':'—';
+}
+
+function renderProgressTab(){
+  const sessions=gp.sessions||[];
+  const dC={easy:'var(--emerald)',medium:'var(--amber)',hard:'var(--rose)',ielts:'var(--violet)',toefl:'var(--amber)',adaptive:'var(--cyan)'};
+  const dL={easy:'Easy',medium:'Medium',hard:'Hard',ielts:'IELTS',toefl:'TOEFL',adaptive:'Adaptive'};
+  document.getElementById('hist-list').innerHTML=sessions.length?
+    sessions.slice(0,10).map(s=>`<div class="hist-item"><div class="hist-dot" style="background:${dC[s.diff]||'var(--emerald)'}"></div><div class="hist-info"><div class="hist-name">${dL[s.diff]||s.diff} Assessment</div><div class="hist-meta">${s.date} · ${s.correct}/${s.total} correct</div></div><div class="hist-score" style="color:${s.score>=80?'var(--emerald)':s.score>=60?'var(--amber)':'var(--rose)'}">${s.score}%</div></div>`).join('')
+    :'<div class="no-data">No sessions yet. Take an assessment!</div>';
+  const acc=gp.topicAcc||{};
+  document.getElementById('cat-mastery').innerHTML=CATS.map(cat=>{
+    const avg=cat.topics.length?Math.round(cat.topics.reduce((a,t)=>a+(acc[t.id]||0),0)/cat.topics.length):0;
+    return `<div class="tpi"><div class="tpi-top"><span>${cat.label}</span><span style="font-family:var(--font-mono);color:var(--emerald);font-weight:600">${avg}%</span></div><div class="tpi-bar"><div class="tpi-fill" style="width:0%" data-w="${avg}"></div></div></div>`;
+  }).join('');
+  setTimeout(()=>document.querySelectorAll('.tpi-fill').forEach(b=>b.style.width=b.dataset.w+'%'),200);
+  const mistakes=gp.mistakes||[];
+  document.getElementById('mis-list').innerHTML=mistakes.length?
+    mistakes.slice(0,8).map(m=>`<div class="mi"><div class="mi-q">${m.q}</div><div class="mi-yours">✗ Your answer: ${m.chosen}</div><div class="mi-correct">✓ Correct: ${m.correct}</div><div class="mi-explain">📖 ${m.explain}</div></div>`).join('')
+    :'<div class="no-data">No mistakes yet — keep it up! 🎉</div>';
+}
+
+/* ═══════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════ */
+function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;}
+function showToast(ico,msg){const t=document.getElementById('toast');document.getElementById('t-ico').textContent=ico;document.getElementById('t-msg').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+async function handleLogout(){await fetch('/api/auth/logout',{method:'POST',credentials:'include'});window.location.href='/login';}
+
+initUser();
+</script>
+</body>
+</html>
